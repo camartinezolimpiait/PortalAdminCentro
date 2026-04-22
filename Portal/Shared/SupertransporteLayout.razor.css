@@ -1,0 +1,27 @@
+﻿main {
+    overflow-y: auto;
+    width: 100%;
+    background: url("img/bg.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom;
+}
+
+::deep .wrapper {
+    padding: 2rem 3rem;
+}
+
+::deep .wrapper_st {
+    box-sizing: content-box;
+    max-width: 80ch;
+    margin: 2rem auto;
+    background-color: white;
+    box-shadow: var(--elevacion-4);
+}
+
+::deep .cuadricula {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-block-end: 3rem;
+}

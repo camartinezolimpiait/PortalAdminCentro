@@ -1,0 +1,241 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+@using portalAdministrativoSISEC.Entidades.Common
+@using portalAdministrativoSISEC.Pages.Pines.PinesAsociados
+
+<figure class="fig-table">
+    @if (View == "Asociados")
+    {
+
+        <div class="page-size-chooser">
+            Resultados por página
+            <select @bind="@Pagination.ItemsPerPage">
+                <option>5</option>
+                <option>10</option>
+            </select>
+        </div>
+
+        <QuickGrid TGridItem="RowList" Items="@DataQueryable.AsQueryable()" Pagination="@Pagination" Theme="milicencia" Virtualize="true">
+            @foreach (ColumnList column in DataQueryable.First().Row)
+            {
+                <PropertyColumn Title
+                ="@column.NameColumn"
+                Property="@((RowList row) => row.Row.FirstOrDefault(c => c.NameColumn == column.NameColumn).Value)"
+                class="numerico"
+                Sortable="@column.Sortable"/>
+            }
+
+        </QuickGrid>
+
+        <Paginator State="@Pagination" />
+    }
+    else
+    {
+        <QuickGrid TGridItem="RowList" Pagination="Pagination" ItemsProvider="@Data" Theme="@Theme" Virtualize="true">
+
+            @foreach (ColumnList column in Columns)
+            {
+                @if (column.NameColumn == "Detalle de Pago")
+                {
+                    <TemplateColumn Title="@column.NameColumn">
+                        <button @onclick="@(() => DescargarDetalle(context))"> Descargar </button>
+                    </TemplateColumn>
+                }
+                else if (column.NameColumn == "Pines Asociados")
+                {
+
+                    <TemplateColumn Title="@column.NameColumn">
+                        @{
+                            bool validacionPin = ValidarPinesAsociados(context);
+                        }
+                        @if (validacionPin)
+                        {
+                            <a href="javascript:void(0);" @onclick="@(() => VerPinesAsociados(context))"> Ver Pines Asociados </a>
+                        }
+                        else
+                        {
+                            <span>PIN sin cuotas</span>
+                        }
+                        <PinesAsociados Opened="dialogShow" @ref="pinesAsociados" CloseButtonClicked="@(() => dialogShow = false)"></PinesAsociados>
+                    </TemplateColumn>
+
+                }
+                else if (column.NameColumn == "Cuotas" || column.NameColumn == "Pagos")
+                {
+                }
+                else if (column.NameColumn == "Valor de la cuota" ||
+                column.NameColumn == "Saldo restante" ||
+                column.NameColumn == "Fecha de abono" ||
+                column.NameColumn == "Estado" ||
+                column.NameColumn == "Valor pagado" ||
+                column.NameColumn == "Cuota")
+                {
+                    <TemplateColumn Title="@column.NameColumn" HeaderTemplate="@((header) => GetHeaderTemplate(column.NameColumn))">
+
+                        <!-- Usar display: flex -->
+                        <div class="@GetRowBackground(context)" style="position: relative; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;">
+                            @foreach (var item in context.Row)
+                            {
+
+                                if (item.NameColumn == column.NameColumn)
+                                {
+                                    var parts = item.Value.Split('|');
+                                    if (parts.Length == 2)
+                                    {
+                                        <span style="color: #1da96a; margin-bottom: 0.4em;">@parts[0]</span>
+                                        <br>
+                                        <span style="color: #1da96a; margin-top: 2.0em; display: inline-block; margin-left: -30px; font-size: 0.7em;">@parts[1]</span>
+                                    }
+                                    else if (item.Value.Contains("*"))
+                                    {
+                                        var firstPart = item.Value.Split('*')[0];
+                                        <span style="color: #1da96a; flex: 1;">@firstPart</span>
+                                    }
+                                    else if (item.Value.Contains("+"))
+                                    {
+                                        var firstPart = item.Value.Split('+')[0];
+                                        <span style="color: #FF872C; flex: 1;">@firstPart</span>
+                                    }
+                                    else if (string.IsNullOrEmpty(item.Value))
+                                    {
+                                        <span>(Vacío)</span> @* Muestra un indicador si está vacío *@
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Value</span>
+                                    }
+
+                                }
+                            }
+                        </div>
+                    </TemplateColumn>
+                }
+                else if (column.NameColumn == "Comprobante Devolución")
+                {
+                    <TemplateColumn Title="@column.NameColumn">
+                        <a href="javascript:void(0);" @onclick="@(() => EventCallbackButtonClick(context))">
+                            Descargar
+                        </a>
+                    </TemplateColumn>
+                }
+
+                else
+                {
+                    <PropertyColumn Title="@column.NameColumn"
+                                    Property="@((RowList row) => (row.Row.FirstOrDefault(c => c.NameColumn == column.NameColumn).Value ?? ""))"
+                                    class="numerico"
+                                    Sortable="@column.Sortable"
+                                    HeaderTemplate="@((header) => GetHeaderTemplate(column.NameColumn))" />
+                }
+            }
+
+        </QuickGrid>
+    }
+
+</figure>
+
+@if (ShowPager)
+{
+    <div class="paginador">
+        <div class="elementos_pagina">
+            <label for="registros">
+                Resultados por página
+            </label>
+            <select id="registros" @bind-value:event="oninput" @bind-value="Paginas.RegistrosPorPagina" @onchange="CantidadRegistrosChanged">
+                <option value="5" selected="@(5 == Paginas.RegistrosPorPagina? true : false)"> 5 </option>
+                <option value="10" selected="@(10 == Paginas.RegistrosPorPagina? true : false)"> 10 </option>
+                <option value="20" selected="@(20 == Paginas.RegistrosPorPagina? true : false)"> 20 </option>
+                <option value="30" selected="@(30 == Paginas.RegistrosPorPagina? true : false)"> 30 </option>              
+            </select>
+        </div>
+        <div class="lista_paginas">
+            <button name="paginaAnterior" disabled="@(Paginas.PaginaActual == Paginas.PaginaInicial)" @onclick="()=> OnAtrasClicked(Paginas.PaginaActual)">@atras</button>
+            <button name="paginaInicial" class="@(Paginas.PaginaActual == Paginas.PaginaInicial ? "actual" : "")" disabled="@(Paginas.PaginaActual == Paginas.PaginaInicial)" @onclick="()=> OnAtrasInicialClicked(Paginas.PaginaInicial)"> @Paginas.PaginaInicial </button>
+            @if (Paginas.TotalPaginas > 1)
+            {
+                @for (int i = PaginaInicial; i < PaginasRecorrido; i++)
+                {
+                    if (i > 1)
+                    {
+                        if (i != Paginas.PaginaFinal)
+                        {
+                            var localVariable = i;
+                            <button class="@(Paginas.PaginaActual == i ? "actual" : "")" @onclick="()=> OnSeleccionClicked(localVariable)">@i</button>
+                        }
+                        
+                    }
+                    
+                }
+            }
+            @if (Paginas.TotalPaginas > 5 && Paginas.PaginaActual != Paginas.PaginaFinal)
+            {
+                <button disabled="@(Paginas.PaginaActual == Paginas.PaginaFinal)" @onclick="()=> OnSeleccionClicked(PaginasRecorrido)">...</button>
+            }
+
+            @if (Paginas.TotalPaginas != 1)
+            {
+            <button name="paginaFinal" class="@(Paginas.PaginaActual == Paginas.PaginaFinal ? "actual" : "")" disabled="@(Paginas.PaginaActual == Paginas.PaginaFinal)" @onclick="()=> OnSiguienteFinalClicked(Paginas.PaginaFinal)">@Paginas.PaginaFinal </button>
+      
+
+            }
+            <button name="paginaSiguiente" disabled="@(Paginas.PaginaActual == Paginas.PaginaFinal)" @onclick="()=> OnSiguienteClicked(Paginas.PaginaActual)"> @siguiente</button>
+        </div>
+    </div>
+    <p>
+        Mostrando resultados @Paginas.RegistroInicialPagina a @Paginas.RegistroFinalPagina - Total: @Paginas.TotalRegistros
+    </p>
+                                  }
+@code {
+    private RenderFragment GetHeaderTemplate(string columnName) => builder =>
+    {
+        builder.OpenElement(0, "div");
+        builder.AddAttribute(1, "style", GetHeaderStyle(columnName));
+        builder.AddContent(2, columnName);
+        builder.CloseElement();
+    };
+
+    private string GetHeaderStyle(string columnName)
+    {
+        return columnName switch
+        {
+            "Valor de la cuota" => "display: flex; justify-content: center; align-items: center; font-weight: bold; color: #333; padding: 0 20px;",
+            "Saldo restante" => "display: flex; justify-content: center; align-items: center; font-weight: bold; color: #333; padding: 0 20px;",
+            "Fecha de abono" => "display: flex; justify-content: center; align-items: center; font-weight: bold; color: #333; padding: 0 20px;",
+            "Estado" => "display: flex; justify-content: flex-end; align-items: center; font-weight: bold; color: #333; padding: 0 20px 0 0; margin-left: 50px;",
+            "Cuota" => "display: flex; justify-content: flex-end; align-items: center; font-weight: bold; color: #333; padding: 0 20px 0 0; margin-left: 50px;",
+            _ => "display: flex; justify-content: left; align-items: left; font-weight: bold; color: #333;padding-left:10px;"
+        };
+    }
+    private string GetRowBackground(RowList row)
+    {
+
+        // Obtener la columna "Cuota"
+        var cuotaColumn = row.Row.FirstOrDefault(c => c.NameColumn == "Cuota");
+
+        // Verificar que cuotaColumn no sea nulo y tenga un valor
+        if (cuotaColumn == null || string.IsNullOrEmpty(cuotaColumn.Value))
+        {
+            // Retornar el último color utilizado como valor por defecto
+            return _lastColor;
+        }
+
+        // Si la columna "Cuota" contiene "-", utiliza el último color aplicado
+        if (cuotaColumn.Value == "-")
+        {
+            return _lastColor;
+        }
+
+        // Si "Cuota" contiene un número, alterna entre blanco y gris
+        if (int.TryParse(cuotaColumn.Value, out int numeroCuota))
+        {
+            // Alternar color según el número de cuota (par o impar)
+            _lastColor = numeroCuota % 2 == 0 ? "bg-color-gray" : "bg-color-white";
+            return _lastColor;
+        }
+
+        // Si no es un número y tampoco es "-", usa el último color
+        return _lastColor;
+    }
+
+}
+
+@* <Paginator State="@Pagination" /> *@

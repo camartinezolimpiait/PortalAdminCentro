@@ -1,0 +1,296 @@
+﻿@page "/Finger"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+@using Newtonsoft.Json;
+@using Microsoft.JSInterop
+@inject IConfiguration Configuration
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+
+
+<div class="formulario-2 ">
+    <h2>Captura de huellas digitales</h2>
+
+    <div class="row">
+        <div class="col-6">
+            <img src="img/izquierda-pulgar.svg" />
+        </div>
+        <div class="col-6">
+            <div class="rectangulo-703">
+                <p class="texto-huella">
+                    <svg class="feather">
+                        <use xlink:href="assets/feather-sprite.svg#alert-circle" />
+                    </svg>Recuerda colocar el dedo en el centro del dispositivo para garantizar una buena captura
+                </p>
+                <img src="img/huella_buena.png" />
+                <img src="img/huella_mala.png" />
+            </div>
+
+            <div class="rectangulo-737">
+                <EditForm Model="@huellasDTO">
+                    <InputSelect name="huellas" id="huellas" class="form-group" @bind-Value="@huellasDTO.Id">
+                        <option value="" selected>Seleccione...</option>
+                        @foreach (var huella in HuellasGral)
+                        {
+                            <option value="@huella.Id">@huella.NombreDedo</option>
+                        }
+                    </InputSelect>
+                </EditForm>
+            </div>
+
+            <div>
+                <button type="button" class="boton-primario" @onclick="@capturarHuella">Capturar huella</button>
+                <button type="button" class="boton-secundario" @onclick="@validarIdentidad">Validar Identidad</button>
+                <button type="button" class="boton-secundario" @onclick="@Siguiente">Siguiente</button>
+
+                @if (showModalValida)
+                {
+                    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal body -->
+                            <div class="modal-body">
+                                    <h4>Validación Identidad</h4>
+                                    <p>@message</p>
+                                </div>
+
+                                <!-- Modal footer -->
+                            <div class="modal-footer">
+                                    @*<button type="button" class="btn" @onclick="@(() => showModal =
+                                        !showModal)">Cancelar</button>*@
+                                    <button type="button" class="btn btn-primary" @onclick=@(() =>
+                                    closeValida())>Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="rectangulo-61 formulario-2">
+        <p class="texto-registraduria">La huella será validada contra la base de datos de la Registraduría Nacional del
+            estado Civil</p>
+    </div>
+</div>
+@code {
+
+    string[] strIdHuella;
+    string[] HuellasGeneradas;
+    HuellasDTO huellasDTO = new HuellasDTO();
+    List<HuellasDTO> HuellasGral = new List<HuellasDTO>();
+    List<string> listaHuellas = new List<string>();
+    private string apiName = null;
+    private string apiNameValida = null;
+    bool showModal = true;
+    bool showModalValida = false;
+    private string message = null;
+    private string typeAlert = null;
+    private ApplicationSevice menuservice = new ApplicationSevice();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        generarArregloHuellas();
+        cargaSubtiposBiometria();
+    }
+
+
+    void Siguiente()
+    {
+        UriHelper.NavigateTo("Additional");
+    }
+
+
+    private void closeValida()
+    {
+        showModalValida = false;
+        StateHasChanged();
+    }
+
+
+
+    void validarIdentidad()
+    {
+        validarIdentidadRNEC();
+        StateHasChanged();
+    }
+    async void capturarHuella()
+    {
+        Http = new HttpClient();
+        var apiName = "/fingerprintreader/" + huellasDTO.Id;
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+        var response = await Http.GetAsync(apiName);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            strIdHuella = content.Split('|');
+            if (strIdHuella[0].Contains("Yes!"))
+            {
+                listaHuellas.Add(strIdHuella[1]);
+            }
+        }
+    }
+
+
+    private async void validarIdentidadRNEC()
+    {
+
+
+        HttpClient HttpValida = new HttpClient();
+        apiNameValida = "ValidarIdentidad";
+        HttpValida.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+        EntradaValidacion entradaValidacion = new EntradaValidacion();
+        entradaValidacion.IdCentro = (int)menuservice.entradaEnrolamiento.IdCentro;
+        entradaValidacion.idClientePlataforma = (int)menuservice.entradaEnrolamiento.ClienteId;
+        entradaValidacion.NumeroDocumentoCandidato = menuservice.entradaEnrolamiento.NumeroDocumento;
+        entradaValidacion.TipoIdentificacionCandidato = await getAbreviaturaTipoDocuemnto();
+        entradaValidacion.UsuarioCreacion = "RP1026589073";
+        entradaValidacion.Base64FormatoAutorizacionFD = menuservice.entradaEnrolamiento.Base64DocumentoFirmadoFD;
+        entradaValidacion.ListKeyBiometrias = listaHuellas;
+        entradaValidacion.codigoProducto = "001";
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(entradaValidacion), System.Text.Encoding.UTF8,
+        "application/json");
+        var response = await HttpValida.PostAsync(apiNameValida, stringContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            RespuestaProcesoZeus respuestaProcesoZeus = JsonConvert.DeserializeObject<RespuestaProcesoZeus>(content);
+
+            message = respuestaProcesoZeus.DescripcionError;
+            typeAlert = "success";
+            showModalValida = true;
+            registraDocumentosDatos();
+            StateHasChanged();
+        }
+        else
+        {
+            message = response.ReasonPhrase;
+            typeAlert = "danger";
+            showModalValida = true;
+            StateHasChanged();
+        }
+
+    }
+
+
+    private async void registraDocumentosDatos()
+    {
+        EntradaDocumentos entradaDocumentos = new EntradaDocumentos();
+        entradaDocumentos.Archivo = Convert.ToBase64String(menuservice.entradaEnrolamiento.byteDocumentoValidacion);
+        entradaDocumentos.ArchivoRNEC = Convert.ToBase64String(menuservice.entradaEnrolamiento.ByteDocumentoFirmadoFD);
+        entradaDocumentos.ClienteId = (int)menuservice.entradaEnrolamiento.ClienteId;
+        entradaDocumentos.EsAspirante = true;
+        entradaDocumentos.IdPersona = menuservice.respuestaEnrolarPersona.IdPersonaCRCCEA;
+        entradaDocumentos.IdProceso = menuservice.respuestaEnrolarPersona.IdProcesoCRCCEA;
+        entradaDocumentos.IdTipoDocumento = Convert.ToInt32(menuservice.entradaEnrolamiento.TipoDocumentoId);
+        entradaDocumentos.NumeroDocumento = menuservice.entradaEnrolamiento.NumeroDocumento;
+        entradaDocumentos.PrimerApellido = menuservice.entradaEnrolamiento.PrimerApellido;
+        entradaDocumentos.PrimerNombre = menuservice.entradaEnrolamiento.PrimerNombre;
+        entradaDocumentos.SegundoApellido = menuservice.entradaEnrolamiento.SegundoApellido;
+        entradaDocumentos.SegundoNombre = menuservice.entradaEnrolamiento.SegundoNombre;
+
+
+        Http = new HttpClient();
+        var apiName = "/RegistraAutoDatos";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(entradaDocumentos), System.Text.Encoding.UTF8,
+        "application/json");
+        var response = await Http.PostAsync(apiName, stringContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            RespGeneralModel respuestaProceso = JsonConvert.DeserializeObject<RespGeneralModel>
+            (content);
+
+            message = respuestaProceso.RespuestaTexto;
+            typeAlert = "success";
+            showModalValida = true;
+
+            StateHasChanged();
+        }
+        else
+        {
+            message = response.ReasonPhrase;
+            typeAlert = "danger";
+            showModalValida = true;
+            StateHasChanged();
+        }
+
+    }
+
+    protected async Task<string>
+    getAbreviaturaTipoDocuemnto()
+    {
+        TipoDocumentoDTO tipoDocumento = new TipoDocumentoDTO();
+
+        Http = new HttpClient();
+        apiName = "consultarTipoDocumentoId/" + menuservice.entradaEnrolamiento.TipoDocumentoId;
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+        var response = await Http.GetAsync(apiName);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            tipoDocumento = JsonConvert.DeserializeObject<TipoDocumentoDTO>
+            (content);
+        }
+        return tipoDocumento.abreviatura;
+
+    }
+
+    private void generarArregloHuellas()
+    {
+        int TotalHuellasCapturar = Convert.ToInt32(@Configuration["AppSettings:CantidadHuellas"]);
+        string[] huellas = new string[TotalHuellasCapturar];
+        var seed = Environment.TickCount;
+        var random = new Random(seed);
+
+        for (int i = 0; i < TotalHuellasCapturar; i++)
+        {
+            huellas[i] = random.Next(1, 10).ToString();
+        }
+        HuellasGeneradas = huellas;
+    }
+
+    private void cargaSubtiposBiometria()
+    {
+
+        Dictionary<string, int>
+        Dedos = Enum.GetValues(typeof(HuellasEnu))
+        .Cast<HuellasEnu>
+        ()
+        .ToDictionary(k => k.ToString(), v => (int)v);
+
+        foreach (var huellaGenerada in HuellasGeneradas)
+        {
+            foreach (var item in Dedos)
+            {
+                if (item.Value == Convert.ToInt32(huellaGenerada))
+                {
+                    HuellasDTO huella = new HuellasDTO();
+                    huella.NombreDedo = item.Key;
+                    huella.Id = item.Value.ToString();
+                    HuellasGral.Add(huella);
+                    break;
+                }
+            }
+        }
+    }
+}

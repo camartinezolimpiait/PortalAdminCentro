@@ -1,0 +1,171 @@
+﻿@page "/compradepin/transactionprogress"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+@using portalAdministrativoSISEC.Pages.Common
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.Common
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen;
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Pages.CompraPin.ResumenCompra;
+@using System.Globalization
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--azul-700)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <div class="wrapper ">
+            <div class="max-w-[546px]">
+                <h3>Detalles del pago</h3>
+
+                @if (PagoPin.ClienteCompra == (int)EnumTipoCliente.CEA)
+                {
+                    <div class="border border-azul-700 rounded-lg px-4 py-2 bg-white w-full max-w-2xl mb-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-semibold">NUT (Número de autorización):</span>
+                                <span class="text-azul-700 font-semibold">@PagoPin.Nut</span>
+                            </div>
+
+                            <!-- Botón -->
+                            <button class="@($"flex items-center text-white text-sm font-medium px-3 py-1.5 rounded-md transition-colors duration-150 cursor-pointer {(mensajeCopiado is not null ? "bg-green-600 hover:bg-green-700" : "bg-azul-700 hover:bg-azul-800")}")"
+                                    @onclick="CopiarNUT">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2M8 16h8a2 2 0 002-2V8a2 2 0 00-2-2H8m0 10v2a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                </svg>
+                                @(mensajeCopiado is not null ? "Copiado" : "Copiar")
+                            </button>
+                        </div>
+
+                    </div>
+                }
+
+                <div class="border border-azul-700 rounded-lg px-4 py-5 bg-white w-full max-w-2xl">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <!-- Icono (reemplázalo con tu SVG) -->
+                            <div class="flex items-center justify-center bg-azul-700 rounded-full w-[36px] h-[36px]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 14 18" fill="none">
+                                    <path d="M3.66732 15.666H10.334V13.166C10.334 12.2493 10.0076 11.4646 9.35482 10.8118C8.70204 10.1591 7.91732 9.83268 7.00065 9.83268C6.08398 9.83268 5.29926 10.1591 4.64648 10.8118C3.99371 11.4646 3.66732 12.2493 3.66732 13.166V15.666ZM0.333984 17.3327V15.666H2.00065V13.166C2.00065 12.3188 2.19857 11.5237 2.5944 10.7806C2.99023 10.0375 3.54232 9.44379 4.25065 8.99935C3.54232 8.5549 2.99023 7.96115 2.5944 7.2181C2.19857 6.47504 2.00065 5.6799 2.00065 4.83268V2.33268H0.333984V0.666016H13.6673V2.33268H12.0007V4.83268C12.0007 5.6799 11.8027 6.47504 11.4069 7.2181C11.0111 7.96115 10.459 8.5549 9.75065 8.99935C10.459 9.44379 11.0111 10.0375 11.4069 10.7806C11.8027 11.5237 12.0007 12.3188 12.0007 13.166V15.666H13.6673V17.3327H0.333984Z" fill="#E6E6E6" />
+                                </svg>
+                            </div>
+
+                            <h2 class="text-azul-700 font-semibold text-[20px] m-0">Transacción en proceso...</h2>
+                        </div>
+
+                        <!-- Botón -->
+                        <button class="@ButtonClass"
+                                @onclick="ActualizarManualAsync"
+                                disabled="@IsUpdating">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9M20 20v-5h-.581m-15.357-2a8.003 8.003 0 0015.356 2" />
+                            </svg>
+                            @ButtonText
+                        </button>
+                    </div>
+
+                    <!-- Línea inferior -->
+
+                    <p class="text-gris-600 text-base mt-2 p-0 mb-0">
+                        @if (IsUpdating)
+                        {
+                            <span>Próxima actualización disponible en: @CountdownDisplay</span>
+                        }
+                        else
+                        {
+                            <span>Última actualización: Hace @LastUpdateDisplay</span>
+                        }
+                    </p>
+                </div>
+                <div class="border border-gris-400 rounded-lg mt-5 px-4 py-5 bg-white w-full max-w-2xl">
+                    <h3 class="text-[18px]">Información de la compra</h3>
+                    <div class="grid grid-cols-2 gap-y-1 text-sm">
+                        <div class="font-medium font-semibold text-gris-600">PIN:</div>
+                        <div class="text-gris-500">@PagoPin.PinGenerado</div>
+
+                        <div class="font-medium font-semibold text-gris-600">NUT:</div>
+                        <div class="text-gris-500">@PagoPin.Nut</div>
+
+                        <div class="font-medium font-semibold text-gris-600">Descripción:</div>
+                        <div class="text-gris-500">@if (PagoPin.ClienteCompra == (int)EnumTipoCliente.CEA)
+                            {
+                                <p class="mb-0">Curso de conducción</p>
+                            }else{
+                                <p class="mb-0">Examen Médico</p>
+                            }
+                            </div>
+
+                        <div class="font-medium font-semibold text-gris-600">Empresa:</div>
+                        <div class="text-gris-500">
+                            @{
+                                var medio = PagoPin.MediosPago.FirstOrDefault(x => x.Id == PagoPin.TipoRecaudoCtrl);
+                            }
+                            <p class="mb-0">@medio.Nombre</p>
+                        </div>
+
+                        <div class="font-medium font-semibold text-gris-600">Valor de pago:</div>
+                        <div class="text-gris-500">
+                            @if (PagoPin.ClienteCompra == (int)EnumTipoCliente.CRC)
+                            {
+                                @PagoPin.ValorDiscriminadoCotizacion.ValorTotal.ToString("C0", new CultureInfo("es-CO"))
+                            }
+                            else if (PagoPin.Cuotas == 0)
+                            {
+                                @PagoPin.ValorDiscriminadoCotizacion.ValorTotal.ToString("C0", new CultureInfo("es-CO"))
+                            }
+                            else
+                            {
+                                @(PagoPin.Cuotas != null
+                                    ? PagoPin.CostoCuotas[(int)PagoPin.Cuotas - 1].PrimeraCuota.ToString("C0", new CultureInfo("es-CO"))
+                                    : PagoPin.CostoCuotas[0].PrimeraCuota.ToString("C0", new CultureInfo("es-CO")))
+                            }
+                        </div>
+
+                        <div class="font-medium font-semibold text-gris-600">Fecha de la transacción:</div>
+                        <div class ="text-gris-500">@PagoPin.FechaPago</div>
+
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3 border border-azul-200 bg-[#EBF3FF] rounded-lg mt-5 px-4 py-5 w-full max-w-2xl">
+                    <svg width="20" height="20" class="text-azul-500 feather ">
+                        <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
+                    </svg>
+                    <div class="">
+                        <p class="mb-0">
+                            El estado no se actualiza automáticamente, haz clic en Actualizar estado
+                            para verificarlo.
+                        </p>
+                        <p class="mt-1 mb-0">
+                            Si sales de la página, recibirás la confirmación por correo cuando el banco procese tu pago.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 mt-4">
+                    <button @onclick="Salir" class="boton-secundario">
+                        Salir
+                    </button>
+
+                    <button @onclick="ComprarOtroPin" class="boton-primario">
+                        Comprar otro PIN
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </ContentTemplate>
+</SpinLoader>
+

@@ -1,0 +1,115 @@
+﻿@page "/compradepincda/resumen"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo
+@inject NavigationManager NavManager
+
+<div class="resumen lining">
+	<div class="resumen-item">
+		<div class="item-encabezado">
+			Centro de diagnóstico automotor
+		</div>
+		<div class="item-contenido">@PagoPinCda.CentroSeleccionado.Nombre</div>
+	</div>
+	@if (PagoPinCda.IsValidDatosBasicos)
+	{
+		<div class="resumen-item">
+			<div class="item-encabezado">
+				Datos básicos del vehículo
+				<button class="boton_texto" @onclick="()=>	OnNavegarResumen(1)"> Cambiar </button>
+			</div>
+			<div class="item-contenido">@PagoPinCda.TipoVehiculo</div>
+			<div class="item-contenido">@PagoPinCda.TipoCategoria</div>
+			<div class="item-contenido">@PagoPinCda.PlacaVehiculo</div>
+			<div class="item-contenido">Matriculado hace @PagoPinCda.EdadVehiculo años</div>
+		</div>
+	}
+	@if (PasosCompraPin >= 99 && PagoPinCda.TipoTramite != 0)
+	{
+		<div class="resumen-item">
+			<div class="item-encabezado">
+				Trámite
+				<button class="boton_texto" @onclick="()=> OnNavegarResumen(7)"> Cambiar </button>
+			</div>
+			<div class="item-contenido">
+				@PagoPinConst.DescripcionTramite[PagoPinCda.TramiteInstructor
+								? (PagoPinCda.TipoTramite == (int)EnumTramite.PrimeraVez
+								? EnumTramite.PrimeraVezInstructor
+								: EnumTramite.RecategorizarInstructor)
+								: (EnumTramite)PagoPinCda.TipoTramite]
+			</div>
+		</div>
+	}
+	@if (PasosCompraPin >= 2)
+	{
+		<div class="resumen-item">
+			<div class="item-encabezado">
+				Datos personales
+				<button class="boton_texto" @onclick="()=> OnNavegarResumen(2)"> Cambiar </button>
+			</div>
+			<div class="item-contenido">@PagoPinCda.Usuario.Nombre @PagoPinCda.Usuario.Apellido</div>
+			@if (PagoPinCda.Usuario.TipoDocumento == 13)
+			{
+				<div class="item-contenido">PPT @PagoPinCda.Usuario.NumDocumento</div>
+			}
+			else
+			{
+				<div class="item-contenido">@PagoPinCda.Usuario.TipoDocumentoDescpcion @PagoPinCda.Usuario.NumDocumento</div>
+			}
+			<div class="item-contenido">@PagoPinCda.Usuario.Correo</div>
+			<div class="item-contenido">@PagoPinCda.Usuario.Celular</div>
+		</div>
+	}
+
+	@if (PasosCompraPin >= 13)
+	{
+		<div class="resumen-item">
+			<div class="item-encabezado">
+				Medio de pago
+				<!-- <a href="/compra">Cambiar</a> -->
+			</div>
+			<div class="item-contenido">PIN Directo Colpatria</div>
+		</div>
+		@if (MostrarDetalle)
+		{
+			<div>
+				<!-- <div class="item-encabezado">
+				Tarifa
+				<span>Valor</span>
+				</div> -->
+				<div class="valores detalle">
+					<span>
+						Tarifa CDA <sup><a href="#fn1-22001" id="fnr1-22001" title="see footnote" class="footnote"></a></sup>:
+					</span>
+					<span class="valor">
+						$ @PagoPinCda.ValorDiscriminadoCotizacion.CDA.ToString("N0") 
+					</span>
+					<span>
+						ANSV<sup><a href="#fn2-22001" id="fnr2-22001" title="see footnote" class="footnote"></a></sup>:
+					</span>
+					<span class="valor">
+						$ @PagoPinCda.ValorDiscriminadoCotizacion.Ansv.ToString("N0")
+					</span>
+					<span>SICOV:</span>
+					<span class="valor">
+						$ @PagoPinCda.ValorDiscriminadoCotizacion.Sicov.ToString("N0")
+					</span>
+					<span> Recaudo: </span>
+					<span class="valor">
+						$ @PagoPinCda.ValorDiscriminadoCotizacion.Banco.ToString("N0")
+					</span>
+				</div>
+			</div>
+		}
+
+		<div class="valores total">
+			<span class="total">Total a pagar:</span>
+			<span class="valor total">
+				$ @PagoPinCda.ValorDiscriminadoCotizacion.ValorTotal.ToString("N0")
+			</span>
+		</div>
+		<button class="boton_texto alinear_derecha" @onclick="()=> MostrarOcultardetalle()">
+			@(MostrarDetalle ? "Ocultar detalle" : "Mostrar detalle")
+		</button>
+	}
+</div>

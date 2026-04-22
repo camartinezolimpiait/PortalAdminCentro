@@ -1,0 +1,144 @@
+﻿@page "/supertransporte/centro/poliza"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+
+<h3>Póliza</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo III</h4>
+        <p>5. Contar con la constitución de póliza de responsabilidad civil profesional que ampare la responsabilidad civil resultante de la prestación deficiente de los servicios por parte del centro de reconocimiento de conductores, por un monto de mil salarios mínimos mensuales legales vigentes (1.000 smmlv) con vigencia de un (1) año, de conformidad con las características determinadas en el artículo 2.2.1.7.8.6 del Decreto 1595 de 2015 o la norma que la modifique, adicione o sustituya</p>
+    </div>
+</details>
+
+<EditForm Model=@_polizaDto OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label for="num_poliza">Nº de la póliza de responsabilidad civil profesional</label>
+    <ValidationMessage For="() => _polizaDto.num_poliza" />
+    <InputText id="num_poliza" @bind-Value="_polizaDto.num_poliza" />
+
+    <label for="nombre_aseguradora">Nombre de la aseguradora</label>
+    <ValidationMessage For="() => _polizaDto.nombre_aseguradora" />
+    <InputSelect id="nombre_aseguradora" @bind-Value="_polizaDto.nombre_aseguradora">
+        <option value="">-</option>
+        @foreach (var item in _select)
+        {
+            <option value="@item.id">@item.nombre</option>
+        }
+    </InputSelect>
+
+    <label for="valor_asegurado">Valor asegurado para RC de la póliza</label>
+    <ValidationMessage For="() => _polizaDto.valor_asegurado" />
+    <InputNumber id="valor_asegurado" @bind-Value="_polizaDto.valor_asegurado" />
+
+    <div class="dos_columnas">
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de expedición
+                </legend>
+                <ValidationMessage For="() => _polizaDto.dia_fecha_expedicion" />
+                <ValidationMessage For="() => _polizaDto.mes_fecha_expedicion" />
+                <ValidationMessage For="() => _polizaDto.anio_fecha_expedicion" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_fecha_expedicion">Día</label>
+                        <InputNumber id="dia_fecha_expedicion" @bind-Value="_polizaDto.dia_fecha_expedicion" />
+                    </div>
+                    <div>
+                        <label for="mes_fecha_expedicion">Mes</label>
+                        <InputNumber id="mes_fecha_expedicion" @bind-Value="_polizaDto.mes_fecha_expedicion" />
+                    </div>
+                    <div>
+                        <label for="anio_fecha_expedicion">Año:</label>
+                        <InputNumber id="anio_fecha_expedicion" @bind-Value="_polizaDto.anio_fecha_expedicion" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de vencimiento
+                </legend>
+                <ValidationMessage For="() => _polizaDto.dia_fecha_vencimiento" />
+                <ValidationMessage For="() => _polizaDto.mes_fecha_vencimiento" />
+                <ValidationMessage For="() => _polizaDto.anio_fecha_vencimiento" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_fecha_vencimiento">Día</label>
+                        <InputNumber id="dia_fecha_vencimiento" @bind-Value="_polizaDto.dia_fecha_vencimiento" />
+                    </div>
+                    <div>
+                        <label for="mes_fecha_vencimiento">Mes</label>
+                        <InputNumber id="mes_fecha_vencimiento" @bind-Value="_polizaDto.mes_fecha_vencimiento" />
+                    </div>
+                    <div>
+                        <label for="anio_fecha_vencimiento">Año:</label>
+                        <InputNumber id="anio_fecha_vencimiento" @bind-Value="_polizaDto.anio_fecha_vencimiento" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>   
+    
+    <fieldset class="pregunta_sn">
+        <legend>
+            ¿Ha presentado alguna reclamación durante la vigencia de esta póliza?
+        </legend>
+        <InputCheckbox id="ha_presentado_reclamacion" @bind-Value="_polizaDto.ha_presentado_reclamacion" />
+        <label for="ha_presentado_reclamacion">Sí</label>
+
+        @if (_polizaDto.ha_presentado_reclamacion){
+            <label for="motivo_reclamacion">¿Cuál fue el motivo?</label>
+            <ValidationMessage For="() => _polizaDto.motivo_reclamacion" />
+            <InputText id="motivo_reclamacion" @bind-Value="_polizaDto.motivo_reclamacion" />        
+        }
+
+    </fieldset>
+
+
+    <label>Póliza vigente, carátula y anexos</label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr>
+                    <td>@_polizaDto.nombre_poliza_adjunto</td>
+                    <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFilePolizaVigente">Descargar</button></td>
+                </tr>
+        </tbody>
+    </table>
+    <ValidationMessage For="@(() => _polizaDto.poliza_vigente)" />
+    <InputFile class="file-input w-full p-0" id="poliza" name="files" OnChange="HandleArchivoPolizaSeleccionado" />
+    
+
+    <label>Soporte de pago de la póliza</label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_polizaDto.nombre_soporte_pago_adjunto</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileSoportePagoPoliza">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <ValidationMessage For="@(() => _polizaDto.soporte_pago)" />
+    <InputFile class="file-input w-full p-0" id="pago_poliza" name="files" OnChange="HandleArchivoPagoPolizaSeleccionado" />
+    
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

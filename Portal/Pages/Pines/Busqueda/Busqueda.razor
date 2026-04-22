@@ -1,0 +1,401 @@
+﻿@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+    @inherits LayoutComponentBase
+@* tipoBusqueda 1 = Dispersiones, 2 = Usados, 3 = Activos, 4 = Devoluciones *@
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        @if (tipoBusqueda == 1)
+        {
+            <div>
+                <div style="text-align:right">
+                    <div class="dropdown">
+                        <label class="dropdown-btn">Criterios de búsqueda</label>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li>&#8226; Fecha Inicial + Fecha Final + Centro</li>
+                                <li>&#8226; Fecha Inicial + Fecha Final + Centro + Canal de Venta</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <fieldset class="ancho">
+                    <div class="tres_columnas">
+                        <div>
+                            <label>Fecha Inicial</label>
+                            <input type="date" name="FechaInicial" placeholder="DD/MM/AAAA" autocomplete="off" id="FechaInicial" @bind-value:event="oninput" @bind-value="busquedaPines.FechaInicial" max="@fechaAyerFormateada" />
+                        </div>
+                        <div>
+                            <label>Fecha Final</label>
+                            <input type="date" name="FechaFinal" placeholder="MM/DD/AAAA" autocomplete="off" id="FechaFinal" @bind-value:event="oninput" @bind-value="busquedaPines.FechaFinal" max="@fechaFormateada" />
+                        </div>
+                        <div>
+                            <label>Nombre del Centro (*)</label>
+                            <select id="nombreCentro"
+                                    @bind-value:event="oninput"
+                                    @bind-value="busquedaPines.IdRunt"
+                                    class="@(string.IsNullOrEmpty(busquedaPines.IdRunt) ? "invalid-select" : "")">
+                                <option value="">Seleccione un centro</option>
+                                @foreach (var doc in ListaCentros)
+                                {
+                                    <option value="@doc.CodigoRUNT" selected="@(doc.CodigoRUNT.ToString() == busquedaPines.IdRunt ? true : false)">
+                                        @doc.Nombre
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="cinco_columnas">
+                        @* <div>
+                    <label>Canal de Venta</label>
+                    <select id="canalVenta" @bind-value:event="oninput" @onchange="ActualizarCampos" @bind-value="busquedaPines.Canal">
+                    <option value="">Seleccione un canal de venta</option>
+                    @foreach (var doc in ListaCanalVenta)
+                    {
+                    <option value="@doc.Id" selected="@(doc.Id == busquedaPines.Canal ? true : false)">@doc.Nombre</option>
+                    }
+                    </select>
+                    </div>
+                    <div>
+                    <label>Agente Dispersi&oacute;n</label>
+                    <select id="agenteDispersion" @bind-value:event="oninput" @bind-value="busquedaPines.IdAgenteDispersion">
+                    <option value="">Seleccione un agente</option>
+                    @foreach (var doc in ListaAgenteDispersion)
+                    {
+                    <option value="@doc.IdAgenteDispersion" selected="@(doc.IdAgenteDispersion == busquedaPines.IdAgenteDispersion? true : false)">@doc.Nombre</option>
+                    }
+                    </select>
+                    </div>
+                    <div>
+                    <label for="tipodocumento">Tipo Documento</label>
+                    <select id="tipoDocumento" @bind-value:event="oninput" @bind-value="busquedaPines.IdTipoDocumento" disabled="@camposDeshabilitados">
+                    <option value="">Seleccione un tipo de documento</option>
+                    @foreach (var doc in ListaDocumentos)
+                    {
+                    <option value="@doc.IdTipoSisec" selected="@(int.Parse(doc.IdTipoSisec) == busquedaPines.IdTipoDocumento? true : false)">@doc.Nombre</option>
+                    }
+                    </select>
+                    </div>
+                    <div>
+                    <label for="documento">Num. Documento</label>
+                    <input inputmode="text" maxlength="20" type="text" id="documento" style="text-transform: uppercase;" autocomplete="off" @bind-value:event="oninput" @bind-value="busquedaPines.Documento" disabled="@camposDeshabilitados" />
+                    </div>
+                    <div>
+                    <label for="pin">Num. Pin</label>
+                    <input inputmode="text" maxlength="30" type="text" id="pin" style="text-transform: uppercase;" autocomplete="off" @bind-value:event="oninput" @bind-value="busquedaPines.Pin" />
+                    </div> *@
+                    </div>
+                    <div style="text-align:right" class="mt-4">
+                        <button class="boton-primario" @onclick="()=> DescargarArchivo(true, busquedaPines)">
+                            <em class="fa fa-download"></em>
+                        </button>
+                        <button class="boton-primario" @onclick="()=> ConsultarPines(busquedaPines)">
+                            <em class="fa fa-search mr-2"></em> Consultar
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        else if (tipoBusqueda == 2)
+        {
+            <div>
+                <div style="text-align:right">
+                    <div class="dropdown">
+                        <label class="dropdown-btn">Criterios de búsqueda</label>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li>&#8226; Fecha de Uso de Pin Inicial + Fecha de Uso de Pin Final + Centro</li>
+                                <li>&#8226; Fecha de Uso de Pin Inicial + Fecha de Uso de Pin Final + Centro + Canal de Venta</li>
+                                <li>&#8226; Centro + Tipo Documento + Num Documento</li>
+                                <li>&#8226; Centro + Num Documento</li>
+                                <li>&#8226; Centro + Num Pin</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <fieldset class="ancho">
+                    <div class="tres_columnas">
+                        <div style="margin-bottom: 10px;">
+                            <label>Fecha Inicial</label>
+                            <input type="date" name="FechaInicial" placeholder="DD/MM/AAAA" autocomplete="off" id="FechaInicial" @bind-value:event="oninput" @bind-value="busquedaPines.FechaInicial" max="@fechaAyerFormateada" />
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label>Fecha Final</label>
+                            <input type="date" name="FechaFinal" placeholder="MM/DD/AAAA" autocomplete="off" id="FechaFinal" @bind-value:event="oninput" @bind-value="busquedaPines.FechaFinal" max="@fechaFormateada" />
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label>Nombre del Centro (*)</label>
+                            <select id="nombreCentro"
+                                    @bind-value:event="oninput"
+                                    @bind-value="busquedaPines.IdRunt"
+                                    class="@(string.IsNullOrEmpty(busquedaPines.IdRunt) ? "invalid-select" : "")">
+                                <option value="">Seleccione un centro</option>
+                                @foreach (var doc in ListaCentros)
+                                {
+                                    <option value="@doc.CodigoRUNT" selected="@(doc.CodigoRUNT.ToString() == busquedaPines.IdRunt ? true : false)">
+                                        @doc.Nombre
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="cinco_columnas">
+                        <div style="margin-bottom: 15px;">
+                            <label>Canal de Venta</label>
+                            <select id="canalVenta" @bind-value:event="oninput" @onchange="ActualizarCampos" @bind-value="busquedaPines.Canal">
+                                <option value="">Seleccione un canal de venta</option>
+                                @foreach (var doc in ListaCanalVenta)
+                                {
+                                    <option value="@doc.Id" selected="@(doc.Id == busquedaPines.Canal ? true : false)">@doc.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label>Agente Dispersi&oacute;n</label>
+                            <select id="agenteDispersion" @bind-value:event="oninput" @bind-value="busquedaPines.IdAgenteDispersion">
+                                <option value="">Seleccione un agente</option>
+                                @foreach (var doc in ListaAgenteDispersion)
+                                {
+                                    <option value="@doc.IdAgenteDispersion" selected="@(doc.IdAgenteDispersion == busquedaPines.IdAgenteDispersion? true : false)">@doc.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label for="tipodocumento">Tipo Documento</label>
+                            <select id="tipoDocumento" @bind-value:event="oninput" @bind-value="busquedaPines.IdTipoDocumento" disabled="@camposDeshabilitados" @onchange="CambiarTipoDocumento">
+                                <option value="">Seleccione un tipo de documento</option>
+                                @foreach (var doc in ListaDocumentos)
+                                {
+                                    <option value="@doc.IdTipoSisec" selected="@(int.Parse(doc.IdTipoSisec) == busquedaPines.IdTipoDocumento? true : false)">@doc.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label for="documento">Num. Documento</label>
+                            <input inputmode="text" maxlength="20" type="text" id="documento"
+                                   style="text-transform: uppercase;" autocomplete="off" @bind-value:event="oninput" @bind-value="busquedaPines.Documento" disabled="@camposDeshabilitados" @onkeydown="(e) => FiltrarInput(e, variableTipoDocumento)" />
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label for="pin">Num. Pin</label>
+                            <input inputmode="text" maxlength="30" type="text" id="pin"
+                                   style="text-transform: uppercase;" autocomplete="off" @bind-value:event="oninput" @bind-value="busquedaPines.Pin" @onkeydown="(e) => FiltrarInput(e, EnumTipoInput.SoloNumeros)" />
+                        </div>
+                    </div>
+                    <div style="text-align:right; margin-top: 10px;">
+                        <button class="boton-primario" @onclick="()=> DescargarArchivo(true, busquedaPines)">
+                            <em class="fa fa-download"></em>
+                        </button>
+                        <button class="boton-primario" @onclick="()=> ConsultarPines(busquedaPines)">
+                            <em class="fa fa-search mr-2"></em> Consultar
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+        }
+
+        else if (tipoBusqueda == 3)
+        {
+            <div>
+                <div style="text-align:right">
+                    <div class="dropdown">
+                        <label class="dropdown-btn">Criterios de búsqueda</label>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li>&#8226; Fecha de Recaudo Inicial + Fecha de Recaudo Final + Centro</li>
+                                <li>&#8226; Fecha de Recaudo Inicial + Fecha de Recaudo Final + Centro + Canal de Venta</li>
+                                <li>&#8226; Centro + Tipo Documento + Num Documento</li>
+                                <li>&#8226; Centro + Num Documento</li>
+                                <li>&#8226; Centro + Num Pin</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <fieldset class="ancho">
+                    <div class="tres_columnas">
+                        <div>
+                            <label>Fecha Inicial</label>
+                            <input type="date" name="FechaInicial" placeholder="DD/MM/AAAA" autocomplete="off" id="FechaInicial" @bind-value:event="oninput" @bind-value="busquedaPines.FechaInicial" max="@fechaAyerFormateada" />
+
+                        </div>
+                        <div>
+                            <label>Fecha Final</label>
+                            <input type="date" name="FechaFinal" placeholder="MM/DD/AAAA" autocomplete="off" id="FechaFinal" @bind-value:event="oninput" @bind-value="busquedaPines.FechaFinal" max="@fechaFormateada" />
+
+                        </div>
+                        <div>
+                            <label>Nombre del Centro (*)</label>
+                            <select id="nombreCentro"
+                                    @bind-value:event="oninput"
+                                    @bind-value="busquedaPines.IdRunt"
+                                    class="@(string.IsNullOrEmpty(busquedaPines.IdRunt) ? "invalid-select" : "")">
+                                <option value="">Seleccione un centro</option>
+                                @foreach (var doc in ListaCentros)
+                                {
+                                    <option value="@doc.CodigoRUNT" selected="@(doc.CodigoRUNT.ToString() == busquedaPines.IdRunt ? true : false)">
+                                        @doc.Nombre
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="cinco_columnas">
+                        <div>
+                            <label>Canal de Venta</label>
+                            <select id="canalVenta" @bind-value:event="oninput" @onchange="ActualizarCampos" @bind-value="busquedaPines.Canal">
+                                <option value="">Seleccione un canal de venta</option>
+                                @foreach (var doc in ListaCanalVenta)
+                                {
+                                    <option value="@doc.Id" selected="@(doc.Id == busquedaPines.Canal ? true : false)">@doc.Nombre</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div>
+                            <label>Agente Dispersi&oacute;n</label>
+                            <select id="agenteDispersion" @bind-value:event="oninput" @bind-value="busquedaPines.IdAgenteDispersion">
+                                <option value="">Seleccione un agente</option>
+                                @foreach (var doc in ListaAgenteDispersion)
+                                {
+                                    <option value="@doc.IdAgenteDispersion" selected="@(doc.IdAgenteDispersion == busquedaPines.IdAgenteDispersion? true : false)">@doc.Nombre</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div>
+                            <label for="tipodocumento">Tipo Documento</label>
+                            <select id="tipoDocumento" @bind-value:event="oninput" @bind-value="busquedaPines.IdTipoDocumento" disabled="@camposDeshabilitados" @onchange="CambiarTipoDocumento">
+                                <option value="">Seleccione un tipo de documento</option>
+                                @foreach (var doc in ListaDocumentos)
+                                {
+                                    <option value="@doc.IdTipoSisec" selected="@(int.Parse(doc.IdTipoSisec) == busquedaPines.IdTipoDocumento? true : false)">@doc.Nombre</option>
+                                }
+                            </select>
+
+                        </div>
+                        <div>
+                            <label for="documento">Num. Documento</label>
+                            <input inputmode="text" maxlength="20" type="text" id="documento"
+                                   style="text-transform: uppercase;" autocomplete="off" @bind-value:event="oninput" @bind-value="busquedaPines.Documento" disabled="@camposDeshabilitados" @onkeydown="(e) => FiltrarInput(e, variableTipoDocumento)" />
+
+                        </div>
+                        <div>
+                            <label for="pin">Num. Pin</label>
+                            <input inputmode="text" maxlength="30" type="text" id="pin"
+                                   style="text-transform: uppercase;" autocomplete="off" @bind-value:event="oninput" @bind-value="busquedaPines.Pin" @onkeydown="(e) => FiltrarInput(e, EnumTipoInput.SoloNumeros)" />
+
+                        </div>
+                    </div>
+                    <div style="text-align:right">
+                        <button class="boton-primario" @onclick="()=> DescargarArchivo(true,busquedaPines)">
+                            <em class="fa fa-download"></em>
+                        </button>
+                        <button class="boton-primario" @onclick="()=> ConsultarPines(busquedaPines)">
+                            <em class="fa fa-search mr-2">  </em> Consultar
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+        }
+        else
+        {
+            <div>
+                <div style="text-align:right">
+                    <div class="dropdown">
+                        <label class="dropdown-btn">Criterios de búsqueda</label>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li>&#8226; Fecha Inicial + Fecha Final</li>
+                                <li>&#8226; Fecha Inicial + Fecha Final + Canal</li>
+                                <li>&#8226; Fecha Inicial + Fecha Final + Canal + Num. Documento</li>
+                                <li>&#8226; Fecha Inicial + Fecha Final + Canal + Num. Documento + Pin</li>
+                                <li>&#8226; Fecha Inicial + Fecha Final + Canal + Num. Documento + Pin + Agente Dispersión</li>
+                                <li>&#8226; Num Documento</li>
+                                <li>&#8226; Num Pin</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <fieldset class="ancho">
+                    <div class="tres_columnas">
+                        <div>
+                            <label>Fecha Inicial</label>
+                            <input type="date" name="startDate" placeholder="MM/DD/AAAA" autocomplete="off" id="startDate" @bind-value:event="oninput" @bind-value="busquedaPines.FechaInicial" max="@fechaAyerFormateada" />
+
+                        </div>
+                        <div>
+                            <label>Fecha Final</label>
+                            <input type="date" name="endDate" placeholder="MM/DD/AAAA" autocomplete="off" id="endDate" @bind-value:event="oninput" @bind-value="busquedaPines.FechaFinal" max="@fechaFormateada" />
+
+                        </div>
+                        <div>
+                            <label>Canal de Venta</label>
+                            <select id="canalVenta" @bind-value:event="oninput" @bind-value="busquedaPines.Canal" @onchange="ActualizarCampos">
+                                <option value="">Seleccione un canal de venta</option>
+                                @foreach (var doc in ListaCanalVenta)
+                                {
+                                    <option value="@doc.Id" selected="@(doc.Id == busquedaPines.Canal? true : false)">@doc.Nombre</option>
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="tres_columnas">
+
+                        <div>
+                            <label>Agente Dispersi&oacute;n</label>
+                            <select id="agenteDispersion" @bind-value:event="oninput" @bind-value="busquedaPines.IdAgenteDispersion">
+                                <option value="">Seleccione un agente</option>
+                                @foreach (var doc in ListaAgenteDispersion)
+                                {
+                                    <option value="@doc.IdAgenteDispersion" selected="@(doc.IdAgenteDispersion == busquedaPines.IdAgenteDispersion ? true : false)">@doc.Nombre</option>
+                                }
+                            </select>
+
+                        </div>
+
+                        <div>
+                            <label for="documento">Num. Documento</label>
+                            <input inputmode="text" maxlength="20" type="text" id="documento"
+                                   style="text-transform: uppercase;" autocomplete="off" @bind-value:event="oninput" @bind-value="busquedaPines.Documento" disabled="@camposDeshabilitados" @onkeydown="(e) => FiltrarInput(e, variableTipoDocumento)" />
+
+                        </div>
+
+                        <div>
+                            <label for="pin">Num. Pin</label>
+                            <input inputmode="text" maxlength="30" type="text" id="pin"
+                                   style="text-transform: uppercase;" autocomplete="off" @bind-value:event="oninput" @bind-value="busquedaPines.Pin" @onkeydown="(e) => FiltrarInput(e, EnumTipoInput.SoloNumeros)" />
+
+                        </div>
+
+                    </div>
+                    <div style="text-align:right">
+                        <button class="boton-primario" @onclick="()=> DescargarArchivo(true,busquedaPines)">
+                            <em class="fa fa-download"></em>
+                        </button>
+                        <button class="boton-primario" @onclick="()=> ConsultarPines(busquedaPines)">
+                            <em class="fa fa-search mr-2">  </em> Consultar
+                        </button>
+                    </div>
+                </fieldset>
+            </div>
+        }
+    <script type="text/javascript">
+            window.preventDefaultKeyPress = function (key) {
+                document.addEventListener('keydown', function preventKeyPress(event) {
+                    if (event.key === key) {
+                        event.preventDefault();
+                    }
+                    document.removeEventListener('keydown', preventKeyPress);
+                }, { once: true });
+            }
+        </script>
+    </ContentTemplate>
+</SpinLoader>
+
+

@@ -1,0 +1,75 @@
+﻿@page "/compradepincda/datosBasicosCDA"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Pages.CompraPin
+@inject NavigationManager NavManager
+
+<EditForm EditContext="@editContext" OnValidSubmit="HandleValidSubmit">
+	<DataAnnotationsValidator />
+	<div>
+		<h3>Sexo y fecha de nacimiento</h3>
+		<p>
+			El costo del curso de conducción se calcula a partir de la edad y sexo como aparecen en el
+			documento de identidad
+		</p>
+
+		<h4>Sexo</h4>
+		<fieldset class="radio_sexo">
+			@foreach (Sexo sexo in Sexos)
+			{
+				<div>
+					<input id=@sexo.Genero
+						   type="radio"
+						   name=@sexo.Genero
+						   value=@sexo.Id
+						   checked=@sexo.Selected
+						   @onchange="RadioSelection" />
+					<label for=@sexo.Genero>@sexo.Genero</label>
+				</div>
+			}
+		</fieldset>
+
+		<h4>Fecha de nacimiento</h4>
+		<fieldset class="fecha fecha-flex">
+			<div>
+				<label for="day">Dia</label>
+
+				<input maxlength="2"
+					   type="text"
+					   pattern="[0-9]*"
+					   inputmode="numeric"
+					   name="day"
+					   id="day"
+					   autocomplete="bday-day"
+					   @bind-value="DatosBasicosModel.Dia" @bind-value:event="oninput" @onchange="@((ChangeEventArgs e) => HandleInputChange("Dia", e))" />
+			</div>
+			<div>
+				<label for="month">Mes</label>
+				<input maxlength="2"
+					   type="text"
+					   pattern="[0-9]*"
+					   inputmode="numeric"
+					   name="month"
+					   id="month"
+					   autocomplete="bday-month"
+					   @bind-value="DatosBasicosModel.Mes" @bind-value:event="oninput" @onchange="@((ChangeEventArgs e) => HandleInputChange("Mes", e))" />
+			</div>
+			<div>
+				<label for="year">Año</label>
+				<input maxlength="4"
+					   type="text"
+					   pattern="[0-9]*"
+					   inputmode="numeric"
+					   name="year"
+					   id="year"
+					   autocomplete="bday-year"
+					   @bind-value="DatosBasicosModel.Anio" @bind-value:event="oninput" @onchange="@((ChangeEventArgs e) => HandleInputChange("Anio", e))" />
+			</div>
+		</fieldset>
+		<ValidationMessage For="@(() => DatosBasicosModel.Anio)" />
+		<ValidationMessage For="@(() => DatosBasicosModel.Dia)" />
+		<ValidationMessage For="@(() => DatosBasicosModel.Mes)" />
+	</div>
+</EditForm>

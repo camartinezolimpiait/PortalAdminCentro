@@ -1,0 +1,404 @@
+﻿.encabezado {
+    background: var(--color-azul-900);
+    color: white;
+    padding: var(--text-lg) 0;
+}
+
+    .encabezado p {
+        margin-block: 0;
+    }
+
+p.cea {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1;
+    margin-block-end: var(--text-root);
+}
+
+p.direccion,
+p.clase_centro {
+    font-size: var(--text-lg);
+    line-height: 1;
+}
+
+p.clase_centro {
+    color: var(--color-amarillo-100);
+    font-weight: 600;
+}
+
+.encabezado .wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--text-lg);
+}
+
+.columnas {
+    padding-top: var(--text-lg);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: var(--text-xl);
+}
+
+.menus {
+    position: sticky;
+    top: var(--text-lg);
+}
+
+.acciones {
+    padding: var(--text-lg);
+    border-radius: 1rem;
+    border: 1px solid var(--color-Gris-200, #d0c5b3);
+    background: var(--color-Gris-50, #f8f6f3);
+}
+
+    .acciones h3 {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+    }
+
+    .acciones colorletras {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+        color: white !important;
+    }
+
+    .acciones linksmenusecundario {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+        color: white !important;
+    }
+
+    .acciones .boton-primario {
+        margin-left: 0;
+        margin-block: 0 var(--text-xl);
+    }
+
+.encabezadodos {
+    background: var(--color-azul-900);
+    color: white;
+    padding: var(--text-lg) 0;
+    margin-bottom: var(--text-lg);
+}
+
+    .encabezadodos p {
+        margin-block: 0;
+    }
+
+.link a {
+    color: var(--color-azul-100);
+    font-weight: 500;
+}
+
+p.titulodos {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1;
+    margin-block: 0.5rem 0;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 70%;
+    min-width: 0;
+}
+
+.column-resumen {
+    flex: 30%;
+    min-width: 0;
+}
+
+
+.msg_error {
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-Naranja-500, #c45300);
+    background: var(--color-Naranja-100, #ffbf62);
+    color: var(--color-Naranja-900, #530000);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: var(--text-root);
+    max-width: max-content;
+}
+
+    .msg_error .feather {
+        flex: none;
+    }
+
+    .msg_error p {
+        margin: 0;
+    }
+
+
+.respuesta_pin {
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-Gris-200, #d0c5b3);
+    background: var(--color-Gris-50, #f8f6f3);
+    padding: var(--text-lg);
+    max-width: max-content;
+}
+
+    .respuesta_pin h2 {
+        font-size: var(--text-lg);
+        font-weight: 700;
+    }
+
+    .respuesta_pin .cuadricula {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--text-2xl);
+        row-gap: var(--text-root);
+        margin-block-end: var(--text-lg);
+    }
+
+.cuadricula > div > div:first-child {
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.botones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+    .botones > button {
+        margin: 0;
+    }
+
+.wrapper p {
+    font-size: var(--text-lg);
+}
+
+.justificado {
+    text-align: justify;
+}
+
+.margin-left {
+    margin-left: 1%;
+}
+
+.margin-top {
+    margin-top: 5%;
+}
+
+.rigth-position {
+    display: grid;
+    justify-items: end;
+    padding-left: 10%;
+}
+
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Espacio entre campos y el botón */
+    align-items: center; /* Alineación vertical de los elementos en el centro */
+}
+
+.horizontal-consulta {
+    flex-direction: row; /* Disposición en línea horizontal */
+}
+
+.vertical-consulta {
+    flex-direction: column; /* Disposición en línea vertical */
+}
+
+.boton-primario {
+    /* Otros estilos del botón */
+    margin-left: 0;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Ajustar para ocupar toda la altura de la pantalla */
+    overflow: hidden;
+}
+
+.consulta-info-container {
+    flex: 0 0 auto; /* Fijo, ocupa solo lo necesario */
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.result-container {
+    flex: 1; /* Ocupa la parte inferior */
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.table-container {
+    margin-left: 0;
+    padding-left: 0;
+    padding-right: 0;
+    flex: 2;
+    overflow: auto;
+    max-width: 100%;
+    justify-content: space-between;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ccc; /* Añadir un borde inferior */
+}
+
+.summary-container {
+    flex: 1; 
+    padding-left: 30px;
+    overflow: auto;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+    .radio-item label {
+        margin-left: 8px;
+        margin-right: 15px;
+        white-space: nowrap;
+    }
+
+#option1 ~ .input-box {
+    margin-top: 15px;
+}
+
+
+#option2 ~ .input-box {
+    margin-top: 20px;
+    width: 60px;
+}
+
+/* Ajuste específico para option3 */
+/*#option3 ~ .input-box {
+    margin-top: 20px;
+    -moz-appearance: textfield;
+}*/
+
+    /* Ocultar los spinners para inputs tipo number */
+    #option3 ~ .input-box::-webkit-outer-spin-button,
+    #option3 ~ .input-box::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+/* Para Firefox */
+#option3 ~ .input-box {
+    -moz-appearance: textfield;
+    margin-top: 20px;
+}
+
+
+
+/*  .radio-item label {
+        margin-left: 8px;
+        margin-right: 15px;
+        white-space: nowrap;
+    }
+
+.input-box {
+    margin-left: 10px;
+    padding: 5px;
+    width: 150px;
+}*/
+
+/* Estilo para las celdas de valor */
+.valor-cuota,
+.saldo-restante {
+    padding-bottom: 1.5rem; /* Ajustado para dar espacio suficiente al texto adicional */
+    position: relative;
+}
+
+    /* Estilo para el texto "+ valor transacción" */
+    .valor-cuota::after,
+    .saldo-restante::after {
+        content: "+ valor transacción";
+        display: block;
+        font-size: 0.8rem; /* Tamaño de fuente más pequeño */
+        color: var(--azul-claro); /* Usa una variable de color azul definida en tus estilos */
+        position: absolute;
+        top: 100%; /* Justo debajo del valor */
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 0.3rem; /* Espacio adicional para separar el texto del valor */
+    }
+.payment-options-container {
+    border: 1px solid var(--color-Gris-200, #d0c5b3); /* Color grisáceo */
+    border-radius: 8px; /* Esquinas redondeadas */
+    padding: var(--text-lg); /* Espaciado interno */
+    background-color: white; /* Fondo blanco */
+    margin-top: var(--text-root); /* Espacio superior para que el título no toque el contorno */
+    display: flex;
+    justify-content: flex-start; /* Alineación al inicio (izquierda) */
+    width: 100%; /* Asegura que ocupe el ancho completo */
+    box-sizing: border-box; /* Incluye padding y border en el ancho total */
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre los ítems */
+    width: 100%;
+    max-width: 600px; /* Ajusta según tus necesidades */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+}
+
+.radio-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre los ítems dentro de radio-buttons */
+}
+
+.radio-item {
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos */
+    gap: 15px; /* Espacio entre el radio button y el label */
+}
+
+.input-box-radio {
+    margin: 0;
+}
+
+.input-box-label {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.input-box {
+    padding: 5px;
+    width: 150px;
+}
+
+/* Ajusta la alineación vertical del input en el último radio-item */
+.radio-item input[type="text"],
+.radio-item input[type="number"] {
+    margin-left: 10px;
+}
+
+/* Ajuste específico para el último radio item */
+.radio-buttons .radio-item:last-child {
+    margin-top: -20px; /* Ajusta el valor según sea necesario */
+}
+
+.last-radio-item {
+    margin-top: -5px; /* Ajusta el valor según sea necesario */
+}
+
+.radio-item:first-child {
+    margin-top: 20px; /* Añadir margen solo al primer radio button */
+}
+

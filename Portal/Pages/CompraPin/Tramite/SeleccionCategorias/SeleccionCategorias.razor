@@ -1,0 +1,284 @@
+﻿@page "/compradepin/seleccioncategorias"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Common
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="#2563eb"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@editContext" OnValidSubmit="() => CalcularPin(true)">
+            <!-- 3.1 Primera vez -->
+            @if (tempTipoTramite == (int)EnumTramite.PrimeraVez)
+            {
+                if (pagoPin.ClienteCompra == (int)EnumTipoCliente.CRC && pagoPin.OpcionTramite == DescripcionOpcionTramite.FirstOrDefault(x => x.Key == 2).Key)
+                {
+                    @if (pagoPin.OpcionTramite == DescripcionOpcionTramite.FirstOrDefault(x => x.Key == 1).Key)
+                    {
+                        <fieldset class="check">
+                            <legend>
+                                <h3>Licencia primera vez</h3>
+                                <p>Escoge qué tipo de vehículo manejarás (pueden ser ambos)</p>
+                            </legend>
+                            <div>
+                                <InputCheckbox @bind-Value="vistaCategoriasCarro" 
+                                @bind-Value:after="() => CalcularPin()"
+                                @onchange="MostrarCategoriasCarro" />
+                                <label for="Carro">Carro</label>
+                            </div>
+                            <div>
+                                <InputCheckbox @bind-Value="vistaCategoriasMoto"
+                                @onchange="MostrarCategoriasMoto"
+                                @bind-Value:after="() => CalcularPin()" />
+                                <label for="Moto">Moto</label>
+                            </div>
+                        </fieldset>
+                    }
+                    @if (vistaCategoriasCarro)
+                    {
+                        <CategoriaSelector Titulo="Automóvil"
+                        Items="categoriasCarro"
+                        @bind-Value="compraPinForm.CategoriaPrincipal"
+                        @bind-Value:after="() => CalcularPin()" />
+                    }
+
+                    @if (vistaCategoriasMoto)
+                    {
+
+                        <CategoriaSelector Titulo="Moto"
+                        Items="categoriasMoto"
+                        @bind-Value="compraPinForm.CategoriaSecundaria"
+                        @bind-Value:after="() => CalcularPin()" />
+
+                    }
+                }else{
+
+                    <h3>Licencia primera vez</h3>
+                    <p>Seleccione la categoría de la licencia a la que va a optar</p>
+
+                    <CategoriaSelector Titulo="Moto"
+                    Items="categoriasMoto"
+                    @bind-Value="compraPinForm.CategoriaPrincipal" 
+                    @bind-Value:after="() => CalcularPin()" />
+
+                    <CategoriaSelector Titulo="Automóvil"
+                    Items="categoriasCarro"
+                    @bind-Value="compraPinForm.CategoriaPrincipal"
+                    @bind-Value:after="() => CalcularPin()" />
+                }
+
+
+                <div class="flex items-center mt-5 space-x-3">
+                    <button type="button" class="boton-secundario" @onclick="Retroceder">
+                        Atrás
+                    </button>
+
+                    @if (pagoPin.ClienteCompra == (int)EnumTipoCliente.CRC && pagoPin.OpcionTramite == DescripcionOpcionTramite.FirstOrDefault(x => x.Key == 2).Key)
+                    {
+                        @if ((!vistaCategoriasCarro || !string.IsNullOrEmpty(compraPinForm.CategoriaPrincipal)) &&
+                      (vistaCategoriasCarro || vistaCategoriasMoto) &&
+                      (!vistaCategoriasMoto || !string.IsNullOrEmpty(compraPinForm.CategoriaSecundaria)))
+                        {
+                            <button type="submit" class="boton-primario" tabindex="0">
+                                Siguiente
+                            </button>
+                        }
+                    }
+                    else
+                    {
+                        @if (!string.IsNullOrEmpty(compraPinForm.CategoriaPrincipal))
+                        {
+                            <button type="submit" class="boton-primario" tabindex="0">
+                                Siguiente
+                            </button>
+                        }
+                    }
+                </div>
+
+            }
+            else if (tempTipoTramite != (int)EnumTramite.PrimeraVez)
+            {
+                @if (tempTipoTramite == (int)EnumTramite.Renovar)
+                {
+                    <h3>
+                        @(pagoPin.ClienteCompra == (int)EnumTipoCliente.CRC
+                                ? "Renovación de licencia"
+                                : "Categoría de licencia")
+                    </h3>
+                    <p>Escoge qué tipo de vehículo manejarás</p>
+
+                    @if (mostrarRecategorizacionCombo && mostrarRecategorizacionMoto)
+                    {
+                        <CategoriaSelector Titulo="Moto"
+                        Items="categoriasMoto"
+                        @bind-Value="compraPinForm.CategoriaPrincipal"
+                        @bind-Value:after="() => CalcularPin()" />
+                    }
+
+                    @if (mostrarRecategorizacionCombo && mostrarRecategorizacionCarro)
+                    {
+                        <CategoriaSelector Titulo="Servicio Particular"
+                        Items="categoriasParticular"
+                        @bind-Value="compraPinForm.CategoriaPrincipal"
+                        @bind-Value:after="() => CalcularPin()" />
+
+                        <CategoriaSelector Titulo="Servicio público"
+                        Items="categoriasPublico"
+                        @bind-Value="compraPinForm.CategoriaPrincipal"
+                        @bind-Value:after="() => CalcularPin()" />
+                    }
+
+                    <div class="flex items-center mt-5 space-x-3">
+                    <button type="button" class="boton-secundario" @onclick="Retroceder">
+                        Atrás
+                    </button>
+                        @if (!string.IsNullOrEmpty(compraPinForm.CategoriaPrincipal))
+                        {
+                            <button type="submit" class="boton-primario" tabindex="0">
+                                Siguiente
+                            </button>
+                        }
+                    </div>
+                }
+
+                @if (tempTipoTramite == (int)EnumTramite.Recategorizar)
+                {
+                    <h3>
+                        @(pagoPin.ClienteCompra == (int)EnumTipoCliente.CRC
+                                ? "Recategorización de licencia"
+                                : "Categoría de licencia")
+                    </h3>
+                    <p>Selecciona la categoría de licencia que tienes</p>
+
+                    @* --- Motos --- *@
+                    @if (mostrarRecategorizacionCombo && mostrarRecategorizacionMoto && (categoriasMoto?.Count > 0))
+                    {
+                        <CategoriaSelector Titulo="Motos"
+                        Items="categoriasMoto"
+                        @bind-Value="CategoriasActual"
+                        @bind-Value:after="() => CalcularPin()" />
+                    }
+                    else if (mostrarRecategorizacionCombo && !mostrarRecategorizacionMoto && !mostrarRecategorizacionCarro && (categoriasMoto?.Count > 0))
+                    {
+                        <div>Para categorías de moto no existe recategorización</div>
+                        <div class="flex items-center mt-5 space-x-3">
+                            <button type="button" class="boton-secundario" @onclick="Retroceder">
+                                Atrás
+                            </button>
+                        </div>
+                    }
+
+                    @* --- Servicio particular --- *@
+                    @if (mostrarRecategorizacionCombo && mostrarRecategorizacionCarro && (categoriasParticular?.Count > 0))
+                    {
+                        <CategoriaSelector Titulo="Servicio particular"
+                        Items="categoriasParticular"
+                        @bind-Value="CategoriasActual"
+                        @bind-Value:after="() => CalcularPin()"
+                        Name="actual" />
+                    }
+
+                    @* --- Servicio público (filtrando RC1) --- *@
+                    @if (mostrarRecategorizacionCombo && mostrarRecategorizacionCarro && (categoriasPublico?.Count > 0))
+                    {
+
+                        <CategoriaSelector Titulo="Servicio público"
+                        Items="@(categoriasPublico?.Where(c => c.Codigo != "RC1").ToList())"
+                        @bind-Value="CategoriasActual"
+                        @bind-Value:after="() => CalcularPin()"
+                        Name="actual" />
+                    }
+
+                    @* --- Segunda selección: categoría destino --- *@
+                    @if (!string.IsNullOrEmpty(CategoriasActual))
+                    {
+                        CalcularRecategorizacion();
+                        <p>Selecciona la categoría a la que deseas cambiar</p>
+
+                        <CategoriaSelector Titulo="Categorías disponibles"
+                        Items="CategoriasRecategorizacion"
+                        @bind-Value="compraPinForm.CategoriaPrincipal"
+                        @bind-Value:after="() => CalcularPin()"
+                        Name="final"/>
+
+                        @if (!string.IsNullOrEmpty(compraPinForm.CategoriaPrincipal))
+                        {
+                            ValidarCategoriaCombo(CategoriasRecategorizacion.Where(x => x.Codigo == compraPinForm.CategoriaPrincipal).FirstOrDefault());
+                        }
+                    }
+
+                    @* --- Botones --- *@
+                    @if (!string.IsNullOrEmpty(CategoriasActual) && !string.IsNullOrEmpty(pagoPin.Categoria1))
+                    {
+                        <div class="flex items-center mt-5 space-x-3">
+                            <button type="button" class="boton-secundario" @onclick="Retroceder">
+                                Atrás
+                            </button>
+
+                            @if (MostrarBotonSiguienteCombo())
+                            {
+                                <button type="submit" class="boton-primario" tabindex="0">
+                                    Siguiente
+                                </button>
+                            }
+                        </div>
+                    }
+                }
+
+                @if (pagoPin.ClienteCompra == (int)EnumTipoCliente.CEA)
+                {
+                    @if ((tempTipoTramite == (int)EnumTramite.PrimeraVezInstructor && pagoPin.TramiteInstructor) ||
+                   (tempTipoTramite == (int)EnumTramite.RecategorizarInstructor && pagoPin.TramiteInstructor))
+                    {
+                        @if (categoriasInstructor.Count() > 0)
+                        {
+                            <h3>Categoría de la certificación</h3>
+                            <p>Seleccione la categoría de certificación a la que va a optar.</p>
+
+                            <CategoriaSelector Titulo="Moto"
+                                               Items="@(CategoriasInstructorPorCodigo("A"))"
+                                               @bind-Value="compraPinForm.CategoriaPrincipal"
+                                               @bind-Value:after="() => CalcularPin()"
+                                               Name="actual" />
+
+                            <CategoriaSelector Titulo="Servicio particular"
+                                               Items="@(CategoriasInstructorPorCodigo("B"))"
+                                               @bind-Value="compraPinForm.CategoriaPrincipal"
+                                               @bind-Value:after="() => CalcularPin()"
+                                               Name="actual" />
+
+                            <CategoriaSelector Titulo="Servicio público"
+                                               Items="@(CategoriasInstructorPorCodigo("C"))"
+                                               @bind-Value="compraPinForm.CategoriaPrincipal"
+                                               @bind-Value:after="() => CalcularPin()"
+                                               Name="actual" />
+                            <div class="flex items-center mt-5 space-x-3">
+                                <button type="button" class="boton-secundario" @onclick="Retroceder">
+                                    Atrás
+                                </button>
+                                <button type="submit" class="boton-primario" tabindex="0">
+                                    Siguiente
+                                </button>
+                            </div>
+                        }else{
+                            <h3>@pagoPin.CentroSeleccionado?.Nombre?.ToUpper()</h3>
+                            <p>El centro seleccionado no cuenta con categorías habilitadas para instructor.</p>
+                            <button type="button" class="boton-secundario" @onclick="Retroceder">
+                                Atrás
+                            </button>
+                        }
+                    }     
+                }
+
+            }
+        </EditForm>
+    </ContentTemplate>
+
+</SpinLoader>

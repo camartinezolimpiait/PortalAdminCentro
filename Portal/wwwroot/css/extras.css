@@ -1,0 +1,400 @@
+/* Este es la modificacion que hizo alguien de estilo. Por favor no seguir este ejemplo y 
+combinar diferentes modulos en un archivo  */  
+@layer base {
+
+  .explicacion {
+    text-align: center;
+    /*font: normal normal 300 21px/28px Proxima Nova;*/
+    letter-spacing: 0px;
+    color: #000000;
+    opacity: 1;
+    margin-top: 20px;
+    font-size: 21px;
+  }
+  
+  .formulario-2 {
+    margin: 0 auto;
+    width: 90%;
+    max-width: 60rem;
+  }
+  
+  .mensajeBarCode {
+    color: var(--color-azul-600);
+    text-align: left;
+    text-decoration: underline;
+    /*font: normal normal normal 18px/24px Proxima Nova;*/
+    letter-spacing: 0px;
+    opacity: 1;
+    font-size: 18px;
+  }
+  
+  
+  table .num {
+    text-align: right;
+  }
+  
+  .tabla-responsive {
+    border-collapse: collapse;
+    border: 1px solid var(--color-gris-200);
+  }
+  
+  .tabla-responsive th,
+  .tabla-responsive td {
+    padding: 10px;
+  }
+  
+  .tabla-responsive th {
+    text-align: left;
+    color: white;
+    background-color: var(--color-azul-600);
+    font-weight: 600;
+  }
+
+  .tabla-responsive tfoot {
+    border-top: 2px solid var(--color-gris-200);
+  }
+  
+  tr:nth-child(odd) {
+    background-color: var(--color-gris-100);
+  }
+  
+  @media (max-width: 600px) {
+    .tabla-responsive {
+      border: none;
+    }
+  
+    .tabla-responsive,
+    .tabla-responsive caption,
+    .tabla-responsive tbody,
+    .tabla-responsive tr,
+    .tabla-responsive td {
+      display: block;
+      text-align: left;
+    }
+  
+    .tabla-responsive thead,
+    .tabla-responsive th,
+    .tabla-responsive tr:first-child {
+      display: none;
+      visibility: hidden;
+    }
+  
+    .tabla-responsive tr {
+      background-color: white;
+      margin-bottom: 8px;
+      border: 1px solid var(--color-gris-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+  
+    .tabla-responsive td[data-title]:before {
+      content: attr(data-title) ": ";
+      display: inline-block;
+      white-space: pre;
+      font-weight: 500;
+    }
+  
+    .tabla-responsive .titulo {
+      color: white;
+      background-color: var(--color-azul-600);
+      font-weight: 600;
+    }
+    }
+  
+    @media screen and (max-width: 770px) {
+      .col-sm-12,
+      .col-12,
+      .col-6 {
+        padding: 0;
+      }
+  
+      .paso-captura-huellas,
+      .paso-captura-foto {
+        padding: 0 15px;
+      }
+  
+      .col-tablet {
+        width: 100%;
+        flex-direction: column;
+        -ms-flex: 0 0 50%;
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
+  
+      .d-flex {
+        flex-direction: column;
+      }
+  
+      .d-flex.captura-huellas,
+      .d-flex.tipo-numero-identificacion {
+        flex-direction: row;
+      }
+  
+      .input-tipo-identificacion {
+        max-width: 50%;
+      }
+  
+      .deskt {
+        display: none;
+      }
+  
+      .deskt-mobile {
+        display: block;
+      }
+  
+      .order {
+        order: 1;
+      }
+  
+      .error-texto {
+        font-size: 14px;
+      }
+  
+      .square-form {
+        padding: 0em 0em;
+        max-width: 400px;
+      }
+  
+      .modal-content {
+        max-width: 90%;
+        margin: auto;
+      }
+  
+      .content-form {
+        margin-bottom: 20px;
+      }
+  
+      .btn-container-mobile {
+        flex-direction: row;
+      }
+      /* Disable Pull-to-refresh action */
+      body {
+        overscroll-behavior: none;
+      }
+  
+      /* -- Botones razor -- */
+      .ui-steps ul {
+        display: none;
+      }
+  
+      .ui-steps-prev,
+      .ui-steps-next {
+        font-size: 18px;
+      }
+  
+      /* -- RADIO BUTTON -- */
+      .radio-button-container {
+        font-size: 16px;
+        padding-left: 25px;
+      }
+  
+      .radio-button-container input[type="radio"] {
+        margin-bottom: 0;
+        width: 0;
+        height: 0;
+      }
+  
+      .radio-active {
+        width: 20px;
+        height: 20px;
+      }
+  
+      .radio-active:after {
+        width: 10px;
+        height: 10px;
+        margin: 3px;
+      }
+  
+      /* -- CHECKBOX CONTAINER -- */
+      .check-box-container {
+        margin-bottom: auto;
+        margin-top: auto;
+      }
+  
+      /* -- CABECERA TR�MITE -- */
+  
+      .cabecera-tramite-container.desktop {
+        display: none;
+      }
+  
+      .cabecera-tramite-container.mobile {
+        display: block;
+        padding: 5px;
+      }
+  
+      .cabecera-tramite-content.mobile {
+        display: flex;
+      }
+  
+      .datos-tramite p:nth-child(2) {
+        font-size: 16px;
+      }
+  
+      .cabecera-tramite-content,
+      .pasos-content {
+        width: 98%;
+      }
+  
+      .cabecera-tramite-content p {
+        font-size: 12px;
+      }
+  
+      .cabecera-tramite-content.cabecera-tramite.container,
+      .pasos-container > .pasos-content.container {
+        max-width: 95%;
+      }
+  
+      .pasos-content button {
+        font-size: 12px;
+        margin: 0;
+      }
+  
+      .pasos-content button::after {
+        font-size: 0.4rem;
+        display: contents;
+        margin-left: 15px;
+      }
+  
+      .pasos-container {
+        margin-bottom: 10px;
+      }
+  
+      button.cancelar-mobile {
+        background: transparent;
+        color: var(--color-rojo-600);
+        font-size: 14px;
+        padding: 3px;
+      }
+      /* -- CAPTURA DE FOTO -- */
+  
+      .btn-captura-container {
+        width: 400px;
+        justify-content: space-between;
+        display: flex;
+      }
+  
+      .captura-foto {
+        height: 350px;
+        min-width: 350px;
+        max-width: 400px;
+      }
+  
+      video#video {
+        width: 100%;
+      }
+      /* -- CAPTURA DE FIRMA -- */
+      .btn-firma-container {
+        margin-bottom: 0;
+      }
+  
+      .firma-container {
+        width: 100%;
+      }
+  
+      /* -- CAPTURA DE HUELLAS -- */
+  
+      .img-dedo-container {
+        border: 1px solid var(--color-gris-200);
+      }
+  
+      .img-dedo {
+        height: 300px;
+        padding: 1.2rem 2rem;
+      }
+  
+      .captura-huellas {
+        justify-content: center;
+      }
+  
+      .d-flex.captura-huellas {
+        justify-content: space-around;
+      }
+  
+      /* -- LOGIN -- */
+  
+      .login-layout-container {
+        display: block;
+      }
+  
+      .login-layout-container .content {
+        text-align: center;
+        margin-right: 0rem;
+      }
+  
+      /* -- RESUMEN -- */
+      .dedo-resultado-container {
+        margin-top: 5px;
+        margin-left: 0;
+      }
+  
+      .img-client {
+        margin-bottom: 20px;
+      }
+  
+      .resumen-table-mobile {
+        width: 100%;
+        margin: 0 auto;
+        border: 1px solid var(--color-gris-200);
+        margin-bottom: 15px;
+      }
+  
+      .resumen-table-mobile tr td {
+        padding: 5px;
+      }
+  
+      .resumen-table.resumen-table-mobile tr td {
+        border: transparent;
+        width: 50%;
+      }
+  
+      .resumen-table.resumen-table-mobile tr td p {
+        white-space: nowrap;
+      }
+  
+      .img-client.img-client-mobile {
+        width: 170px;
+        box-shadow: none !important;
+        margin: 15px;
+        border-radius: 4px;
+      }
+  
+      .resultado-huellas-resumen.dedo-resultado-container {
+        margin-top: 0;
+      }
+  
+      .resultado-huellas-resumen div:first-child {
+        margin-right: 16px;
+      }
+  
+      /* -- PREVISUALIZACI�N ACTA -- */
+      .mensaje-pdf-movil {
+        color: var(--color-gris-600);
+        margin-bottom: 0.8rem;
+      }
+  
+      .pdf-movil-bar {
+        color: var(--color-gris-200);
+        margin-bottom: 1rem;
+      }
+  
+      canvas.preacta-mobile {
+        width: 460px;
+      }
+  
+      .check-box-container {
+        margin-bottom: auto;
+        margin-top: auto;
+      }
+  
+      .captura-foto {
+        height: 350px;
+        min-width: 59% !important;
+        max-width: 74% !important;
+      }
+  
+      .previsualizacion-mobile {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }

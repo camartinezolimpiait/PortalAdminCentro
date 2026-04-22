@@ -1,0 +1,16 @@
+﻿@using portalAdministrativoSISEC.Entidades.SuperTransporte;
+@if (loader.IsVisible())
+{
+    <button class="boton-primario" type="button" style="height: 42px; width: 84px" disabled>
+        <Flow Center="true" Color="var(--color-azul-200)" Size="15.3px" />
+    </button>
+}
+else
+{
+    <button type="submit" class="boton-primario">@leyenda</button>
+}
+
+@code {
+    [Parameter] public LoaderEventSubmit loader { get; set; }
+    [Parameter] public string leyenda { get; set; }
+}

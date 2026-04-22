@@ -1,0 +1,114 @@
+﻿@page "/supertransporte/centro-cea/licencia-funcionamiento"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Licencia de funcionamiento o reconocimiento</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo I</h4>
+        <p>1. Contar con licencia de funcionamiento o reconocimiento de carácter oficial y registro de programas otorgado por la Secretaría de Educación de la entidad territorial certificada en educación para los programas de formación de conductores e instructores en conducción.</p>
+    </div>
+</details>
+
+<EditForm Model=@_licenciaFuncionamientoDto OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label>Nº del acto administrativo de la licencia de funcionamiento</label>
+    <div class="explicacion">Expedida por la respectiva secretaría de educación de la entidad territorial certificada en educación ó el  acto de creación (cuando se trate de un centro de enseñanza de carácter estatal)</div>
+    <ValidationMessage For="() => _licenciaFuncionamientoDto.acto_administrativo" />
+    <InputText id="acto_administrativo" @bind-Value="_licenciaFuncionamientoDto.acto_administrativo" />
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha del acto administrativo de la licencia de funcionamiento ó acto de creación
+        </legend>
+        <ValidationMessage For="() => _licenciaFuncionamientoDto.dia_fecha_acto_expedicion" />
+        <ValidationMessage For="() => _licenciaFuncionamientoDto.mes_fecha_acto_expedicion" />
+        <ValidationMessage For="() => _licenciaFuncionamientoDto.anio_fecha_acto_expedicion" />
+        <div class="fecha-flex">
+            <div>
+                <label for="dia_fecha_acto_expedicion">Día</label>
+                <InputNumber id="dia_fecha_acto_expedicion" @bind-Value="_licenciaFuncionamientoDto.dia_fecha_acto_expedicion" />
+            </div>
+            <div>
+                <label for="mes_fecha_acto_expedicion">Mes</label>
+                <InputNumber id="mes_fecha_acto_expedicion" @bind-Value="_licenciaFuncionamientoDto.mes_fecha_acto_expedicion" />
+            </div>
+            <div>
+                <label for="anio_fecha_acto_expedicion">Año:</label>
+                <InputNumber id="anio_fecha_acto_expedicion" @bind-Value="_licenciaFuncionamientoDto.anio_fecha_acto_expedicion" />
+            </div>
+        </div>
+    </fieldset>
+
+    <label for="secretaria_edu_expedicion">Secretaría de Educación que expidió la licencia de funcionamiento</label>
+    <div class="explicacion">O autoridad que ordenó la creación (cuando se trate de un centro de enseñanza de carácter estatal)</div>
+    <ValidationMessage For="() => _licenciaFuncionamientoDto.secretaria_edu_expedicion" />
+    <InputSelect id="secretaria_edu_expedicion" @bind-Value="_licenciaFuncionamientoDto.secretaria_edu_expedicion">
+          <option value="">-</option>
+          @foreach (var item in _select)
+          {
+               <option value="@item.id">@item.nombre</option>
+          }
+    </InputSelect>
+
+    <label for="num_radicado_actualizacion">Nº del radicado del registro de la actualización de los contenidos curriculares</label>
+    <ValidationMessage For="() => _licenciaFuncionamientoDto.num_radicado_actualizacion" />
+    <InputText id="num_radicado_actualizacion" @bind-Value="_licenciaFuncionamientoDto.num_radicado_actualizacion" />
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha del radicado del registro de la actualización de los contenidos curriculares
+        </legend>
+        <ValidationMessage For="() => _licenciaFuncionamientoDto.dia_fecha_radicado" />
+        <ValidationMessage For="() => _licenciaFuncionamientoDto.mes_fecha_radicado" />
+        <ValidationMessage For="() => _licenciaFuncionamientoDto.anio_fecha_radicado" />
+        <div class="fecha-flex">
+            <div>
+                <label for="dia_fecha_radicado">Día</label>
+                <InputNumber id="dia_fecha_radicado" @bind-Value="_licenciaFuncionamientoDto.dia_fecha_radicado" />
+            </div>
+            <div>
+                <label for="mes_fecha_radicado">Mes</label>
+                <InputNumber id="mes_fecha_radicado" @bind-Value="_licenciaFuncionamientoDto.mes_fecha_radicado" />
+            </div>
+            <div>
+                <label for="anio_fecha_radicado">Año:</label>
+                <InputNumber id="anio_fecha_radicado" @bind-Value="_licenciaFuncionamientoDto.anio_fecha_radicado" />
+            </div>
+        </div>
+    </fieldset>
+
+    <label for="secretaria_edu_actualizacion">Secretaría de educación ante la cual realizó la actualización de los contenidos curriculares</label>
+    <ValidationMessage For="() => _licenciaFuncionamientoDto.secretaria_edu_actualizacion" />
+    <InputSelect id="secretaria_edu_actualizacion" @bind-Value="_licenciaFuncionamientoDto.secretaria_edu_actualizacion">
+        <option value="">-</option>
+        @foreach (var item in _select)
+        {
+            <option value="@item.id">@item.nombre</option>
+        }
+    </InputSelect>
+
+    <label>Adjuntar el acto administrativo de la licencia de funcionamiento</label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_licenciaFuncionamientoDto.nombre_adjunto_acto_administrativo</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileActoAdministrativo">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <ValidationMessage For="@(() => _licenciaFuncionamientoDto.acto_administrativo_doc)" />
+    <InputFile class="file-input w-full p-0" id="acto_administrativo_doc" name="files" OnChange="HandleArchivoActoAdministrativoDoc" />
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

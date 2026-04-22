@@ -1,0 +1,37 @@
+﻿<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+
+        @if (menuService != null)
+        {
+            @if (menuService.SubMenuList == null)
+            {
+                <p><em>Cargando...</em></p>
+            }
+            else
+            {
+                <div class="subnav">
+                    <h3 class="pt-2">@padre</h3>
+                    <ul class="menu menu-lg bg-transparent p-0 m-0 w-full">
+                        @foreach (var mn in menuService.SubMenuList)
+                        {
+                            <li>
+                                <NavLink ActiveClass="menu-active" href="@mn.Ruta">
+                                   @mn.Pagina
+                                </NavLink>
+                            </li>
+                        }
+                        
+                    </ul>
+                    
+                </div>
+            }
+        }
+
+    </ContentTemplate>
+</SpinLoader>

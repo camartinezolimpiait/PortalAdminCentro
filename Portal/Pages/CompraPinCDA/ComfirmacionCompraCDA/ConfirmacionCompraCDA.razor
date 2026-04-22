@@ -1,0 +1,53 @@
+﻿@page "/compradepincda/confirmacioncompra"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen;
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Pages.CompraPin.ResumenCompra;
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.ResumenCDA;
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.ResumenCompraCDA;
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.SpinProceso;
+@inject NavigationManager NavManager
+
+@if(!MostrarResumenCompra ){
+	<h2>Confirmación de compra</h2>
+
+	<div class="columnas">
+		<ResumenCDA PagoPinCda="PagoPin" PasosCompraPin="PasosCompraPin" OnNavegarResumen="NavegarResumen"/>
+
+		<div class="instrucciones">
+			<p>
+				Verifica que tu información esté correcta. Enviaremos la confirmación de la compra al correo
+				electrónico aquí registrado.
+			</p>
+			<slot />
+			<a class="boton-secundario" @onclick="()=> Volver()">Atras</a>
+			<a class="boton-primario" @onclick="()=> PagarReferenciaPinDirecto()">Pagar con PIN Directo Colpatria</a>
+		</div>
+	</div>
+}
+@if (MostrarSpin)
+{
+
+	<div id="modal-container" class="modal-container hidden">
+		<div class="modal">
+			<div class="modal-content">
+				@* <span class="close-button">&times;</span> *@
+				<div>
+					<SpinProceso />
+				</div>
+			</div>
+		</div>
+	</div>
+}
+@if (MostrarResumenCompra)
+{
+	<div class="resumen-compra">
+		<ResumenCompraCDA PagoPinCda="PagoPin" />
+	</div>
+}

@@ -1,0 +1,60 @@
+/* -- SELECCIONAR TRÁMITE Y COMPARECIENTES -- */
+@layer base {
+  .header-configuraciones {
+    background-color: var(--color-azul-100);
+    color: var(--color-azul-800);
+  }
+
+  .opciones-configuracion {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem 0;
+    transition: all 0.3s;
+    color: var(--color-azul-600);
+  }
+
+  .opciones-configuracion:hover {
+    color: var(--color-azul-700);
+    box-shadow: var(--elevacion-2);
+  }
+
+  .btn-resta,
+  .btn-suma {
+    background-color: transparent;
+    color: var(--rojo-primario);
+    font-size: 1.2rem;
+    padding: 0;
+  }
+
+  .cantidad-comp-container {
+    border-color: transparent;
+    box-shadow: var(--elevacion-1);
+    width: 160px;
+    margin-bottom: 0.5rem;
+    padding: 0.275rem 0.75rem;
+  }
+
+  .cantidad-comp-container button > .fa {
+    width: auto;
+    height: 20px;
+  }
+
+  .comparecientes-input {
+    border-color: transparent;
+    width: 80px;
+    text-align: center;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .accordion > .card:first-of-type {
+    border-radius: 10px;
+    border: 1px solid var(--color-gris-200);
+  }
+
+  .card-body label:last-child {
+    margin-bottom: 0;
+  }
+}

@@ -1,0 +1,168 @@
+﻿.flex-container {
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.flex-item {
+    text-align: left;
+    width: calc(32% - 10px); /* 4 columnas (100% / 4) */
+    box-sizing: border-box;
+}
+
+h4 {
+    color: black;
+}
+
+.paragraph {
+    max-width: 80%;
+}
+
+.mx-99 {
+    max-width: 99%;
+}
+
+.tabs-container {
+    border-bottom: 1px solid #ccc;
+    background: #f8f9fa;
+    flex-direction: column;
+}
+
+.tab-buttons button {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: bold;
+    color: #555;
+    border-radius: 5px 5px 0 0;
+    transition: background 0.3s, color 0.3s;
+}
+
+.tab-buttons .active {
+    background: white;
+    color: black;
+    border-top: 2px solid var(--color-azul-600);
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-bottom: none;
+}
+
+.tabs-content {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 0 5px 5px 5px;
+    background: white;
+    margin-top: -1px;
+}
+
+/* Estilos del formulario */
+.form-container {
+    padding: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .form-group input {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+.form-inline {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .form-inline .form-group {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+        .form-inline .form-group:last-child {
+            margin-right: 0;
+        }
+
+.save-button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.margion-none {
+    margin-block-end: 0px;
+}
+
+.save-button:hover {
+    background: #0056b3;
+}
+
+.info-box {
+    background-color: #f2f2f2;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    margin-bottom: 2em;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.status {
+    font-weight: bold;
+}
+
+.error-text {
+    color: darkred;
+    font-weight: bold;
+    margin-block-end: 0px;
+}
+
+.error-list {
+    margin: 5px 0 10px 0;
+}
+
+.technical-issues {
+    color: darkred;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-block-end: 0px;
+}
+
+.description {
+    max-width: 100%;
+}
+
+.bold-label {
+    font-weight: bold;
+}
+
+.div-btn {
+    max-width: 12em;
+}

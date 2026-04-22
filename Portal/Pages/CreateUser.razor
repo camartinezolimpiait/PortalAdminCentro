@@ -1,0 +1,210 @@
+﻿@page "/createuser"
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
+@using Microsoft.Extensions.Configuration
+@using portalAdministrativoSISEC.Util.Helpers
+
+<h3>Creación de usuarios</h3>
+<div>
+    <main>
+        <form class="formulario">
+            <div class="field">
+                <label for='firstName'>Usuario</label>
+                <input type='text' @bind="@username" @oninput="@((e) => { username=(string)e.Value;})" />
+            </div>
+            <div class="field">
+                <label for='email'>Correo electrónico</label>
+                <input type='email' @bind="@email" @oninput="@((e) => { email=(string)e.Value;})" />
+            </div>
+            <div class="field">
+                <label for='confirmEmail'>Confirmar Correo electrónico</label>
+                <input type='email' @bind="@confirmCorreo" @oninput="@((e) => { confirmCorreo=(string)e.Value;})" />
+            </div>
+            <div class="field">
+                <label for='password'>Nueva Contraseña</label>
+                <input type='password' @bind="@passwordHash" @oninput="@((e) => { passwordHash=(string)e.Value;})" placeholder='Mínimo 8 caracteres' />
+            </div>
+            <span style="display:none"></span>
+            <div class="field">
+                <label for='confirmPassword'>Confirmar Contraseña</label>
+                <input type='password' @bind="@confirmPass" @oninput="@((e) => { confirmPass=(string)e.Value;})" />
+            </div>
+            <div class="field">
+                <label for='mobile'>Número de celular</label>
+                <input type='tel' inputmode="numeric" pattern='[0-9]*' @bind="@phoneNumber" @oninput="@((e) => { phoneNumber=(string)e.Value;})" />
+            </div>
+            <div class="field">
+                <label for='confirmMobile'>Confirmar Número de celular</label>
+                <input type='tel' inputmode="numeric" pattern='[0-9]*' @bind="@confirmMob" @oninput="@((e) => { confirmMob=(string)e.Value;})" />
+            </div>
+            <div class="dropdown">
+                <label for='platform'>Plataforma</label>
+                <select name="platform" @bind="@platform" @oninput="@((e) => { platform = (string)e.Value; })">
+                    <option value="0">Seleccione...</option>
+                    <option value="CRC">CRC</option>
+                    <option value="CEA">CEA</option>
+                </select>
+            </div>
+            <input class="boton-primario" type='submit' value='Registrar Usuario' @onclick="createUser">
+            <div>
+                <label>@globalMessage</label>
+            </div>
+        </form>
+    </main>
+</div>
+
+@code
+{
+    private string email { get; set; }
+    private bool emailConfirmed { get; set; }
+    private string passwordHash { get; set; }
+    private string phoneNumber { get; set; }
+    private string username { get; set; }
+    private string platform { get; set; }
+    private string confirmCorreo { get; set; }
+    private string confirmMob { get; set; }
+    private string confirmPass { get; set; }
+
+    private string apiName = string.Empty;
+    private string globalMessage = string.Empty;
+    private string emailErrorMessage = string.Empty;
+    private string PasswordErrorMessage = string.Empty;
+    private string NumberErrorMessage = string.Empty;
+    private ApplicationSevice menuservice = new ApplicationSevice();
+    [Inject] private IApiService _apiService { get; set; }
+
+
+    UserName create = new UserName();
+    HttpClient clientMember = new HttpClient();
+
+    /// <summary>
+    /// Method to create a new user
+    /// </summary>
+    /// <autor>David Amorocho Gacha</autor>
+    /// <returns></returns>
+    protected async Task createUser()
+    {
+        if (!validateFields())
+        {
+            globalMessage = "Todos los campos tienen que estar llenos";
+            return;
+        }
+        else
+        {
+            int resultValidation = validateConfirmFields();
+            if (resultValidation != 0)
+            {
+                switch (resultValidation)
+                {
+                    case 1:
+                        emailErrorMessage = "El campo confirmar correo debe ser el mismo que en el campo 'Correo electrónico'";
+                        break;
+                    case 2:
+                        PasswordErrorMessage = "EL campo Confirmar contraseña debe que ser el mismo que en el campo 'Nueva Contraseña'";
+                        break;
+                    case 3:
+                        NumberErrorMessage = "El campo Confirmar Número de celular debe ser el mismo que el campo 'Numero de celular'";
+                        break;
+                }
+            }
+            else
+            {
+                create.Email = email;
+                create.EmailConfirmed = true;
+                create.PasswordHash = passwordHash;
+                create.securityStamp = string.Empty;
+                create.PhoneNumber = phoneNumber;
+                create.PhoneNumberConfirmed = true;
+                create.TwoFactorEnabled = true;
+                create.LockoutEndDateUtc = DateTime.Now;
+                create.LockoutEnabled = true;
+                create.AccessFailedCount = 0;
+                create.username = username;
+                create.Activo = true;
+                create.ChangePassword = true;
+                create.plataforma = platform;
+
+                try
+                {
+                    ApiResponse<object> response = await _apiService.CallApiAsync<object>(
+                        baseAddress: @Configuration["AppSettings:uriSisecAuth"],
+                        apiEndpoint: "AspNetUser/AgregarAspNetUser",
+                        method: HttpMethod.Post,
+                        content: create,
+                        apiKey: "SisecAut"
+                    );
+
+                    if (response.IsSuccess)
+                    {
+                        globalMessage = "Los cambios se guardaron correctamente";
+                    }
+                    else
+                    {
+                        globalMessage = response.ErrorMessage ?? "No se pudo guardar los cambios";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    globalMessage = $"Error guardando cambios: {ex.Message}";
+                }
+
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Method that validates if the fields are completed or not
+    /// </summary>
+    /// <autor>David Amorocho Gacha</autor>
+    /// <returns>Return true or false depending on whether any of the fields are filled or not</returns>
+    protected bool validateFields()
+    {
+        bool result = true;
+
+        if (string.IsNullOrEmpty(username))
+            result = false;
+        if (string.IsNullOrEmpty(email))
+            result = false;
+        if (string.IsNullOrEmpty(confirmCorreo))
+            result = false;
+        if (string.IsNullOrEmpty(passwordHash))
+            result = false;
+        if (string.IsNullOrEmpty(confirmPass))
+            result = false;
+        if (string.IsNullOrEmpty(phoneNumber))
+            result = false;
+        if (string.IsNullOrEmpty(confirmMob))
+            result = false;
+        if (platform == "0")
+            result = false;
+        return result;
+    }
+
+    /// <summary>
+    /// Method that validates if the fields are the same or not
+    /// </summary>
+    /// <autor>David Amorocho Gacha</autor>
+    /// <returns> 0 = all the fields are the same </returns>
+    /// <returns> 1 = Email and confirm Email aren't the same </returns>
+    /// <returns> 2 = Password and confirm password aren't the same </returns>
+    /// <returns> 3 = Phone Number and confirm Number aren't the same </returns>
+    protected int validateConfirmFields()
+    {
+        int result = 0;
+
+        if (email != confirmCorreo)
+        {
+            result = 1;
+        }
+        else if (passwordHash != confirmPass)
+        {
+            result = 2;
+        }
+        else if (phoneNumber != confirmMob)
+        {
+            result = 3;
+        }
+        return result;
+    }
+}

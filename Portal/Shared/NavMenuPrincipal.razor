@@ -1,0 +1,28 @@
+﻿@if (menuService != null)
+{
+    <ul class="menu_principal">
+        @if (menuService.MenuListPrincipal == null)
+        {
+            @for (int i = 0; i < 5; i++)
+            {
+                <li>
+                    <div class="skeleton h-4 w-24 opacity-50"></div>
+                </li>
+            }
+        }
+        else
+        {
+            @foreach (var mn in menuService.MenuListPrincipal.OrderBy(mn => mn.Pagina))
+            {
+                <li>
+                    <NavLink class="header-link" href="@mn.Ruta" @onclick="() => GetIsCliked(mn)">
+                        <span>
+                            @mn.Pagina
+                        </span>
+                    </NavLink>
+                </li>
+
+            }
+        }
+    </ul>
+}

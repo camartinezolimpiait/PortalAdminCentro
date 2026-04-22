@@ -1,0 +1,6 @@
+﻿main {
+  padding: 0;
+  background-color: white;
+  display: grid;
+  grid-template-columns: auto 1fr;
+}

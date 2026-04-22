@@ -1,0 +1,21 @@
+﻿@page "/compradepin/operaciones"
+@inherits LayoutComponentBase
+@layout TwoPaneLayout
+@using portalAdministrativoSISEC.Pages.CompraPin
+@inject NavigationManager NavManager
+
+
+<h2>OPERACIONES</h2>
+
+
+<section>
+    @Body
+</section>
+
+@code {
+    protected override void OnInitialized()
+    {
+        NavManager.NavigateTo("/compradepin/operaciones", false);
+    }
+}
+

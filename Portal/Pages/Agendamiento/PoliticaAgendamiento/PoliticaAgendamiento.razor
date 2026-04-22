@@ -1,0 +1,67 @@
+﻿@page "/configuracion/politicaAgendamiento"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+
+        @if (ConfiguracionHorarios != null && ConfiguracionHorarios.Any())
+        {
+            if (applicationShared.CreateNewConfiguration)
+            {
+                <h3>Configuración inicial de agendamiento</h3>
+                <h4>1. Política de agendamiento</h4>
+            }
+
+            <p>
+                Su selección define el mensaje que se le mostrará al ciudadano en <b>milicencia.co</b>. Si el módulo está activado, usted podrá gestionar su agenda desde este portal y el ciudadano podrá solicitar citas desde milicencia.
+            </p>
+            <fieldset disabled="@readOnly" class="radio-grande">
+                <input type="radio" id="chkOrdenDeLlegada" name="PoliticaAgendamiento"
+                       checked="@CheckedSelectedValue(portalAdministrativoSISEC.Enum.PoliticaAgendamiento.SoloAtencionOrdenLlegada)"
+                       value="SoloAtencionOrdenLlegada" @onchange="PolicyOnChange" />
+                <label for="chkOrdenDeLlegada">
+                    <b>Solo atención por orden de llegada</b><br />
+                    Se desactivará el módulo de agendamiento y se le dirá al ciudadano que este centro solo atiende
+                    por orden de llegada.
+                </label>
+
+                <input type="radio" id="chkMixta" name="PoliticaAgendamiento"
+                       checked="@CheckedSelectedValue(portalAdministrativoSISEC.Enum.PoliticaAgendamiento.Mixta)" value="Mixta"
+                       @onchange="PolicyOnChange" />
+                <label for="chkMixta">
+                    <b>Atención mixta: citas y orden de llegada</b><br />
+                    Se activará el módulo de agendamiento y se le dirá al ciudadano que este centro atiende
+                    dándole prioridad a las
+                    citas, pero que puede presentarse sin agendar y será atendido de acuerdo con la
+                    disponibilidad.
+                </label>
+
+                <input type="radio" id="chkSoloCitas" name="PoliticaAgendamiento"
+                       checked="@CheckedSelectedValue(portalAdministrativoSISEC.Enum.PoliticaAgendamiento.SoloCitas)" value="SoloCitas"
+                       @onchange="PolicyOnChange" />
+                <label for="chkSoloCitas">
+                    <b>Solo hay atención a través de citas</b><br />
+                    Se activará el módulo de agendamiento y se le dirá al ciudadano que su centro atiende
+                    exclusivamente por citas.
+                </label>
+            </fieldset>
+            @if (applicationShared.CreateNewConfiguration)
+            {
+                <button type="button" class="boton-primario" @onclick="SaveAndNextWizard">@ButtonText</button>
+            }
+
+        }
+        else
+        {
+            <h3>Debe configurar primero el horario de atención.</h3>
+            <button type="button" class="boton-primario" @onclick="Navigate">Configurar Horario</button>
+        }
+    </ContentTemplate>
+</SpinLoader>

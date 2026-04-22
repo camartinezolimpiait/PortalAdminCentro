@@ -1,0 +1,148 @@
+﻿@page "/compradepin/datospersonales"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavManager
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="#2563eb"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@editContext" OnValidSubmit="HandleValidSubmit" id="DatosPersonales">
+            <DataAnnotationsValidator />
+            <div>
+                <h3>Datos personales</h3>
+                <p class="mb-2">Ingrese los datos del aspirante que tomará el examen. Estos datos tambien serán usados para la factura electrónica.</p>
+                <div class="mb-6 max-w-96 space-y-2">
+                    <div>
+                        <label for="nombres" class="font-semibold">Nombre(s)</label>
+                        <ValidationMessage For="@(() => DatosPersonalesModel.Nombre)" />
+                        <input class="w-full max-w-none" type="text" id="nombres" maxlength="50" autocomplete="given-name" @bind-value:event="oninput" @bind-value="DatosPersonalesModel.Nombre" />
+                    </div>
+                    <div>
+                        <label for="apellidos" class="font-semibold">Apellido(s)</label>
+                        <ValidationMessage For="@(() => DatosPersonalesModel.Apellidos)" />
+                        <input class="w-full max-w-none" type="text" id="apellidos" maxlength="50" autocomplete="family-name" @bind-value:event="oninput" @bind-value="DatosPersonalesModel.Apellidos" />
+
+                    </div>
+                    <div>
+                        <label for="tipoDocumento" class="font-semibold">Tipo de documento</label>
+                        <ValidationMessage For="@(() => DatosPersonalesModel.TipoDocumento)" />
+                        <select class="w-full max-w-none" id="tipoDocumento" @bind-value="DatosPersonalesModel.TipoDocumento" @bind-value:event="oninput">
+                            <option value="">Seleccione un tipo de documento</option>
+                            @foreach (var doc in ListaDocumentos)
+                            {
+                                <option value="@doc.IdTipoSisec" selected="@(int.Parse(doc.IdTipoSisec) == DatosPersonalesModel.TipoDocumento ? true : false)">@doc.Nombre</option>
+                            }
+                        </select>
+                    </div>
+                    <div>
+                        <label for="documento" class="font-semibold">Número de Documento</label>
+                        <ValidationMessage For="@(() => DatosPersonalesModel.Documento)" />
+                        <input class="w-full max-w-none" inputmode="numeric" pattern="[0-9]*" maxlength="24" type="text" id="documento"
+                               style="text-transform: uppercase;" autocomplete="on" @bind-value:event="oninput" @bind-value="DatosPersonalesModel.Documento" />
+                    </div>
+                    <div>
+                        <label for="email" class="font-semibold">Correo electrónico</label>
+                        <ValidationMessage For="@(() => DatosPersonalesModel.Correo)" />
+                        <!-- bind permite la comunicación bidireccional entre el campo de entrada y la propiedad-->
+                        <input class="w-full max-w-none" autocomplete="on" name="email" id="email" type="email" @bind-value="DatosPersonalesModel.Correo" @bind-value:event="oninput" />
+                    </div>
+                    <div>
+                        <label for="celular" class="font-semibold">Celular</label>
+                        <ValidationMessage For="@(() => DatosPersonalesModel.Celular)" />
+                        <input class="w-full max-w-none" inputmode="numeric" pattern="[0-9]*" maxlength="10" type="tel" id="celular" autocomplete="tel" @bind-value="DatosPersonalesModel.Celular" @bind-value:event="oninput" />
+                    </div>
+                </div>
+                @* // Inicio código generado por GitHub Copilot *@
+                @if (PagoPin.FacturacionActiva)
+                {
+                    var aspiranteOptionClass = !DatosPersonalesModel.EmisionOtraPersona
+                        ? "relative flex min-h-[40px] cursor-pointer items-center gap-[0.65rem] rounded-[8px] border border-[#1a73e8] bg-white px-3 py-[0.55rem] shadow-[inset_0_0_0_1px_#1a73e8] transition-[border-color,box-shadow] duration-200 ease-in-out"
+                        : "relative flex min-h-[40px] cursor-pointer items-center gap-[0.65rem] rounded-[8px] border border-[#d6d6d6] bg-white px-3 py-[0.55rem] transition-[border-color,box-shadow] duration-200 ease-in-out";
+                    var aspiranteRadioClass = !DatosPersonalesModel.EmisionOtraPersona
+                        ? "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[#1a73e8] bg-white"
+                        : "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[#c9ced6] bg-white";
+                    var terceroOptionClass = DatosPersonalesModel.EmisionOtraPersona
+                        ? "relative flex min-h-[40px] cursor-pointer items-center gap-[0.65rem] rounded-[8px] border border-[#1a73e8] bg-white px-3 py-[0.55rem] shadow-[inset_0_0_0_1px_#1a73e8] transition-[border-color,box-shadow] duration-200 ease-in-out"
+                        : "relative flex min-h-[40px] cursor-pointer items-center gap-[0.65rem] rounded-[8px] border border-[#d6d6d6] bg-white px-3 py-[0.55rem] transition-[border-color,box-shadow] duration-200 ease-in-out";
+                    var terceroRadioClass = DatosPersonalesModel.EmisionOtraPersona
+                        ? "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[#1a73e8] bg-white"
+                        : "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[#c9ced6] bg-white";
+
+                    <section class="mb-6 max-w-96 rounded-[8px] border border-[#d8dadd] bg-[#f3f3f3] px-[0.8rem] pb-[0.75rem] pt-[0.9rem]">
+                        <h4 class="mb-[0.35rem] mt-0 text-[1rem] font-bold leading-[1.3] text-[#3d4042]">Facturación electrónica</h4>
+                        @* // Inicio refactorización/optimización por GitHub Copilot *@
+                        <p class="mb-[0.65rem] text-[0.9rem] leading-[1.45] text-[#4b5563]">
+                            De acuerdo con su configuración, la factura será emitida cuando el PIN del aspirante @ObtenerMomentoFacturacionMensaje()
+                        </p>
+                        @* // Fin refactorización/optimización por GitHub Copilot *@
+
+                        <span class="mb-[0.35rem] block text-[0.72rem] font-medium text-[#3d4042]">Facturar a nombre de:</span>
+
+                        <div class="flex flex-col gap-1" role="radiogroup" aria-label="Facturar a nombre de">
+                            <label class="@aspiranteOptionClass">
+                                <input class="sr-only"
+                                       type="radio"
+                                       name="facturacionTitular"
+                                       checked="@(!DatosPersonalesModel.EmisionOtraPersona)"
+                                       @onchange="@(() => SetEmisionOtraPersona(false))" />
+                                <span class="@aspiranteRadioClass" aria-hidden="true">
+                                    @if (!DatosPersonalesModel.EmisionOtraPersona)
+                                    {
+                                        <span class="h-[9px] w-[9px] rounded-full bg-[#1a73e8]"></span>
+                                    }
+                                </span>
+                                <span class="text-[0.95rem] leading-[1.4] text-[#3d4042]">Aspirante</span>
+                            </label>
+
+                            <label class="@terceroOptionClass">
+                                <input class="sr-only"
+                                       type="radio"
+                                       name="facturacionTitular"
+                                       checked="@(DatosPersonalesModel.EmisionOtraPersona)"
+                                       @onchange="@(() => SetEmisionOtraPersona(true))" />
+                                <span class="@terceroRadioClass" aria-hidden="true">
+                                    @if (DatosPersonalesModel.EmisionOtraPersona)
+                                    {
+                                        <span class="h-[9px] w-[9px] rounded-full bg-[#1a73e8]"></span>
+                                    }
+                                </span>
+                                <span class="text-[0.95rem] leading-[1.4] text-[#3d4042]">Empresa o tercero diferente al aspirante</span>
+                            </label>
+                        </div>
+                    </section>
+                }
+                @* // Fin código generado por GitHub Copilot *@
+
+                <div class="info-box" style="margin-bottom:1rem">
+                    <svg class="feather info-icon">
+                        <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
+                    </svg>
+                    <div class="info-text" style="font-size:14px">
+                        <div><strong>Verifica que la información esté correcta.</strong></div>
+                        <div>Estos datos serán usados para gestionar el PIN.</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mt-3 flex items-center space-x-3">
+                <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">
+                    Atrás
+                </button>
+                <button type="submit" class="boton-primario"> Siguiente </button>
+            </div>
+
+
+        </EditForm>
+    </ContentTemplate>
+
+</SpinLoader>

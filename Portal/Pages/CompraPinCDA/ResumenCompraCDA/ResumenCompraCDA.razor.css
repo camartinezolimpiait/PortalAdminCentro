@@ -1,0 +1,91 @@
+﻿
+.resumen-compra-columnas {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.resumen-compra-order {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.resumen-compra-order-card {
+    background-image: url("/assets/card.svg");
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    max-width: 339px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    justify-content: space-between;
+    padding-block: 0.875rem;
+    box-sizing: border-box;
+    border-radius: 0.8rem;
+    margin-bottom: 20px;
+    padding-inline: 20px;
+}
+
+.resumen-compra-title-pin {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 4px;
+}
+
+.resumen-compra-code-pin {
+    color: white;
+    text-align: center;
+    font-size: 18px; /* Ajusta según sea necesario */
+    letter-spacing: 2px;
+    font-weight: 300;
+}
+
+.resumen-compra-botones-contenedor {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px; /* Ajusta el espacio entre los botones */
+}
+
+.encabezadodos {
+    background: var(--color-azul-900);
+    color: white;
+    margin-bottom: var(--text-lg);
+}
+
+    .encabezadodos p {
+        margin-block: 0;
+    }
+
+p.titulodos {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1;
+    margin-block: 0.5rem 0;
+}
+
+.encabezado .wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--text-lg);
+    padding-left: 40px;
+}
+
+.resumen-compra-total-y-valor {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.resumen-compra-title-pin, .resumen-compra-code-pin {
+    margin-bottom: 10px; /* Reducir el espacio entre elementos */
+}
+
+.resumen-compra-code-pin {
+    margin-bottom: 0;
+}

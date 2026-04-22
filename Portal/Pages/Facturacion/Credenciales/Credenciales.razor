@@ -1,0 +1,56 @@
+﻿@page "/configuracion/configurarFacturacion/credenciales"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.Agendamiento;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@EditContext" id="ConfigurarFacturacion" autocomplete="nope">
+        	<DataAnnotationsValidator />
+
+            <h4>Credenciales</h4>
+
+            <div class="flex-container">
+                <div class="flex-item">
+                    <label for="usuario">Usuario</label>
+                    <input class="mb-0" type="text" id="usuario" maxlength="15" autocomplete="nope" @bind-value:event="oninput" @bind-value="ConfigurarCredencialesModel.Usuario" @onchange="@((ChangeEventArgs e) => HandleInputChange("usuario", e))" />
+                    <ValidationMessage For="@(() => ConfigurarCredencialesModel.Usuario)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="clave">Contraseña</label>
+                    <input class="mb-0" type="password" oncopy="return false;" onpaste="return false;" oncut="return false;" id="clave" maxlength="50" autocomplete="nope" @bind-value:event="oninput" @bind-value="ConfigurarCredencialesModel.Clave" @onchange="@((ChangeEventArgs e) => HandleInputChange("clave", e))" />
+                    <ValidationMessage For="@(() => ConfigurarCredencialesModel.Clave)" />
+                </div>
+            </div>
+
+            <div class="div-btn">
+                <a class="btn-guardar boton-primario" @onclick="() => ValidarCredenciales()">Guardar y validar</a>
+            </div>
+        </EditForm>
+    </ContentTemplate>
+</SpinLoader>

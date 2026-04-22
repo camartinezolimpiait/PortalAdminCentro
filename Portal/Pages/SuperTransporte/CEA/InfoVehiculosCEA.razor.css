@@ -1,0 +1,43 @@
+details.vehiculo {
+    max-width: 72ch;
+    background: var(--color-gris-50);
+    border: 1px solid var(--color-gris-300);
+    margin-bottom: 1rem;
+}
+
+    details.vehiculo[open] {
+        border-color: var(--color-azul-700);
+    }
+
+    details.vehiculo > summary {
+        cursor: pointer;
+        background-color: var(--color-gris-50);
+        color: var(--color-gris-900);
+        padding: 0.35rem 0.8rem;
+    }
+
+    details.vehiculo > .contenido {
+        padding: 1rem 1.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem
+    }
+
+        details.vehiculo > .contenido > *:last-child {
+            margin-bottom: 0;
+        }
+
+    details.vehiculo[open] > summary {
+        background-color: var(--color-azul-700);
+        color: white;
+        font-weight: 500;
+    }
+
+    details.vehiculo > summary > * {
+        display: inline;
+    }
+
+.contenido .btn {
+    grid-column: 2;
+    justify-self: end;
+}

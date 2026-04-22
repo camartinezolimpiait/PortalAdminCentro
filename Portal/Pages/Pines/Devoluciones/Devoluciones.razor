@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.QuickGrid.Infrastructure
+@using portalAdministrativoSISEC.Entidades.Pines.Devoluciones
+@using portalAdministrativoSISEC.Pages.Common
+@using portalAdministrativoSISEC.Pages.Pines.Busqueda
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo
+
+@inherits LayoutComponentBase
+@layout Pines
+<SpinLoader IsLoading="isLoading">
+	<LoadingTemplate>
+		<div style="height:100%;display:flex">
+			<br />
+			<Circle Center="true" Color="var(--color-azul-600)"></Circle>
+		</div>
+	</LoadingTemplate>
+	<ContentTemplate>
+		<div>
+			<h3>Devoluciones</h3>
+			<Busqueda tipoBusqueda="4" DatosFiltros="DatosFiltros" DatosFiltrosChanged="DatosFiltrosChanged" DescargarDatos="DescargarDatos"></Busqueda>
+			@if(Listado.Count >0)
+			{
+				<DynamicQuickGrid Data="Data" Columns="Columnas" Pagination="Pagination" Paginas="PruebaPaginas" PaginaChanged="PaginaChanged" EventCallbackButton="EventCallbackButtonClick"></DynamicQuickGrid>
+			}
+			
+		</div>
+	</ContentTemplate>
+</SpinLoader>
+
+<script>
+	window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+		const arrayBuffer = await contentStreamReference.arrayBuffer();
+		const blob = new Blob([arrayBuffer]);
+		const url = URL.createObjectURL(blob);
+		const anchorElement = document.createElement('a');
+		anchorElement.href = url;
+		anchorElement.download = fileName ?? '';
+		anchorElement.click();
+		anchorElement.remove();
+		URL.revokeObjectURL(url);
+	}
+</script>

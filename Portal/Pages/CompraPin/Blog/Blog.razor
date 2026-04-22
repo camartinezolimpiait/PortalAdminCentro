@@ -1,0 +1,98 @@
+﻿@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Text.Json.Nodes;
+@inject HttpClient Http
+
+<ul class="list-none space-y-6 p-0">
+    @if (articulos is null)
+    {
+        @for (int i = 0; i < 4; i++)
+        {
+            <li class="relative grid max-w-240 grid-cols-[1fr_3fr] grid-rows-1 gap-5">
+                <div class="skeleton aspect-square rounded-md"></div>
+                <div class="comunicado-texto">
+                    <div class="skeleton mb-2 h-6 rounded"></div>
+                    <div class="space-y-2">
+                        <div class="skeleton h-4 rounded"></div>
+                        <div class="skeleton h-4 w-3/4 rounded"></div>
+                        <div class="skeleton h-4 w-1/2 rounded"></div>
+                    </div>
+                </div>
+            </li>
+        }
+    }
+    else
+    {
+        @foreach (JsonNode? articulo in articulos)
+        {
+            <li class="relative grid max-w-240 grid-cols-[1fr_3fr] grid-rows-1 gap-5">
+                <img srcset='@articulo?["node"]?["featuredImage"]?["node"]?["srcSet"]'
+                        sizes='@articulo?["node"]?["featuredImage"]?["node"]?["sizes"]'
+                        src='@articulo?["node"]?["featuredImage"]?["node"]?["sourceUrl"]'
+                        alt='@articulo?["node"]?["featuredImage"]?["node"]?["altText"]'
+                        width="200"
+                        height="200"
+                        class="block aspect-square rounded-md object-cover" />
+                <div class="comunicado-texto">
+                    <h4 class="mb-2">
+                        <NavLink href="@($"blog/{articulo?["node"]?["slug"]}")" class="text-lg leading-tight font-bold no-underline hover:underline">
+                            @articulo?["node"]?["title"]
+                        </NavLink>
+                    </h4>
+                    <div class="leading_snug -mb-3 ">
+                        @((MarkupString)(string)articulo?["node"]?["excerpt"])
+                    </div>
+                    @{
+                        var fechaStr = (string?)articulo?["node"]?["date"];
+                        string fechaFormateada = "";
+                        if (DateTime.TryParse(fechaStr, out var fecha))
+                        {
+                            var cultura = new System.Globalization.CultureInfo("es-ES");
+                            fechaFormateada = fecha.ToString("dddd, d 'de' MMMM 'de' yyyy", cultura);
+                            // Primera letra mayúscula
+                            fechaFormateada = char.ToUpper(fechaFormateada[0], cultura) + fechaFormateada.Substring(1);
+                        }
+                    }
+                    <p class="leading_snug text-sm text-gris-600 mb-0">@fechaFormateada</p>
+                </div>
+            </li>
+        }
+    }   
+</ul>
+
+@code {
+    @* Todo gracias a https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom#deserialize-subsections-of-a-json-payload *@
+    @* Para la paginacion https://chrissainty.com/working-with-query-strings-in-blazor/ *@
+
+    [Parameter]
+    public string CategoryName { get; set; } = "Milicencia";
+    private JsonArray? articulos;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://cms.milicencia.co/graphql");
+            request.Headers.Add("User-Agent", "PortalAdminCentro/1.0"); 
+            request.Headers.Referrer = new Uri("https://miportalcentro.sisec.co/");
+            var category = CategoryName;
+            var queryJson = $@"{{
+                ""query"":""query allPosts(\n    $first: Int\n    $last: Int\n    $after: String\n    $before: String\n) {{\n    posts(first: $first, last: $last, after: $after, before: $before, where: {{ categoryName: \""{category}\"" }}) {{\n      edges {{\n        node {{\n          id\n          title\n          slug\n          date\n          featuredImage {{\n            node {{\n                altText\n                sourceUrl\n                sizes\n                srcSet\n            }}\n          }}\n          excerpt\n        }}\n        cursor\n      }}\n      pageInfo {{\n        endCursor\n        hasNextPage\n        hasPreviousPage\n        startCursor\n      }}\n    }}\n  }}"",
+                ""variables"":{{""first"":4,""after"":""""}}
+            }}";
+            var content = new StringContent(queryJson, null, "application/json");
+            request.Content = content;
+            var response = await Http.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                JsonNode responseGQL = JsonNode.Parse(responseStream)!;
+                articulos = responseGQL!["data"]!["posts"]!["edges"]!.AsArray();
+            }
+        }
+        catch (Exception ex)
+        {
+            articulos = null;
+        }
+    }
+}

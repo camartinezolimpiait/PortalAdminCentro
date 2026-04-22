@@ -1,0 +1,55 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:60965",
+      "sslPort": 44363
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:44363;http://localhost:60965"
+    },
+    "portalAdministrativoSISEC": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:44363;http://localhost:60965"
+    },
+    "portalAdministrativoSISECQA": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "targetProject": "portalAdministrativoSISEC",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Quality"
+      },
+      "applicationUrl": "https://localhost:44363;http://localhost:60965"
+    },
+    "portalAdministrativoSISECPre": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "targetProject": "portalAdministrativoSISEC",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Sandbox"
+      },
+      "applicationUrl": "https://localhost:44363;http://localhost:60965"
+    },
+    "portalAdministrativoSISECPro": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "targetProject": "portalAdministrativoSISEC",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      },
+      "applicationUrl": "https://localhost:44363;http://localhost:60965"
+    }
+  }
+}

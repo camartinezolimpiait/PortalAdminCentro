@@ -1,0 +1,134 @@
+﻿@page "/supertransporte/centro-cea/informacion-propietarios"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+
+<h3>Información de Propietarios</h3>
+
+<EditForm Model=@_infoPropietariosDto OnSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+
+    @if (_lista_infoPropietariosDto != null)
+    {
+        @foreach (var propietariosLista in _lista_infoPropietariosDto)
+        {
+            <div class="propietario">
+                <div class="titulo">
+                    <div>
+                        <span class="nombre">@propietariosLista.primer_nombre @propietariosLista.segundo_nombre @propietariosLista.primer_apellido @propietariosLista.segundo_apellido</span>
+                        <span class="documento">@_select.Find(f => f.id == @propietariosLista.tipo_id)?.nombre @propietariosLista.num_id</span>
+                    </div>
+                    <button type="button" class="btn btn-sm" @onclick="() => ButtonOnClickQuitar(propietariosLista)">Quitar</button>
+                </div>
+                <div class="contacto">
+                    <span> <a href="mailto:@propietariosLista.email">@propietariosLista.email</a> </span>,
+                    <span> <a href="tel:+@propietariosLista.telefono">@propietariosLista.telefono</a></span>
+                </div>
+                <div class="dirección">
+                    <span>Dirección: @propietariosLista.direccion, @_selectDepartamento.Find(f => f.codigoDep == @propietariosLista.departamento)?.nombre, @_selectDepartamento.Find(f => f.codigoDep == @propietariosLista.departamento)?.ciudades.Find(ff => ff.codigo == @propietariosLista.ciudad)?.nombre </span>
+                </div>
+            </div>
+        }
+    }
+
+    <hr/>
+
+    <EditForm Context="PropietariosContext" Model=@_infoPropietariosDto OnValidSubmit=@addPropietario>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <fieldset class="ancho">
+            <legend>Añadir nuevo propietario</legend>
+
+            <div class="dos_columnas">
+                <div>
+                    <label for="tipo_id">Tipo identificación</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.tipo_id" />
+                    <InputSelect id="tipo_id" @bind-Value="_infoPropietariosDto.tipo_id">
+                        <option value="">-</option>
+                        @foreach (var item in _select)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="num_id">Nº identificación:</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.num_id" />
+                    <InputText id="num_id" @bind-Value="_infoPropietariosDto.num_id" />
+                </div>
+                <div>
+                    <label for="primer_nombre">Primer nombre</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.primer_nombre" />
+                    <InputText id="primer_nombre" @bind-Value="_infoPropietariosDto.primer_nombre" />
+                </div>
+                <div>
+                    <label for="segundo_nombre">Segundo nombre</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.segundo_nombre" />
+                    <InputText id="segundo_nombre" @bind-Value="_infoPropietariosDto.segundo_nombre" />
+                </div>
+                <div>
+                    <label for="primer_apellido">Primer apellido</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.primer_apellido" />
+                    <InputText id="primer_apellido" @bind-Value="_infoPropietariosDto.primer_apellido" />
+                </div>
+                <div>
+                    <label for="segundo_apellido">Segundo apellido</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.segundo_apellido" />
+                    <InputText id="segundo_apellido" @bind-Value="_infoPropietariosDto.segundo_apellido" />
+                </div>
+                <div>
+                    <label for="email">Correo electrónico</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.email" />
+                    <InputText id="email" @bind-Value="_infoPropietariosDto.email" />
+                </div>
+                <div>
+                    <label for="telefono">Teléfono</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.telefono" />
+                    <InputNumber id="telefono" @bind-Value="_infoPropietariosDto.telefono" />
+                </div>
+                <div class="span_2">
+                    <label for="direccion">Dirección</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.direccion" />
+                    <InputText id="direccion" @bind-Value="_infoPropietariosDto.direccion" />
+                </div>
+                <div>
+                    <label for="departamento">Departamento</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.departamento" />
+                    <InputSelect id="departamento" @bind-Value="_infoPropietariosDto.departamento">
+                        <option value="">-</option>
+                        @foreach (var item in _selectDepartamento)
+                        {
+                            <option value="@item.codigoDep">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="ciudad">Ciudad</label>
+                    <ValidationMessage For="() => _infoPropietariosDto.ciudad" />
+                    <InputSelect id="ciudad" @bind-Value="_infoPropietariosDto.ciudad">
+                        <option value="">-</option>
+                        @if (validarCidudadseleccionada())
+                        {
+                            @if (_selectDepartamento.Find(w => w.codigoDep == _infoPropietariosDto.departamento) != null)
+                            {
+                                @if (_selectDepartamento.Find(w => w.codigoDep == _infoPropietariosDto.departamento).ciudades != null)
+                                {
+                                    @foreach (var item in _selectDepartamento.Find(w => w.codigoDep == _infoPropietariosDto.departamento).ciudades)
+                                    {
+                                        <option value="@item.codigo">@item.nombre</option>
+                                    }
+                                }
+                            }
+                        }
+                    </InputSelect>
+                </div>
+            </div>            
+
+            <button type="submit" class="boton-secundario">Añadir propietario</button>
+        </fieldset>
+    </EditForm>
+
+    @*<BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>*@
+</EditForm>

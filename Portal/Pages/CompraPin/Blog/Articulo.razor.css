@@ -1,0 +1,114 @@
+﻿article {
+    display: block;
+    /* max-inline-size: 80ch; */
+    margin-inline-end: auto;
+}
+
+.header {
+    background-color: var(--color-azul-800);
+    color: white;
+    padding-block: var(--text-xl);
+    margin-block-end: var(--text-lg);
+}
+
+h1 {
+    font-size: var(--text-xl);
+    margin: 0;
+    padding: 0;
+    font-weight: 300;
+    color: white;
+}
+
+    h1 b {
+        color: white;
+        font-weight: 700;
+    }
+
+.articulo-fecha {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin: 0;
+}
+
+.banner_articulo {
+    margin-block-end: 1.25rem;
+    width: 100%;
+    height: auto;
+}
+
+::deep .articulo-html p {
+    max-width: 100%;
+}
+
+::deep .articulo-html img,
+::deep .wp-block-image > img {
+    max-width: 100%;
+    box-shadow: var(--elevacion-2);
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 0.563rem;
+}
+
+
+
+    ::deep .articulo-html img + figcaption {
+        font-size: 14px;
+        opacity: 0.7;
+        text-align: center;
+    }
+
+::deep .articulo-html p:has(iframe) {
+    position: relative;
+}
+
+    ::deep .articulo-html p:has(iframe)::before {
+        content: "";
+        display: block;
+        padding-top: 56.25%;
+    }
+
+    ::deep .articulo-html p:has(iframe) iframe {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+
+.accionesBack a {
+    color: white !important; /* Usamos !important para asegurarnos de que este estilo tenga prioridad */
+    text-decoration: underline; /* Mantiene el subrayado para indicar que es un enlace */
+}
+
+/* ::deep .wp-block-spacer {
+    display: none;
+} */
+.wrapper {
+    margin-left: 310px;
+    margin-right: 310px;
+}
+
+wrapperArticulo {
+
+    margin-left: 450px;
+    margin-right: 450px;
+}
+
+.header, .banner_articulo {
+    /* Elimina los márgenes específicos para el título y la imagen */
+    margin: 0; /* Elimina todos los márgenes, incluyendo arriba y abajo */
+}
+
+
+    .header h1 {
+        margin-bottom: 0;
+    }
+
+.article {
+    margin-bottom: 400px;
+}

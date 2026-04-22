@@ -1,0 +1,41 @@
+﻿@page "/supertransporte/centro/interconexion-runt"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Interconexión al RUNT</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo III</h4>
+        <p>
+            8. Acreditar el cumplimiento de las condiciones y protocolos establecidos para la adecuada y eficiente interconexión al sistema del Registro Único Nacional de Tránsito (RUNT) conforme a lo establecido en la Ley 1005 de 2006.
+        </p>
+    </div>
+</details>
+
+<EditForm Model=@_InterconexionRUNTDto OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+    
+         
+    <label>Soporte que acredite el cumplimiento de la interconexión al RUNT  </label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_InterconexionRUNTDto.nombre_adjunto_soporte_interconexion</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileSoporteInterconexion">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <ValidationMessage For="@(() => _InterconexionRUNTDto.soporte_interconexion)" />
+    <InputFile class="file-input w-full p-0" id="soporte_interconexion" name="files" OnChange="HandleArchivoSeleccionado" />
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

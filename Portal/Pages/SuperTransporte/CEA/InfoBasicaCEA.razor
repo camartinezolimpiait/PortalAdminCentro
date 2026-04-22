@@ -1,0 +1,148 @@
+﻿@page "/supertransporte/centro-cea/informacion-basica"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+
+<h3>Información Básica</h3>
+
+<EditForm Model=@_infoBasicaCEA OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label for="nivel">Nivel de clasificación del CEA</label>
+    <ValidationMessage For="() => _infoBasicaCEA.nivel" />
+    <InputSelect id="nivel" @bind-Value="_infoBasicaCEA.nivel">
+        <option value="">-</option>
+        @foreach (var item in _select)
+        {
+            <option value="@item.id">@item.nombre</option>
+        }
+    </InputSelect>
+    @if (CategoriasAutorizadasSeleccionadas == false && _submitClicked == true)
+    {
+       
+        <div class="validation-message">Debe seleccionar al menos una categoría.</div>
+        
+    }
+    <fieldset class="ancho">
+        <legend>
+            Categorías autorizadas
+        </legend>
+        <div class="flex_agregar">
+            <div>
+                <InputCheckbox id="A1" @bind-Value="_infoBasicaCEA.categorias_autorizadas.A1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="A1">A1</label>
+            </div>
+            <div>
+                <InputCheckbox id="a2" @bind-Value="_infoBasicaCEA.categorias_autorizadas.A2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="a2">A2</label>
+            </div>
+            <div>
+                <InputCheckbox id="b1" @bind-Value="_infoBasicaCEA.categorias_autorizadas.B1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="b1">B1</label>
+            </div>
+            <div>
+                <InputCheckbox id="b2" @bind-Value="_infoBasicaCEA.categorias_autorizadas.B2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="b2">B2</label>
+            </div>
+            <div>
+                <InputCheckbox id="b3" @bind-Value="_infoBasicaCEA.categorias_autorizadas.B3" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="b3">B3</label>
+            </div>
+            <div>
+                <InputCheckbox id="c1" @bind-Value="_infoBasicaCEA.categorias_autorizadas.C1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="c1">C1</label>
+            </div>
+            <div>
+                <InputCheckbox id="c2" @bind-Value="_infoBasicaCEA.categorias_autorizadas.C2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="c2">C2</label>
+            </div>
+            <div>
+                <InputCheckbox id="c3" @bind-Value="_infoBasicaCEA.categorias_autorizadas.C3" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="c3">C3</label>
+            </div>
+ 
+        </div>
+    </fieldset>
+
+    <fieldset class="pregunta_sn">
+        <legend>
+            ¿Autorizado para dictar cursos en normas de tránsito?
+        </legend>
+        <div>
+            <InputCheckbox id="auth_cursos_normas" @bind-Value="_infoBasicaCEA.auth_cursos_normas" />
+            <label for="auth_cursos_normas">Autorizado</label>
+        </div>
+    </fieldset>
+
+    <hr />
+
+    <label for="num_cert_conformidad">Nº de certificado de conformidad o acreditación </label>
+    <div class="explicacion">Expedido por el respectivo organismo acreditador (ONAC/OEC)</div>
+    <ValidationMessage For="() => _infoBasicaCEA.num_cert_conformidad" />
+    <InputText id="num_cert_conformidad" @bind-Value="_infoBasicaCEA.num_cert_conformidad" />
+
+    <div class="dos_columnas">
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de aprobación del certificado
+                </legend>
+                <ValidationMessage For="() => _infoBasicaCEA.dia_fecha_aprobacion" />
+                <ValidationMessage For="() => _infoBasicaCEA.mes_fecha_aprobacion" />
+                <ValidationMessage For="() => _infoBasicaCEA.anio_fecha_aprobacion" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_fecha_aprobacion">Día</label>
+                        <InputNumber id="dia_fecha_aprobacion" @bind-Value="_infoBasicaCEA.dia_fecha_aprobacion" />
+                    </div>
+                    <div>
+                        <label for="mes_fecha_aprobacion">Mes</label>
+                        <InputNumber id="mes_fecha_aprobacion" @bind-Value="_infoBasicaCEA.mes_fecha_aprobacion" />
+                    </div>
+                    <div>
+                        <label for="anio_fecha_aprobacion">Año:</label>
+                        <InputNumber id="anio_fecha_aprobacion" @bind-Value="_infoBasicaCEA.anio_fecha_aprobacion" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de vencimiento del certificado
+                </legend>
+                <ValidationMessage For="() => _infoBasicaCEA.dia_fecha_vencimiento" />
+                <ValidationMessage For="() => _infoBasicaCEA.mes_fecha_vencimiento" />
+                <ValidationMessage For="() => _infoBasicaCEA.anio_fecha_vencimiento" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_fecha_vencimiento">Día</label>
+                        <InputNumber id="dia_fecha_vencimiento" @bind-Value="_infoBasicaCEA.dia_fecha_vencimiento" />
+                    </div>
+                    <div>
+                        <label for="mes_fecha_vencimiento">Mes</label>
+                        <InputNumber id="mes_fecha_vencimiento" @bind-Value="_infoBasicaCEA.mes_fecha_vencimiento" />
+                    </div>
+                    <div>
+                        <label for="anio_fecha_vencimiento">Año:</label>
+                        <InputNumber id="anio_fecha_vencimiento" @bind-Value="_infoBasicaCEA.anio_fecha_vencimiento" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr/>
+    <fieldset class="pregunta_sn">
+        <legend>
+            ¿Imparte cursos de formación a instructores en conducción?
+        </legend>
+        <div>
+            <InputCheckbox id="forma_instructores" @bind-Value="_infoBasicaCEA.forma_instructores" />
+            <label for="forma_instructores">Sí, imparte cursos</label>
+        </div>
+    </fieldset>
+
+    <div>
+        <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+    </div>
+</EditForm>

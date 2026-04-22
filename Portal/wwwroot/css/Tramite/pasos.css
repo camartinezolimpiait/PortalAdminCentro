@@ -1,0 +1,410 @@
+/* - Pasos de trámite */
+@layer base {
+  .pasos-container {
+    background-color: var(--color-gris-100);
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    justify-content: space-around;
+  }
+
+  .pasos-content {
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pasos {
+    display: flex;
+  }
+
+  .pasos-content button::after {
+    content: "\1433";
+    color: var(--color-gris-400);
+    margin-left: 10px;
+  }
+
+  .pasos-content .btn-terciario {
+    margin: 0;
+  }
+
+  .pasos-content button:last-child:after {
+    content: "";
+  }
+
+  /* - Fin pasos de trámite*/
+
+  /* -- DATOS CIUDADANO -- */
+  .input-tipo-identificacion {
+    width: 400px;
+  }
+
+  .input-tipo-identificacion > select {
+    border-radius: 0.25rem 0 0 0.25rem;
+    height: 38px;
+  }
+
+  .input-container input.input-numero-identificacion {
+    border-radius: 0 0.25rem 0.25rem 0;
+  }
+
+  .datos-identificacion-container {
+    padding-bottom: 0.8rem;
+  }
+
+  .datos-contacto-container {
+    border-top: 1px solid var(--color-gris-200);
+  }
+
+  .datos-contacto-container p {
+    font-size: 0.9rem;
+  }
+
+  /* -- FIN DATOS CIUDADANO --*/
+  /* IDENTIFICACIÓN CIUDADANO */
+
+  .form-validation {
+    height: auto;
+  }
+
+  /* -- Fin identificación ciudadano -- */
+
+  /* AUTORIZACIÓN DE DATOS */
+
+  .modal-dialog {
+    max-width: 700px;
+  }
+
+  .modal-header h3 {
+    margin: 0.3rem 0;
+  }
+
+  .firma-container {
+    width: 100%;
+    border-radius: 0.75rem;
+    height: 200px;
+    color: #6e6e6e;
+    background-color: white;
+    border: 1px solid var(--color-gris-400);
+    margin: 0.75rem 0;
+  }
+
+  .firma-compareciente {
+    border: 1px solid var(--color-gris-400);
+    width: 400px;
+    height: 240px;
+    min-width: 400px;
+    min-height: 240px;
+    box-sizing: content-box;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  .firma-container p {
+    overflow: hidden;
+    margin: 0;
+    border-radius: 0 0 0.75rem 0.75rem;
+    font-size: 14px;
+  }
+
+  .img-firma-container {
+    height: 95%;
+    justify-content: center;
+    display: flex;
+  }
+
+  .img-firma {
+    max-height: 150px;
+    max-width: 100%;
+    object-fit: scale-down;
+  }
+
+  #idImg {
+    display: none;
+  }
+
+  .firma-capturada {
+    height: 0;
+    position: relative;
+    bottom: 50px;
+    left: 1rem;
+  }
+
+  .firma-capturada .firma-ok {
+    color: var(--color-verde-900);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .firma-capturada .firma-ok p {
+    border-radius: 0;
+  }
+
+  /* -- Fin Autorización de datos -- */
+
+  /* -- FOTO CIUDADANO -- */
+
+  .btn-captura-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .captura-foto-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .captura-foto {
+    min-width: 100%;
+    max-width: 100%;
+    margin: 0.375rem auto;
+    box-shadow: var(--elevacion-2);
+    border-radius: 4px;
+  }
+
+  /* -- FIN FOTO CIUDADANO --*/
+  /* CAPTURA DE HUELLAS */
+  .deskt {
+    display: block;
+  }
+
+  .deskt-mobile {
+    display: none;
+  }
+
+  .tips-captura-container {
+    background-color: #fcfcfc;
+    border-radius: 0.7rem;
+    padding: 1rem 1.5rem;
+    width: 70%;
+  }
+
+  .img-tip-captura {
+    height: 5rem;
+    margin-bottom: 1rem;
+  }
+
+  .img-tip-captura-tres {
+    height: 7rem;
+  }
+
+  .img-tip-captura-horizontal {
+    height: 3rem;
+  }
+
+  .dedo-solicitado-container.dedo-uno {
+    margin-right: 1.5rem;
+  }
+
+  .dedo-solicitado-container {
+    width: 215px;
+  }
+
+  .dedo-solicitado {
+    text-align: center;
+    border-radius: 0.3rem;
+    margin-top: 0.5rem;
+  }
+
+  .dedo-solicitado p {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .img-dedo {
+    height: 220px;
+    padding: 1.2rem 3rem;
+  }
+
+  .img-dedo-container {
+    border-radius: 0.7rem;
+    border: 1px solid var(--color-gris-100);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 600;
+  }
+
+  .img-dedo-container:hover {
+    cursor: pointer;
+    box-shadow: var(--elevacion-2);
+  }
+
+  .img-dedo-container.ok,
+  .progress-bar.verde {
+    border: 1px solid var(--color-verde-800);
+    background-color: var(--color-verde-100);
+    color: var(--color-verde-800);
+  }
+
+  .btn-configuracion.warning,
+  .img-dedo-container.warning {
+    border: 1px solid var(--color-amarillo-800);
+    background-color: var(--color-amarillo-100);
+    color: var(--color-amarillo-800);
+  }
+
+  .btn-configuracion.warning {
+    border-color: transparent;
+  }
+
+  .estado-captura-container {
+    height: 0;
+  }
+
+  .estado-captura-huella {
+    position: relative;
+    top: -7rem;
+    left: 3.5rem;
+  }
+
+  .estado-captura-huella.contador {
+    text-align: center;
+    color: var(--color-gris-500);
+  }
+
+  .texto-ok::before,
+  .estado-captura-container.ok > .estado-captura-huella::after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f058";
+    font-size: 3rem;
+    color: var(--color-verde-800);
+  }
+
+  .estado-captura-container.warning > .estado-captura-huella::after {
+    font-family: "Font Awesome 5 Free";
+    content: "\f06a";
+    font-size: 3rem;
+    color: var(--color-amarillo-700);
+  }
+
+  .progress {
+    /*margin-top: 1rem;*/
+    background-color: var(--color-gris-200);
+  }
+
+  .progress-bar.warning,
+  .progress-bar.verde {
+    border: none;
+  }
+
+  .progress-bar,
+  .progress-bar.gris {
+    color: var(--color-gris-700);
+  }
+
+  .progress-bar.rojo {
+    background-color: var(--color-rojo-200);
+    color: var(--color-rojo-800);
+  }
+
+  .progress-bar.naranja {
+    background-color: hsla(27, 98%, 60%, 1);
+    color: hsla(27, 98%, 20%, 1);
+  }
+
+  .progress-bar.amarillo {
+    background-color: var(--color-amarillo-200);
+    color: var(--color-amarillo-800);
+  }
+
+  /* -- Fin captura de huellas -- */
+
+  /* RESUMEN */
+  .content-form {
+    background-color: white;
+    border: 1px solid rgba(128, 128, 128, 0.479);
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: 0.3rem 0.3rem 0.5rem rgba(0, 0, 0, 0.24);
+    padding: 0.7rem;
+  }
+
+  .img-client {
+    background-color: white;
+    border: 1px solid rgba(128, 128, 128, 0.479);
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: 0.3rem 0.3rem 0.5rem rgba(0, 0, 0, 0.24);
+  }
+
+  .ok,
+  .texto-ok {
+    color: var(--color-verde-700);
+    font-weight: 600;
+  }
+
+  .error-texto,
+  .error,
+  .form-error {
+    color: red;
+    font-weight: 600;
+  }
+
+  .form-error {
+    display: none;
+  }
+
+  .form-error.mostrar {
+    display: block;
+  }
+
+  .error-nombre {
+    color: var(--rojo-primario);
+    font-weight: 400;
+  }
+
+  .texto-ok::before,
+  .error-texto::before {
+    font-size: 1rem;
+    margin-right: 0.3rem;
+  }
+
+  .error-texto::before {
+    color: red;
+  }
+
+  .texto-ok::before {
+    color: var(--color-verde-700);
+  }
+
+  .resumen-table {
+    margin-bottom: 1.2rem;
+    font-size: 16px;
+  }
+
+  .resumen-table tr td {
+    border-bottom: 1px solid var(--color-gris-200);
+  }
+
+  .dedo-resultado-container {
+    margin-top: 20px;
+    margin-left: 20px;
+    text-align: center;
+  }
+
+  .dedo-resultado-container p {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .estado-row {
+    margin-top: 1rem;
+  }
+
+  .estado-row td {
+    vertical-align: middle;
+  }
+
+  .texto-ok.vigente {
+    font-size: 20px;
+  }
+
+  .resultado-huellas-resumen {
+    display: flex;
+  }
+  /* -- Fin de Resumen -- */
+}

@@ -1,0 +1,55 @@
+﻿.agenda-details-title {
+    background: var(--color-amarillo-200) !important;
+    color: var(--color-amarillo-800) !important;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="date"],
+.form-group input[type="tel"],
+.form-group input[type="time"],
+.form-group input[type="number"],
+.form-group select {
+    margin-bottom: 10px !important;
+    padding: 5px
+}
+
+
+.form-group textarea {
+    border: 1px solid var(--color-gris-200);
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    font-family: inherit;
+    resize: none;
+}
+
+    .form-group textarea:focus {
+        box-shadow: 0 0 0px 2px var(--color-amarillo-200);
+        outline: none;
+    }
+
+.action-form {
+    display: flex;
+    gap: 1px;
+    align-items: center;
+}
+
+.radiobuttons-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 10px;
+}
+
+    .radiobuttons-container.two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 10px;
+    }
+
+.validation-message {
+    color: var(--color-red-500);
+    font-size: 12px;
+}

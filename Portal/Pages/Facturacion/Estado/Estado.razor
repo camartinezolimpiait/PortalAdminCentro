@@ -1,0 +1,103 @@
+﻿@* Displays billing status and allows refreshing the current state *@
+
+@page "/configuracion/configurarFacturacion/estado"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Entidades.Facturacion
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.Agendamiento;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+@using System
+
+<!-- Inicio refactorización/optimización por GitHub Copilot -->
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <details class="bg-base-200 collapse-arrow collapse rounded-2xl border border-gray-300">
+            <summary class="collapse-title font-normal">
+                <div class="flex flex-row flex-wrap items-center justify-between gap-2">
+                    <div class="flex flex-row items-center gap-1">
+                        @ErrorFacturacion?.Estado?.ToLower()?.StatusIndicator()
+                        <div class="ps-2">Próxima factura: <span class="font-bold">@ErrorFacturacion?.ProximaFactura</span></div>
+                    </div>
+
+                    <div>
+                        Última actualización: <span class="font-bold">@ErrorFacturacion?.UltimaActualizacion</span>
+                        <button @onclick="UpdateStatus" aria-label="refresh" class="btn btn-sm btn-circle btn-ghost btn-primary">
+                            <svg class="feather size-4">
+                                <use xlink:href="assets/feather-sprite.svg#refresh-cw"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </summary>
+
+            <div class="collapse-content text-sm">
+                <div class="rounded-md border border-gray-300 bg-white p-2">
+                    <div class="flex items-baseline justify-between">
+                        <p class="mb-0">Proveedor: <span class="font-bold">@ErrorFacturacion?.Proveedor</span></p>
+
+                        @if (!IsConfiguration)
+                        {
+                            <NavLink href="/configuracion/configurarFacturacion">Ir a configuración de facturación</NavLink>
+                        }
+                    </div>
+
+                    <hr class="my-2 border-gray-300" />
+
+                    @if (ErrorFacturacion?.Estado?.ToLower() == "error")
+                    {
+                        <ul class="max-h-60 space-y-2 overflow-y-auto divide-y divide-neutral-300 mb-0">
+                            @foreach (var error in ErrorFacturacion.DetalleErrores)
+                            {
+                                <li class="leading-tight grid grid-cols-[1fr_auto] pb-2 gap-x-0.5">
+                                    <div class="text-rojo-700 font-bold">@error.Error</div>
+                                    <div class="text-gray-500 text-xs text-right row-span-2">@error.FechaEstado</div>
+                                    <div>@error.DescripcionError</div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else if (ErrorFacturacion?.Estado?.ToLower() == "en línea")
+                    {
+                        <p class="leading-tight mb-0">
+                            El sistema de facturación electrónica está encendido y generando facturas correctamente.
+                        </p>
+                    }
+                    else if (ErrorFacturacion?.Estado?.ToLower() == "sin conexión")
+                    {
+                        <p class="leading-tight mb-0">
+                            <span class="text-naranja-500 font-bold">El proveedor tecnológico no responde</span>
+                            <br />Tus facturas seguirán emitiéndose automáticamente cuando se restablezca la conexión
+                        </p>
+                    }
+                    else if (ErrorFacturacion?.Estado?.ToLower() == "apagado")
+                    {
+                        <p class="leading-tight mb-0">
+                            El servicio está apagado y no están generando facturas
+                        </p>
+                    }
+                </div>
+            </div>
+        </details>
+    </ContentTemplate>
+</SpinLoader>
+<!-- Fin refactorización/optimización por GitHub Copilot -->

@@ -1,0 +1,94 @@
+﻿@using portalAdministrativoSISEC.Util
+@if (IsLoading)
+{
+	<i>Cargando detalle agenda...</i>
+}
+@if (AgendaDto != null && !IsLoading)
+{
+	@using portalAdministrativoSISEC.Enum
+	<h5 class="agenda-details-title agenda-details-title_enrolamiento">
+		@string.Concat(TipoCita, ", ",AgendaDto.FechaAgenda.ToString("dd/MM/yyyy"), " - ",@convertirHoraEstandar(OptionAppoiment.TimeString))
+	</h5>
+	<div class="agenda-details-body">
+		<div class="detail-group">
+			<label>Nombre completo</label>
+			<span>@string.Concat(AgendaDto.DatosPersonaDTO.Nombres, " ", AgendaDto.DatosPersonaDTO.Apellidos)</span>
+		</div>
+		<div class="detail-group">
+			<label>Documento</label>
+			<span>@string.Concat(resultadoDocumento != null ? resultadoDocumento.abreviatura : TipoDocumentoDto.abreviatura, " ", AgendaDto.DatosPersonaDTO.NumeroIdentificacion)</span>
+		</div>
+		<div class="detail-group">
+			<label>Teléfono</label>
+			<span>@AgendaDto.DatosPersonaDTO.NumeroTelefono</span>
+		</div>
+		<div class="detail-group">
+			<label>Correo electrónico</label>
+			<span>@AgendaDto.DatosPersonaDTO.Email</span>
+		</div>
+
+		@if (!isArmas)
+		{
+			<div class="detail-group">
+				<label>Trámite y categoría</label>
+				<span>
+					@string.Concat(TramiteDto?.Nombre, " - ", (!string.IsNullOrEmpty(AgendaDto.Categoria)) ?
+			AgendaDto.Categoria.Replace(",", " ") : string.Empty)
+				</span>
+			</div>
+		}
+
+
+		<div class="detail-group">
+			<label>Agendada por</label>
+
+			@if (AgendaDto.IdTipoAgendaCliente == TipoAgendaCliente.MiLicencia)
+			{
+				<span>
+					Milicencia.co
+				</span>
+			}
+			else if (AgendaDto.IdTipoAgendaCliente == TipoAgendaCliente.PortalAdministrativo)
+			{
+				<span>@AgendaDto.UsuarioCreacion</span>
+			}
+			else
+			{
+				<span>@(((TipoAgendaCliente)AgendaDto.IdTipoAgendaCliente).ToString())</span>
+			}
+		</div>
+		@if (AgendaDto.IdTipoCita == TipoCitaAgenda.Enrolamiento)
+		{
+			@if (!string.IsNullOrEmpty(AgendaDto.NumeroPin))
+			{
+				<div class="detail-group">
+					<label>PIN</label>
+					<span>@AgendaDto.NumeroPin</span>
+				</div>
+			}
+		}
+		else if (AgendaDto.IdTipoCita == TipoCitaAgenda.ContinuarProceso)
+		{
+			<div class="detail-group">
+				<label>Motivo</label>
+				<span>@MotivoDto?.Nombre</span>
+			</div>
+			<div class="detail-group">
+				<label>Observaciones</label>
+				<span>@AgendaDto.Observaciones</span>
+			</div>
+		}
+
+	</div>
+	<div class="agenda-details-buttons">
+		<button type="button" class="boton-secundario" @onclick="ReScheduleClick">
+			Reprogramar cita
+		</button>
+		<button type="button" class="boton-secundario" @onclick="(e) => CancelScheduleClick(e, true)">
+			Deseleccionar
+		</button>
+		<button class="btn btn-error text-root" @onclick="CancelScheduleClick">
+			Cancelar cita
+		</button>
+	</div>
+}

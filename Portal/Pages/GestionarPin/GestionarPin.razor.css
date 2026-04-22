@@ -1,0 +1,226 @@
+﻿.encabezado {
+    background: var(--color-azul-900);
+    color: white;
+    padding: var(--text-lg) 0;
+}
+
+    .encabezado p {
+        margin-block: 0;
+    }
+
+p.cea {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1;
+    margin-block-end: var(--text-root);
+}
+
+p.direccion,
+p.clase_centro {
+    font-size: var(--text-lg);
+    line-height: 1;
+}
+
+p.clase_centro {
+    color: var(--color-amarillo-100);
+    font-weight: 600;
+}
+
+.encabezado .wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--text-lg);
+}
+
+.columnas {
+    padding-top: var(--text-lg);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: var(--text-xl);
+}
+
+.menus {
+    position: sticky;
+    top: var(--text-lg);
+}
+
+.acciones {
+    padding: var(--text-lg);
+    border-radius: 1rem;
+    border: 1px solid var(--color-Gris-200, #d0c5b3);
+    background: var(--color-Gris-50, #f8f6f3);
+}
+
+    .acciones h3 {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+    }
+
+    .acciones colorletras {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+        color: white !important;
+    }
+
+    .acciones linksmenusecundario {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+        color: white !important;
+    }
+
+    .acciones .boton-primario {
+        margin-block: 0 var(--text-xl);
+    }
+
+.encabezadodos {
+    background: var(--color-azul-900);
+    color: white;
+    padding: var(--text-lg) 0;
+    margin-bottom: var(--text-lg);
+}
+
+    .encabezadodos p {
+        margin-block: 0;
+    }
+
+.link a {
+    color: var(--color-azul-100);
+    font-weight: 500;
+}
+
+p.titulodos {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1;
+    margin-block: 0.5rem 0;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 70%;
+    min-width: 0;
+}
+
+.column-resumen {
+    flex: 30%;
+    min-width: 0;
+}
+
+.msg_error {
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-Naranja-600, #A63800);
+    background: var(--color-Naranja-100, #ffbf62);
+    color: var(--color-Naranja-900, #530000);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: var(--text-root);
+    max-width: max-content;
+}
+
+    .msg_error .feather {
+        flex: none;
+    }
+
+    .msg_error p {
+        margin: 0;
+    }
+
+.respuesta_pin {
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-Gris-200, #d0c5b3);
+    background: var(--color-Gris-50, #f8f6f3);
+    padding: var(--text-lg);
+    max-width: max-content;
+}
+
+    .respuesta_pin h2 {
+        font-size: var(--text-lg);
+        font-weight: 700;
+    }
+
+    .respuesta_pin .cuadricula {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--text-2xl);
+        row-gap: var(--text-root);
+        margin-block-end: var(--text-lg);
+    }
+
+.cuadricula > div > div:first-child {
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.botones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+    .botones > button {
+        margin: 0;
+    }
+
+.wrapper p {
+    font-size: var(--text-lg);
+}
+
+.justificado {
+    text-align: justify;
+}
+
+.margin-left {
+    margin-left: 1%;
+}
+
+.margin-top {
+    margin-top: 5%;
+}
+
+.rigth-position {
+    display: grid;
+    justify-items: end;
+    padding-left: 10%;
+}
+
+.info-box {
+    display: flex;
+    align-items: center; 
+    background-color: #f8fbff;
+    border: 1px solid #cde0f5;
+    border-radius: 8px; 
+    padding: 0.75rem 1rem; 
+}
+
+.info-icon {
+    width: 20px;
+    height: 20px;
+    color: #0a66c2;
+    margin-right: 0.5rem; 
+    flex-shrink: 0; 
+}
+
+.info-text p {
+    margin: 0; 
+    color: #1a1a1a; 
+    line-height: 1.4; 
+}
+
+.table thead tr:nth-child(odd) {
+    background-color: white !important;
+}
+
+.table table{
+    margin-block-end: 0px;
+}
+tbody tr:nth-child(odd) {
+    background-color: #F7F7F8 !important; /* Color claro */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #ffffff !important; /* Blanco */
+}

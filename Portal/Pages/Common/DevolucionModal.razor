@@ -1,0 +1,60 @@
+﻿@if (Open)
+{
+    <div class="fixed inset-0 z-50 flex items-center justify-center">
+        <!-- Backdrop -->
+        <div class="fixed inset-0 bg-black/50" @onclick="OnBackdropClick" aria-hidden="true"></div>
+
+        <!-- Panel (más pequeño) -->
+        <div role="dialog" aria-modal="true" aria-labelledby="go-home-title"
+             class="relative z-10 w-full max-w-[414px] rounded-2xl bg-white p-6 text-center shadow-xl overflow-visible">
+            <!-- Cerrar (X) -->
+            <button type="button"
+                    class="absolute right-3 top-3 h-8 w-8 rounded-full text-gray-500 hover:bg-gray-100
+                   text-xl leading-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    aria-label="Cerrar" @onclick="Close">
+                ×
+            </button>
+
+            <!-- Icono circular más pequeño -->
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50">
+                <svg class="feather text-blue-600 h-8 w-8">
+                    <use xlink:href="assets/feather-sprite.svg#info"></use>
+                </svg>
+            </div>
+
+            <!-- Título más compacto -->
+            <h2 class="my-[28px] mx-auto my-[5px] max-w-md text-[24px] leading-[24px] font-semibold text-center text-gray-800 font-figtree">
+                ¿Está seguro de que desea realizar una devolución?
+                Esta acción anulará el PIN y no se podrá deshacer.
+            </h2>
+
+
+            <!-- Botonera más compacta -->
+            <div class="mt-5 flex justify-center gap-4">
+                <button type="button"
+                        class="boton-secundario"
+                        @onclick="Close">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="boton-primario"
+                        @onclick="OnConfirm">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public bool CloseOnBackdrop { get; set; } = true;
+
+    private async Task Close() => await OpenChanged.InvokeAsync(false);
+    private async Task OnBackdropClick() { if (CloseOnBackdrop) await Close(); }
+}

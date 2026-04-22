@@ -1,0 +1,115 @@
+﻿.boton_texto {
+    all: unset;
+    font-size: 1rem;
+    font-weight: 400;
+    display: block;
+    color: var(--color-azul-600);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.alinear_derecha {
+    margin-inline-start: auto;
+}
+
+.resumen {
+    grid-area: left;
+    background: var(--color-gris-50);
+    padding: var(--text-lg);
+    border: 1px var(--color-gris-300) solid;
+    border-radius: 0.75rem;
+    margin-block-end: 1.5rem;
+}
+
+.resumen-item {
+    --padding: 0.75rem;
+    padding-bottom: var(--padding);
+    margin-block-end: var(--padding);
+    border-bottom: 1px solid var(--color-gris-300);
+}
+
+.item-encabezado {
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    column-gap: 0.5rem;
+}
+
+    .item-encabezado a {
+        font-weight: 400;
+        font-size: 1rem;
+    }
+
+        .item-encabezado a:visited {
+            color: var(--color-azul-600);
+        }
+
+.valores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    row-gap: 0.1rem;
+}
+
+    .valores .valor {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .valores.detalle {
+        --padding-fondo: 0.5rem;
+        padding-bottom: var(--padding-fondo);
+        border-bottom: 1px solid black;
+        margin-block-end: var(--padding-fondo);
+        grid-template-rows: repeat(4, 1fr);
+    }
+
+    .valores.total {
+        font-weight: 600;
+    }
+
+.valor.total {
+    font-weight: 800;
+}
+
+.instrucciones {
+    margin-block-end: 1.5rem;
+}
+
+@media screen and (min-width: 640px) {
+    .columnas {
+        max-width: 70rem;
+        display: flex;
+        flex-direction: row;
+        column-gap: var(--text-2xl);
+        margin-block-end: 1.5rem;
+    }
+
+    .resumen {
+        flex: 1 0 max-content;
+        max-width: 420px;
+    }
+
+    .instrucciones {
+        flex: 1 1 42ch;
+        position: sticky;
+        top: 1.5rem;
+        height: max-content;
+    }
+}
+
+.oculto {
+    display: none;
+}
+.columnas {
+    flex-direction: row;
+    column-gap: var(--text-2xl);
+    margin-block-end: 1.5rem;
+}
+
+
+.resumen-compra {
+    padding-left: 20px;
+}

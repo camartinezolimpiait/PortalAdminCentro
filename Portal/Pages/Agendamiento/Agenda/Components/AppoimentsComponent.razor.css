@@ -1,0 +1,87 @@
+﻿.appointment-available {
+    background-color: var(--color-gris-50);
+    color: transparent;
+}
+
+    .appointment-available:hover {
+        color: var(--color-gris-400);
+    }
+
+        .appointment-available:hover svg {
+            stroke-width: 3px;
+        }
+
+.appointment-unavailable {
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.appointment-locked {
+    background-color: var(--color-naranja-200) !important;
+    border: none !important;
+    color: transparent;
+    transition: color 300ms ease-in;
+}
+
+    .appointment-locked:active {
+        color: var(--color-naranja-600) !important;
+        transition: color 10ms ease-out;
+    }
+
+
+.appointment-green {
+    background-color: var(--color-verde-100);
+    color: var(--color-verde-700);
+    border: none !important;
+}
+
+.appointment-orange {
+    background-color: var(--color-naranja-100);
+    color: var(--color-naranja-700);
+    border: none !important;
+}
+
+.appointment-blue {
+    background-color: var(--color-azul-200);
+    color: var(--color-azul-700);
+    border: none !important;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 3;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }

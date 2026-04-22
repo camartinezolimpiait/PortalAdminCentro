@@ -1,0 +1,41 @@
+﻿@using System.Linq.Expressions
+@if (Items?.Any() == true)
+{
+    <h4 class="text-azul-900 mt-5 mb-2 text-lg font-bold">@Titulo</h4>
+    <InputRadioGroup @bind-Value="Value"
+                     @bind-Value:after="OnValueChanged"
+                     Name="@Name">
+        <div class="grid_categoria mb-2 grid gap-3">
+            @foreach (var item in Items)
+            {
+                <div class="group relative">
+                    <InputRadio id="@($"{Name}{item.Codigo}")" Value="@item.Codigo" class="absolute bottom-0 opacity-0" />
+                    <label class="hover:ring-azul-200 group-has-checked:border-azul-400 group-has-checked:bg-azul-100 group-has-checked:text-azul-800 group-has-focus:ring-azul-200 block h-full cursor-pointer rounded-sm border border-neutral-300 bg-neutral-50 p-3 text-neutral-900 group-has-focus:ring-2 hover:ring-2"
+                           for="@($"{Name}{item.Codigo}")">
+                        <span class="block text-3xl leading-none font-extrabold opacity-60">@item.Codigo</span>
+                        <span class="block text-xs leading-none font-medium">@item.Nombre</span>
+                    </label>
+                </div>
+            }
+        </div>
+    </InputRadioGroup>
+}
+
+@code {
+    [Parameter] public string Titulo { get; set; }
+    [Parameter] public IEnumerable<Data.CompraPin.Categoria> Items { get; set; }
+
+    [Parameter] public string Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public string Name { get; set; }
+
+    private async Task OnValueChanged()
+    {
+        await ValueChanged.InvokeAsync(Value);
+    }
+}
+<style>
+    .grid_categoria {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 104px));
+    }
+</style>

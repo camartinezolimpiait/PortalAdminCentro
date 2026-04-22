@@ -1,0 +1,74 @@
+﻿@page "/supertransporte/centro-cea/programas-convenio"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Programas Convenio</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Decreto 1079 de 2015, Artículo 2.3.1.2.3</h4>
+        <p>Cuando dos o más Centros de Enseñanza Automovilística decidan ofrecer los programas de formación a instructores y conductores en convenio, deberán solicitar el respectivo registro de manera conjunta tal como lo ordena el artículo 2.6.4.14. del Decreto 1075 de 2015, o la norma que lo modifique, adicione, sustituya o compile, evento en el cual el certificado que expidan deberá ser otorgado conjuntamente</p>
+    </div>
+</details>
+
+<EditForm Model=@_programaConvenio OnValidSubmit=@GuardarInformacion>
+    
+
+    <fieldset class="pregunta_sn">
+        <legend>
+            ¿Ofrece programas de formación a instructores y conductores en convenio?
+        </legend>
+        <div>
+            <InputCheckbox id="ofrece" @bind-Value="_programaConvenio.ofrece" />
+            <label for="ofrece">Sí, ofrece cursos en convenio</label>
+        </div>
+    </fieldset>
+
+    @if (_programaConvenio.ofrece)
+    {
+        <DataAnnotationsValidator />
+        <label for="nit_cea_convenio">NIT del CEA con el que tiene convenio</label>
+        <ValidationMessage For="() => _programaConvenio.nit_cea_convenio" />
+        <InputNumber id="nit_cea_convenio" @bind-Value="_programaConvenio.nit_cea_convenio"></InputNumber>
+        @*<InputSelect id="nit_cea_convenio" @bind-Value="_programaConvenio.nit_cea_convenio">
+            <option value="">-</option>
+            @foreach (var item in _selectNit)
+            {
+                <option value="@item.id">@item.nombre</option>
+            }
+        </InputSelect>*@
+
+        <label for="secretaria">Secretaría de educación donde registró el convenio</label>
+        <ValidationMessage For="() => _programaConvenio.secretaria" />
+        <InputSelect id="secretaria" @bind-Value="_programaConvenio.secretaria">
+            <option value="">-</option>
+            @foreach (var item in _selectSecretaria)
+            {
+                <option value="@item.id">@item.nombre</option>
+            }
+        </InputSelect>
+
+        <label>Adjuntar registro</label>
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Archivo adjunto</th>
+                    <th class="num"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@_programaConvenio.nombre_adjunto_registro</td>
+                    <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileRegistro">Descargar</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <ValidationMessage For="@(() => _programaConvenio.registro)" />
+        <InputFile class="file-input w-full p-0" id="registro" OnChange="HandleArchivoSeleccionado" />
+    }
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>
+

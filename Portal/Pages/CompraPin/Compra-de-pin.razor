@@ -1,0 +1,212 @@
+﻿@page "/compradepin"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.Common
+@using portalAdministrativoSISEC.Pages.CompraPin.CuotasCeas
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.FacturacionElectronica
+@using portalAdministrativoSISEC.Pages.CompraPin.MediosDePago
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite.TramiteCrc
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        @if (componentesCompra.CompraPin)
+        {
+            <div>
+                <header class="encabezado">
+                    <div class="wrapper margen_general">
+                        <div>
+                            <p class="cea">@getCentroResponse.Nombre</p>
+                            <p class="direccion">@getCentroResponse.Direccion</p>
+                        </div>
+                        <p class="clase_centro">
+                            @ObtenerNombreCentro(menuService.Plataforma)
+                        </p>
+
+                    </div>
+                </header>
+                <div class="wrapper margen_general">
+                    <div class="columnas">
+                        <Blog></Blog>
+                        <div>
+                            <div class="menus space-y-4">
+                                <div class="acciones">
+                                    <h3>Pagos</h3>
+                                    <a class="boton-primario" @onclick="() => GotoDatosBasicos()">Comprar PIN</a>
+                                    <h3>Otras operaciones</h3>
+                                    <a class="linksmenusecundario cursor-pointer" @onclick="() => FormularioGestionPin()">Consulta y devolución de PIN</a><br>
+                                </div>
+
+                                <div class="acciones canales_de_atención">
+                                    <h3 class="mb-1">Canales de atención</h3>
+                                    <div class="flex flex-col gap-1.5">
+                                        <a class="linksmenusecundario" href="https://wa.me/573112074439" target="_blank">
+                                            <svg class="feather">
+                                                <use xlink:href="assets/feather-sprite.svg#message-circle"></use>
+                                            </svg>
+                                            WhatsApp
+                                        </a>
+                                        @if (menuService.Plataforma.Equals("CEA"))
+                                        {
+                                            <a class="linksmenusecundario" href="mailto:sisec.cea@olimpiait.com">
+                                                <svg class="feather">
+                                                    <use xlink:href="assets/feather-sprite.svg#mail"></use>
+                                                </svg>
+                                                Soporte SISEC CEA
+                                            </a>
+                                        }
+                                        @if (menuService.Plataforma.Equals("CRC"))
+                                        {
+                                            <a class="linksmenusecundario" href="mailto:ssoporte@olimpiait.com">
+                                                <svg class="feather">
+                                                    <use xlink:href="assets/feather-sprite.svg#mail"></use>
+                                                </svg>
+                                                Soporte SISEC CRC y Armas
+                                            </a>
+                                        }
+                                        <a class="linksmenusecundario" href="mailto:servicioalclientesisec@olimpiait.com">
+                                            <svg class="feather">
+                                                <use xlink:href="assets/feather-sprite.svg#mail"></use>
+                                            </svg>
+                                            Servicio al cliente SISEC
+                                        </a>
+                                        <a class="linksmenusecundario" href="tel:+576017441000">
+                                            <svg class="feather">
+                                                <use xlink:href="assets/feather-sprite.svg#phone-call"></use>
+                                            </svg>
+                                            <span class="leading-tight">Línea de atención única <span class="font-medium whitespace-nowrap">(601) 744-1000</span></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div>
+                <header class="encabezadodos">
+                    <div class="wrapper margen_general">
+                        <p class="linkdos">
+                            <a class="cursor-pointer text-[#CFE3FF] hover:underline" @onclick="AbrirConfirmacionIrInicio">Ir al inicio</a>
+                        </p>
+                        <GoHomeModal @bind-Open="abrirModalIrInicio"
+                                     OnConfirm="ConfirmarIrInicio" />
+                        <p class="titulodos">Compra de PIN</p>
+
+                        <p class="subtitulo">@ObtenerDescripcion(menuService.Plataforma)</p>
+                    </div>
+                </header>
+                <div class="wrapper margen_general grid grid-cols-3 gap-12">
+                    @if (componentesCompra.ConfirmarCompra)
+                    {
+                        <div class="col-span-full">
+                            <ConfirmacionCompra PagoPin="pagoPin" PasosCompraPin="pasosCompraPin" PagoPinChanged="PinHasChanged"
+                                                OnRetroceder="VolverMedioDePagoCuotas" PasosCompraPinChanged="PasosCompraPinChanged" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-span-2 pb-16">
+                            <div class="sticky top-2.5">
+                                @if (componentesCompra.DatosBasicos)
+                                {
+                                    <DatosBasicos PagoPin="pagoPin" OnFormValidChanged="HandleFormValidChanged" PagoPinChanged="PinHasChanged"
+                                                  OnRetroceder="GotoDatosBasicos" />
+                                }
+
+                                @if (componentesCompra.TipoTramite)
+                                {
+                                    if (menuService.Plataforma.Equals("CEA"))
+                                    {
+                                        <!-- Tramite CEA -->
+                                        <div>
+                                            <Tramite PagoPin="pagoPin" PagoPinChanged="PinHasChanged" OnFormValidChanged="HandleFormValidChangedTramite" OnRetroceder="GotoDatosBasicos" />
+                                        </div>
+                                    }
+                                    else if (menuService.Plataforma.Equals("CRC"))
+                                    {
+                                        <!-- Tramite CRC -->
+                                        <div>
+                                            <TramiteCrc PagoPin="pagoPin" OnFormValidChanged="HandleFormValidChangedTramite" PagoPinChanged="PinHasChanged"
+                                                        OnRetroceder="GotoDatosBasicos" />
+                                        </div>
+                                    }
+                                }
+
+                                @if (componentesCompra.Categoria)
+                                {
+                                    <SeleccionCategorias pagoPin="pagoPin" @key="pagoPin.PasoCotizacion" PagoPinChanged="PinHasChanged" OnFormValidChanged="HandleFormValidChangedCategoria"
+                                                         OnRetroceder="GotoCantidadTramites" />
+                                }
+
+                                @if (componentesCompra.DatosPersonales)
+                                {
+                                    <DatosPersonales PagoPin="pagoPin" OnFormValidChanged="onDatosPersonales" PagoPinChanged="PinHasChanged"
+                                                     OnRetroceder="GotoCategoria" />
+                                }
+
+                                @if (componentesCompra.FacturaElectronica)
+                                {
+                                    <DatosFactura pagoPin="pagoPin" OnFormValidChanged="onFacturaElectronica" PagoPinChanged="PinHasChanged"
+                                                  OnRetroceder="GotoDatosFromFacturacion"></DatosFactura>
+                                }
+
+                                @if (componentesCompra.MediosPago)
+                                {
+                                    <MediosDePago pagoPin="pagoPin" OnFormValidChanged="OnMedioPago" PagoPinChanged="PinHasChanged"
+                                                  OnRetroceder="GotoDatosPersonales" />
+                                }
+
+                                @if (componentesCompra.CuotaCeas)
+                                {
+                                    <CuotasCeas PagoPin="pagoPin" OnFormValidChanged="HandleFormValidCuotas" PagoPinChanged="PinHasChanged"
+                                                OnRetroceder="GotoMedioPago" />
+                                }
+                            </div>
+                        </div>
+
+                    }
+
+                    @if (!componentesCompra.ConfirmarCompra && !componentesCompra.CompraPin)
+                    {
+                        <!-- Resumen AQUI-->
+                        <div class="col-span-1">
+                            @* // Inicio código generado por GitHub Copilot *@
+                            <Resumen EsConfirmacion="false"
+                                     pagoPin="pagoPin"
+                                     EsModificacion="esModificacion"
+                                     MostrarNotaRecaudo="@(componentesCompra.DatosPersonales || componentesCompra.FacturaElectronica)"
+                                     OnNavegarResumen="CambiarAVista" />
+                            @* // Fin código generado por GitHub Copilot *@
+                        </div>
+
+
+                    }
+                </div>
+            </div>
+        }
+        <section>
+            @Body
+        </section>
+
+    </ContentTemplate>
+</SpinLoader>

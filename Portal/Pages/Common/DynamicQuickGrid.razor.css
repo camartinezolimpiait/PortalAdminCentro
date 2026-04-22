@@ -1,0 +1,323 @@
+﻿.fig-table {
+    max-width: 100%;
+    overflow-x: auto;
+    margin-bottom: 0;
+}
+
+::deep .quickgrid[theme=milicencia] {
+    min-width: 100%;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+    /* Don't collapse rows even if they are empty */
+    ::deep .quickgrid[theme=milicencia] tbody tr {
+        height: 34px;
+    }
+
+    ::deep .quickgrid[theme=milicencia] thead {
+        background: none;
+        border-bottom: 1px solid var(--color-gris-300);
+    }
+
+        ::deep .quickgrid[theme=milicencia] thead tr {
+            background: none;
+        }
+
+    ::deep .quickgrid[theme=milicencia] td,
+    ::deep .quickgrid[theme=milicencia] .col-title {
+        padding: 0.3rem 0.75rem;
+    }
+
+    ::deep .quickgrid[theme=milicencia] th {
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    ::deep .quickgrid[theme=milicencia] .col-title {
+        font-weight: bold;
+        gap: 0.4rem;
+    }
+
+    ::deep .quickgrid[theme=milicencia] button.col-title:hover, ::deep .quickgrid[theme=corporate] .col-options-button:hover {
+        background: var(--color-azul-100);
+    }
+
+    ::deep .quickgrid[theme=milicencia] button.col-title:active, ::deep .quickgrid[theme=corporate] .col-options-button:active {
+        background: var(--color-amarillo-100);
+    }
+
+    ::deep .quickgrid[theme=milicencia] .numerico {
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+    }
+
+    ::deep .quickgrid[theme=milicencia] th.numerico .col-title {
+        flex-direction: row-reverse;
+    }
+
+::deep .quickgrid[theme=EstadoPin] {
+    width: 100%;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    margin: 0;
+    border-collapse: collapse;
+    max-width: 30rem;
+}
+
+    /* Don't collapse rows even if they are empty */
+    ::deep .quickgrid[theme=EstadoPin] tbody tr {
+        height: 34px;
+    }
+
+    ::deep .quickgrid[theme=EstadoPin] thead {
+        background: var(--color-azul-400);
+        border-bottom: 1px solid var(--color-gris-300);
+    }
+
+        ::deep .quickgrid[theme=EstadoPin] thead tr {
+            background: none;
+        }
+
+    ::deep .quickgrid[theme=EstadoPin] td,
+    ::deep .quickgrid[theme=EstadoPin] .col-title {
+        padding: 0.3rem 0.75rem;
+        text-align: left;
+    }
+
+    ::deep .quickgrid[theme=EstadoPin] th {
+        white-space: nowrap;
+        text-align: left;
+        color: black !important;
+    }
+
+        ::deep .quickgrid[theme=EstadoPin] th:nth-child(1) {
+            color: white !important;
+        }
+
+
+        ::deep .quickgrid[theme=EstadoPin] th:nth-child(2),
+        ::deep .quickgrid[theme=EstadoPin] th:nth-child(3) {
+            color: black !important;
+        }
+
+    ::deep .quickgrid[theme=EstadoPin] .col-title {
+        font-weight: bold;
+        gap: 0.4rem;
+        color: white;
+        text-align: left;
+        color: inherit;
+    }
+
+    ::deep .quickgrid[theme=EstadoPin] .col-header-content {
+        text-align: left;
+    }
+
+    ::deep .quickgrid[theme=EstadoPin] button.col-title:hover, ::deep .quickgrid[theme=corporate] .col-options-button:hover {
+        background: var(--color-azul-100);
+    }
+
+    ::deep .quickgrid[theme=EstadoPin] button.col-title:active, ::deep .quickgrid[theme=corporate] .col-options-button:active {
+        background: var(--color-amarillo-100);
+    }
+
+    ::deep .quickgrid[theme=EstadoPin] .numerico {
+        font-variant-numeric: tabular-nums;
+        text-align: left;
+    }
+
+    ::deep .quickgrid[theme=EstadoPin] th.numerico .col-title {
+        flex-direction: inherit;
+    }
+
+.paginador {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding-top: 1rem;
+    align-items: baseline;
+    width: 100%;
+    justify-content: space-between;
+}
+
+    .paginador p {
+        margin: 0;
+    }
+
+.elementos_pagina {
+    display: flex;
+    flex-direction: row;
+    gap: 0.4rem;
+    align-items: baseline;
+}
+
+    .elementos_pagina label {
+        white-space: nowrap;
+    }
+
+    .elementos_pagina select {
+        height: 2rem;
+        padding: 0.1rem;
+    }
+
+.lista_paginas {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+    .lista_paginas button {
+        -webkit-appearance: none;
+        --size: 2rem;
+        width: var(--size);
+        height: var(--size);
+        text-align: center;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: ease-out 300ms all;
+        cursor: pointer;
+        background: var(--color-gris-100);
+        border: 1px solid var(--color-gris-300);
+    }
+
+        .lista_paginas button:hover, .lista_paginas button:focus {
+            background: var(--color-azul-100);
+            border: 1px solid var(--color-azul-300);
+        }
+
+        .lista_paginas button.actual, .lista_paginas button:active {
+            background: var(--color-amarillo-100);
+            border: 1px solid var(--color-amarillo-300);
+        }
+
+
+/* Estilos generales para la tabla */
+::deep .quickgrid[theme=pagoCuotas] {
+    width: 100%;
+    white-space: nowrap; /* Cambiar a normal si el ajuste de línea es necesario */
+    font-variant-numeric: tabular-nums;
+    margin: 0;
+    border-collapse: collapse; /* Asegura que los bordes se colapsen y se alineen correctamente */
+    border-spacing: 0; /* Elimina el espaciado entre celdas */
+    border: 1px solid var(--color-gris-300);
+    overflow-x: auto; /* Permite el desplazamiento horizontal si es necesario */
+    border-radius: 4px; /* Bordes más curvos para la tabla */
+    table-layout: fixed; /* Asegura un ancho uniforme para todas las columnas */
+    max-height: 200px; /* Ajusta la altura máxima para el desplazamiento vertical */
+}
+
+    /* Estilos para el encabezado de la tabla */
+    ::deep .quickgrid[theme=pagoCuotas] thead {
+        background: none;
+        border-bottom: 2px solid var(--color-gris-300); /* Línea debajo del encabezado */
+    }
+
+    /* Estilos para las filas del cuerpo de la tabla */
+    ::deep .quickgrid[theme=pagoCuotas] tbody tr {
+        height: 40px; /* Altura de las filas */
+        background-color: white;
+        margin-bottom: 0; /* Elimina margen entre filas */
+    }
+
+    /* Estilos para las celdas (th y td) */
+    ::deep .quickgrid[theme=pagoCuotas] th,
+    ::deep .quickgrid[theme=pagoCuotas] td {
+        padding: 0.5rem 0.75rem; /* Espaciado interno de las celdas */
+        border: none; /* Elimina bordes de las celdas */
+        background-color: none;
+        text-align: center !important; /* Alinea el texto al centro */
+        vertical-align: middle !important; /* Alinea verticalmente en el medio */
+        box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+        width: 20%; /* Ajusta el ancho según el número de columnas; ajusta si es necesario */
+        position: relative;
+
+    }
+
+    /* Estilos para las celdas (th y td) */
+    ::deep .quickgrid[theme=pagoCuotas] th {
+        border-bottom: 2px solid var(--color-gris-300); /* Línea debajo del encabezado */
+    }
+
+
+/* Estilos específicos para las cabeceras (th) */
+::deep .quickgrid[theme=pagoCuotas] th {
+    text-align: center !important; /* Alinea el texto al centro */
+    border-bottom: 2px solid var(--color-gris-300); /* Línea debajo del encabezado */
+    padding: 0.75rem 0.75rem; /* Espaciado interno del encabezado */
+    margin-bottom: 0.5rem; /* Espacio adicional debajo del encabezado y la línea */
+    white-space: normal; /* Permite el ajuste del texto */
+}
+
+    /* Estilos específicos para los títulos de columna */
+    ::deep .quickgrid[theme=pagoCuotas] .col-title {
+        font-weight: bold;
+        gap: 0.4rem; /* Espacio entre el título de columna y el contenido */
+        text-align: center; /* Alinea el texto al centro */
+        margin: 0;
+    }
+
+    /* Estilos para los datos numéricos */
+    ::deep .quickgrid[theme=pagoCuotas] .numerico {
+        font-variant-numeric: tabular-nums; /* Alineación numérica uniforme */
+        text-align: right; /* Alinea el texto a la derecha */
+    }
+
+    /* Estilos para los títulos de columna numéricos */
+    ::deep .quickgrid[theme=pagoCuotas] th.numerico .col-title {
+        flex-direction: row-reverse;
+        gap: 0.4rem;
+    }
+
+    /* Oculta el indicador de ordenación en los encabezados */
+    ::deep .quickgrid[theme=pagoCuotas] th .sort-indicator {
+        display: none;
+    }
+
+    /* Asegúrate de eliminar cualquier posible contenido adicional en los encabezados que pueda afectar el diseño */
+    ::deep .quickgrid[theme=pagoCuotas] th::after {
+        display: none;
+    }
+    ::deep .quickgrid[theme=pagoCuotas] th.cuotas-header {
+        width: 150px; /* Ajusta el ancho según sea necesario */
+        text-align: right; /* Alinea el texto a la derecha */
+        padding: 0 30px; /* Ajusta el padding si es necesario */
+    }
+
+    ::deep .quickgrid[theme=pagoCuotas] th.estado-header {
+        width: 150px; /* Ajusta el ancho según sea necesario */
+        text-align: right; /* Alinea el texto a la derecha */
+        padding: 0 30px; /* Ajusta el padding si es necesario */
+    }
+
+        /* Asegúrate de que el fondo de las filas se aplique correctamente */
+        .bg-color-white {
+            background-color: #FFFFFF;
+        }
+
+         .bg-color-gray {
+            background-color: #F5F5F5;
+        }
+
+        .bg-color-previous {
+            background-color: #E0E0E0;
+        }
+
+
+/* Asegura que el td ocupe todo el espacio disponible */
+td.bg-color-white, td.bg-color-gray, td.bg-color-previous {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+

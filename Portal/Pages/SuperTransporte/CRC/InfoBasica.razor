@@ -1,0 +1,19 @@
+﻿@page "/supertransporte/centro/informacion-basica"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout;
+
+<h3>Información Básica</h3>
+
+<EditForm Model=@_infoBasica OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label for="capacidad_certificados">Capacidad de emisión de certificados por día</label>
+    <ValidationMessage For="() => _infoBasica.capacidad_certificados" />
+    <InputNumber id="capacidad_certificados" @bind-Value="_infoBasica.capacidad_certificados" />
+
+    <label for="horas_de_atencion_por_dia">Horario de atención (horas por día)</label>
+    <ValidationMessage For="() => _infoBasica.horas_de_atencion_por_dia" />
+    <InputNumber id="horas_de_atencion_por_dia" @bind-Value="_infoBasica.horas_de_atencion_por_dia" />
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

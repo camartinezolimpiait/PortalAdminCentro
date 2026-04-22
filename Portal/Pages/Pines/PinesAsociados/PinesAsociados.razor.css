@@ -1,0 +1,43 @@
+﻿.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.dialog {
+    max-width: 70.8%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem;
+    max-height: 70%;
+}
+
+    .dialog .dialog-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+    }
+
+.close {
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
+    transition: 0.25s ease;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+    .close:hover {
+        background-color: #DDD;
+    }

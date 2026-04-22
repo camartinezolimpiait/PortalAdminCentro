@@ -1,0 +1,80 @@
+﻿@page "/blog/{slug}"
+
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Text.Json.Nodes;
+@inject HttpClient Http
+
+<article>
+    <div class="article">
+    @if (articulo is null)
+    {
+        <div class="wrapper">
+            <p>Cargando artículo</p>
+        </div>
+    }
+    else
+    {
+        <PageTitle>@articulo!["seo"]!["title"] | MiLicencia</PageTitle>
+        <HeadContent>
+            <meta name="description" content="@articulo!["seo"]!["metaDesc"]">
+            <meta name="keywords" content="@articulo!["seo"]!["metaKeywords"]">
+        </HeadContent>
+        <header class="header">
+            <div class="wrapper">
+                <div class="accionesBack">
+                    <a href="compradepin/">Regresar</a>
+                </div>
+                <h1>
+                    <b>@articulo!["title"]</b>
+                </h1>
+            </div>
+        </header>
+        <div class="wrapper">
+            <img srcset='@articulo?["featuredImage"]?["node"]?["srSset"]'
+                 sizes='@articulo?["featuredImage"]?["node"]?["sizes"]'
+                 src='@articulo?["featuredImage"]?["node"]?["sourceUrl"]'
+                 alt='@articulo?["featuredImage"]?["node"]?["altText"]' class="banner_articulo" />
+            @{
+                var fechaStr = (string?)@articulo!["date"];
+                string fechaFormateada = "";
+                if (DateTime.TryParse(fechaStr, out var fecha))
+                {
+                    var cultura = new System.Globalization.CultureInfo("es-ES");
+                    fechaFormateada = fecha.ToString("dddd, d 'de' MMMM 'de' yyyy", cultura);
+                    // Primera letra mayúscula
+                    fechaFormateada = char.ToUpper(fechaFormateada[0], cultura) + fechaFormateada.Substring(1);
+                }
+            }
+            <p class="articulo-fecha">@fechaFormateada</p>
+            <div class="articulo-html">
+                @((MarkupString)(string)articulo?["content"])
+            </div>
+        </div>
+    }
+    <br />
+    </div>
+</article>
+
+@code {
+    [Parameter]
+    public string? Slug { get; set; }
+    private JsonNode? articulo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = new HttpClient();
+        httpClient.Timeout = TimeSpan.FromSeconds(30);
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://cms.milicencia.co/graphql");
+        var query = "{\"query\":\"query GetNewById($id: ID!) {\\n  post(id: $id, idType: SLUG) {\\n    title\\n    slug\\n    date\\n    seo {\\n      metaDesc\\n      metaKeywords\\n      metaRobotsNoindex\\n      title\\n    }\\n    content\\n    featuredImage {\\n      node {\\n        altText\\n        sourceUrl\\n        caption\\n        sizes\\n        srcSet\\n      }\\n    }\\n  }\\n}\",\"variables\":{\"id\":\"" + Slug + "\"}}";
+        var content = new StringContent(query, null, "application/json");
+        request.Content = content;
+        var response = await httpClient.SendAsync(request); ;
+        response.EnsureSuccessStatusCode();
+
+        using var responseStream = await response.Content.ReadAsStreamAsync();
+        JsonNode responseGQL = JsonNode.Parse(responseStream)!;
+
+        articulo = responseGQL!["data"]!["post"]!;
+    }
+}

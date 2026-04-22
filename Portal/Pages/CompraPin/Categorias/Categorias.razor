@@ -1,0 +1,157 @@
+﻿@page "/compradepin/categorias"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+
+
+        @if (PagoPin.TipoTramite == 1)
+        {
+            if (PagoPin.TramiteInstructor)
+            {
+                <h3>Categoría de la certificación</h3>
+                <h4>Seleccione la categoría de certificación a la que va a optar</h4>
+            }
+            else
+            {
+                <h3>Categorías</h3>
+                <h4>Seleccione la categoría a la que va a optar</h4>
+            }
+
+        }
+        else
+        {
+            if (PagoPin.TramiteInstructor)
+            {
+                <h3>Categoría de la certificación</h3>
+                <h4>Seleccione la categoría de certificación a la que va a Recategorizar</h4>
+            }
+            else
+            {
+                <h3>Categorias</h3>
+                <h4>Seleccione la categoría actual</h4>
+            }
+
+        }
+        @if (listadoCategoriasMotos.Count > 0)
+        {
+            <h4>Motos</h4>
+
+            <div class="grid_categoria mb-2 grid gap-3">
+
+
+                @for (int i = 0; i < listadoCategoriasMotos.Count; i++)
+                {
+                    bool seleccionado = CategoriaSeleccionada.Codigo == listadoCategoriasMotos[i].Codigo && CategoriaSeleccionada.Seleccionada;
+
+                    <label class="relative block h-full cursor-pointer rounded-sm border border-neutral-300 bg-neutral-50 p-3 text-neutral-900 hover:ring-2 hover:ring-azul-200 has-checked:border-azul-400 has-checked:bg-azul-100 has-checked:text-azul-800 has-focus:ring-2 has-focus:ring-azul-200">
+                        <input type="radio"
+                           checked="@seleccionado" 
+                           name="categoria"
+                           id="@listadoCategoriasMotos[i].Codigo" 
+                           value="@listadoCategoriasMotos[i].Codigo"
+                           @onchange="SeleccionCategoria"
+                           class="absolute bottom-0 opacity-0" />
+                        <span class="block text-3xl leading-none font-extrabold opacity-60">
+                            @listadoCategoriasMotos[i].Codigo
+                        </span>
+                        <span class="block text-xs leading-none font-medium">
+                            @listadoCategoriasMotos[i].Nombre
+                        </span>
+                    </label>
+                }
+            </div>
+        }
+
+        @if (listadoCategoriasAutoParticular.Count > 0)
+        {
+            <h4>Servicio particular</h4>
+            <div class="grid_categoria mb-2 grid gap-3">
+
+                @for (int i = 0; i < listadoCategoriasAutoParticular.Count; i++)
+                {
+                    bool seleccionado = CategoriaSeleccionada.Codigo == listadoCategoriasAutoParticular[i].Codigo && CategoriaSeleccionada.Seleccionada;
+
+                    <label class="relative block h-full cursor-pointer rounded-sm border border-neutral-300 bg-neutral-50 p-3 text-neutral-900 hover:ring-2 hover:ring-azul-200 has-checked:border-azul-400 has-checked:bg-azul-100 has-checked:text-azul-800 has-focus:ring-2 has-focus:ring-azul-200">
+                        <input type="radio" checked="@seleccionado" name="categoria" id="@listadoCategoriasAutoParticular[i].Codigo" value="@listadoCategoriasAutoParticular[i].Codigo" @onchange="SeleccionCategoria"
+                               class="absolute bottom-0 opacity-0" />
+                        <span class="block text-3xl leading-none font-extrabold opacity-60">
+                            @listadoCategoriasAutoParticular[i].Codigo
+                        </span>
+                        <span class="block text-xs leading-none font-medium">
+                            @listadoCategoriasAutoParticular[i].Nombre
+                        </span>
+                    </label>
+                }
+            </div>
+        }
+        @if (PagoPin.MayorEdad)
+        {
+            @if (listadoCategoriasAutoPublico.Count > 0)
+            {
+                <h4>Servicio público</h4>
+
+                <div class="grid_categoria mb-2 grid gap-3">
+
+                    @for (int i = 0; i < listadoCategoriasAutoPublico.Count; i++)
+                    {
+                        bool seleccionado = CategoriaSeleccionada.Codigo == listadoCategoriasAutoPublico[i].Codigo && CategoriaSeleccionada.Seleccionada;
+
+                        <label class="relative block h-full cursor-pointer rounded-sm border border-neutral-300 bg-neutral-50 p-3 text-neutral-900 hover:ring-2 hover:ring-azul-200 has-checked:border-azul-400 has-checked:bg-azul-100 has-checked:text-azul-800 has-focus:ring-2 has-focus:ring-azul-200">
+                            <input type="radio" checked="@seleccionado" name="categoria" id="@listadoCategoriasAutoPublico[i].Codigo" value="@listadoCategoriasAutoPublico[i].Codigo" @onchange="SeleccionCategoria"
+                                   class="absolute bottom-0 opacity-0" />
+                            <span class="block text-3xl leading-none font-extrabold opacity-60">
+                                @listadoCategoriasAutoPublico[i].Codigo
+                            </span>
+                            <span class="block text-xs leading-none font-medium">
+                                @listadoCategoriasAutoPublico[i].Nombre
+                            </span>
+                        </label>
+
+                    }
+
+
+                </div>
+            }
+        }
+
+        @if (PagoPin.TipoTramite == 3 && !PagoPin.TramiteInstructor && listadoCategoriasRecategorizacion.Count > 0)
+        {
+            <h4>Selecciona la categoria final </h4>
+            <div class="grid_categoria mb-2 grid gap-3">
+                @for (int i = 0; i < listadoCategoriasRecategorizacion.Count; i++)
+                {
+                    bool seleccionado = RecategorizacionSeleccionada.Codigo == listadoCategoriasRecategorizacion[i].Codigo && RecategorizacionSeleccionada.Seleccionada;
+
+                    <label class="relative block h-full cursor-pointer rounded-sm border border-neutral-300 bg-neutral-50 p-3 text-neutral-900 hover:ring-2 hover:ring-azul-200 has-checked:border-azul-400 has-checked:bg-azul-100 has-checked:text-azul-800 has-focus:ring-2 has-focus:ring-azul-200">
+                        <input type="radio" checked="@seleccionado" name="categoriaRecategorizacion" id="Recategorizacion_@listadoCategoriasRecategorizacion[i].Codigo" value="@listadoCategoriasRecategorizacion[i].Codigo" @onchange="SeleccionCategoriaRecategorizacion"
+                               class="absolute bottom-0 opacity-0" />
+                        <span class="block text-3xl leading-none font-extrabold opacity-60">
+                            @listadoCategoriasRecategorizacion[i].Codigo
+                        </span>
+                        <span class="block text-xs leading-none font-medium">
+                            @listadoCategoriasRecategorizacion[i].Nombre
+                        </span>
+                    </label>
+
+
+                }
+
+            </div>
+
+        }
+
+    </ContentTemplate>
+</SpinLoader>

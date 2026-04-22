@@ -1,0 +1,79 @@
+﻿@page "/blogcda"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using System.Text.Json.Nodes;
+@using System.Net.Http.Headers
+@inject HttpClient Http
+
+<PageTitle>Blog | MiLicencia</PageTitle>
+
+<!--<header class="header">
+    <div class="wrapper">
+        <h1>
+            <b>Blog:</b> Actualidad digital
+        </h1>
+    </div>
+</header>-->
+
+<div class="wrapper">
+    @if (articulos is null)
+    {
+        <p>Cargando artículos</p>
+    }
+    else
+    {
+        <ul class="lista_comunicados">
+            @foreach (JsonNode? articulo in articulos)
+            {
+                <li class="comunicado">
+                    <img srcset='@articulo?["node"]?["featuredImage"]?["node"]?["srcSet"]'
+                         sizes='@articulo?["node"]?["featuredImage"]?["node"]?["sizes"]'
+                         src='@articulo?["node"]?["featuredImage"]?["node"]?["sourceUrl"]'
+                         alt='@articulo?["node"]?["featuredImage"]?["node"]?["altText"]'
+                         width="200"
+                         height="200"
+                         class="comunicado-imagen" />
+                    <div class="comunicado-texto">
+                        <h4>
+                            <NavLink href="@($"blogcda/{articulo?["node"]?["slug"]}")">
+                                @articulo?["node"]?["title"]
+                            </NavLink>
+                        </h4>
+                        @((MarkupString)(string)articulo?["node"]?["excerpt"])
+                        <p class="fecha_comunicado lining">@articulo?["node"]?["date"]</p>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    @* Todo gracias a https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/use-dom#deserialize-subsections-of-a-json-payload *@
+    @* Para la paginacion https://chrissainty.com/working-with-query-strings-in-blazor/ *@
+    private JsonArray? articulos;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://cms.milicencia.co/graphql");
+            request.Headers.Add("User-Agent", "PortalAdminCentro/1.0");
+            request.Headers.Referrer = new Uri("https://www.milicencia.co/");
+            var content = new StringContent("{\"query\":\"query allPosts(\\n    $first: Int\\n    $last: Int\\n    $after: String\\n    $before: String\\n) {\\n    posts(first: $first, last: $last, after: $after, before: $before, where: { categoryName: \\\"Milicencia\\\" }) {\\n      edges {\\n        node {\\n          id\\n          title\\n          slug\\n          date\\n          featuredImage {\\n            node {\\n                altText\\n                sourceUrl\\n                sizes\\n                srcSet\\n            }\\n          }\\n          excerpt\\n        }\\n        cursor\\n      }\\n      pageInfo {\\n        endCursor\\n        hasNextPage\\n        hasPreviousPage\\n        startCursor\\n      }\\n    }\\n  }\",\"variables\":{\"first\":4,\"after\":\"\"}}", null, "application/json");
+            request.Content = content;
+            var response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                JsonNode responseGQL = JsonNode.Parse(responseStream)!;
+                articulos = responseGQL!["data"]!["posts"]!["edges"]!.AsArray();
+            }
+        }
+        catch (Exception ex)
+        {
+            articulos = null;
+        }
+    }
+}

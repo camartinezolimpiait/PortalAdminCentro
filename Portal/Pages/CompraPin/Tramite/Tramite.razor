@@ -1,0 +1,92 @@
+﻿@page "/compradepin/tramite"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@editContext" OnValidSubmit="RadioSelection">
+            <DataAnnotationsValidator />
+
+            <div>
+                <h3>Tipo de trámite</h3>
+                <h4>Curso de conducción</h4>
+                <p class="mb-2">Para tramitar la licencia de conducción ante un Organismo de Tránsito</p>
+
+                <div class="mb-4">
+                    @if (TiposTramitesHabilitados.TramiteNormal)
+                    {
+                        <div class="space-y-0.5">
+                            <InputRadioGroup @bind-Value="cantidadModel.Cantidad" name="tramiteNormal">
+                                @foreach (var tramite in ListadoTramites.Where(x => !x.Instructor))
+                                {
+                                    <div>
+                                        <label class="flex items-center">
+                                            <InputRadio Value="@tramite.Id" />
+                                            @tramite.Nombre
+                                        </label>
+                                    </div>
+                                }
+                            </InputRadioGroup>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div>El Centro no posee categorías asociadas al trámite de cursos. Por favor comuníquese con Soporte.</div>
+                    }
+
+                    @if (PagoPin.EdadAspirante > 17)
+                    {
+                        <h4>Curso para formación de instructores</h4>
+                        <p class="mb-2">Para tramitar la certificación de instructor en conducción</p>
+
+                        <details class="collapse-arrow collapse mb-4 max-w-[72ch] border border-neutral-300 bg-neutral-50 shadow-sm open:border-azul-400">
+                            <summary class="collapse-title font-semibold text-neutral-950">
+                                Trámites de instructor
+                            </summary>
+                            <div class="collapse-content space-y-0.5 px-3 pb-4">
+                                @if (TiposTramitesHabilitados.TramiteInstructor)
+                                {
+                                    <InputRadioGroup @bind-Value="cantidadModel.Cantidad" name="tramiteInstructor">
+                                        @foreach (var tramite in ListadoTramites.Where(x => x.Instructor))
+                                        {
+                                            <div>
+                                                <label class="flex items-center">
+                                                    <InputRadio Value="@tramite.Id" />
+                                                    @tramite.Nombre
+                                                </label>
+                                            </div>
+                                        }
+                                    </InputRadioGroup>
+                                }
+                                else
+                                {
+                                    <div>El Centro no posee categorías asociadas al trámite de cursos Instructor. Por favor comuníquese con Soporte.</div>
+                                }
+                            </div>
+                        </details>
+                    }
+                </div>
+            </div>
+            <ValidationMessage For="@(() => cantidadModel.Cantidad)" />
+
+            <div class="mt-3 flex items-center space-x-3">
+                <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">
+                    Atrás
+                </button>
+
+                <button type="submit" class="boton-primario">
+                    Siguiente
+                </button>
+            </div>
+        </EditForm>
+    </ContentTemplate>
+</SpinLoader>

@@ -1,0 +1,38 @@
+﻿@page "/compradepincda/ResumencompraCDA"
+@inherits LayoutComponentBase
+
+@inject NavigationManager NavManager
+
+<div>
+    <!--   <header class="encabezadodos">
+           <div class="wrapper margen_general">
+               <p class="linkdos"><a>Regresar</a></p>
+               <p class="titulodos">Compra de PIN</p>
+           </div>
+          </header>-->
+    <h2 class="titulCompra">Compra completada</h2>
+    <div class="resumen-compra-columnas">
+        <div>
+            <p>
+                Ya puedes usar este Pin para realizar tu revisión técnico mecánica.
+            </p>
+            <div class="resumen-compra-order">
+                <div class="resumen-compra-order-card">
+                    <div class="resumen-compra-code-pin">PIN</div>
+                   <!-- <div class="resumen-compra-code-pin">Revisión técnico mecánica</div>-->
+                    <div class="content">
+                        <div class="resumen-compra-title-pin">@PagoPinCda.PinGenerado</div>
+                    </div>
+                    <div class="resumen-compra-total-y-valor">
+                        <div class="resumen-compra-code-pin"> Total debitado</div>
+                        <div class="resumen-compra-title-pin">$@PagoPinCda.ValorDiscriminadoCotizacion.ValorTotal.ToString("N0")</div>
+                    </div>
+                </div>
+            </div>
+            <div class="resumen-compra-botones-contenedor">
+                <button class="boton-primario" @onclick="Salir">Salir</button>
+                <button class="boton-primario" @onclick="ComprarOtroPin">Comprar Otro Pin</button>
+            </div>
+        </div>
+    </div>
+</div>

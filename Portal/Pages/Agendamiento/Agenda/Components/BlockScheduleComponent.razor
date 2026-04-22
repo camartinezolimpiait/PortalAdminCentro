@@ -1,0 +1,166 @@
+﻿@using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda
+@using portalAdministrativoSISEC.Enum
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+@foreach (var intervalo in CitasIntervaloListado)
+{
+    @if (!intervalo.EsHoraAlmuerzo)
+    {
+        <li class="time">@intervalo.NombreIntervalo</li>
+        foreach (var dia in intervalo.DiasIntervalo)
+        {
+            var isBlock = FilteredList.FirstOrDefault(x => x.DiaInhabilitado && x.FechaAgenda.ToString("ddMMyyyy") == dia.FechaAgenda.ToString("ddMMyyyy")) != null;
+            <li class="appointment">
+                @foreach (var cita in dia.Cita.Where(ct => ct.TipoCita != TipoCita.Ocupado && ct.TipoCita != TipoCita.BloqueadoPorConfiguracion))
+                {
+                    if (!isBlock && cita.IdEstadoAgenda != (short)EstadoAgenda.DiaInhabilitado)
+                    {
+                        isBlock = cita.IsCheckedForBlock;
+                        if (HandlerBlock && HandlerDayBlock == cita.FechaAgenda.ToString("ddMMyyyy"))
+                        {
+                            isBlock = BlockDays[HandlerDayBlock];
+                            cita.IsCheckedForBlock = isBlock;
+                            cita.IsChange = true;
+                            dia.IsChange = true;
+                        }
+                    }
+                    <label class="appointment-block">
+                        <input type="checkbox" checked="@isBlock"
+                               @onchange="(args) => BlockScheduleOnChanged(args, cita, dia)">
+                        <span class="appointment-block-bg">
+                            @if (isBlock)
+                            {
+                                <svg class="feather">
+                                    <use xlink:href="assets/feather-sprite.svg#unlock"></use>
+                                </svg>
+                            }
+                            else
+                            {
+                                <svg class="feather">
+                                    <use xlink:href="assets/feather-sprite.svg#lock"></use>
+                                </svg>
+                            }
+                        </span>
+                    </label>
+                }
+            </li>
+        }
+    }
+    else
+    {
+        <li class="lunchtime @(((ScheduleColumns)CitasIntervaloListado[0].DiasIntervalo.Count + 1).ToString().ToLower())">Almuerzo</li>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public List<CitasIntervalo> CitasIntervaloListado { get; set; }
+
+    [Parameter]
+    public Dictionary<string, bool> BlockDays { get; set; }
+
+    [Parameter]
+    public EventCallback<ActiveCheckboxAllDay> ActivateAllDayBlockCallbak { get; set; }
+    [Parameter]
+    public bool HandlerBlock { get; set; }
+    [Parameter]
+    public string HandlerDayBlock { get; set; }
+    private ApplicationShared applicationShared = new ApplicationShared();
+    [Inject]
+    ProtectedSessionStorage ProtectedSessionStore { get; set; }
+
+    [Inject]
+    DataInformation dataInformation { get; set; }
+
+    protected override void OnInitialized()
+    {
+        dataInformation.OnChange += StateHasChanged;
+    }
+    protected override async Task<Task> OnParametersSetAsync()
+    {
+        var result = await ProtectedSessionStore.GetAsync<ApplicationShared>(applicationShared.NameLocalStorage);
+        applicationShared = result.Value;
+        StateHasChanged();
+        return base.OnParametersSetAsync();
+    }
+    public void Dispose()
+    {
+        dataInformation.OnChange -= StateHasChanged;
+    }
+
+    protected async Task BlockScheduleOnChanged(ChangeEventArgs e, Cita appoiment, DiasIntevalo diasIntevalo)
+    {
+        appoiment.IsChange = true;
+        appoiment.IsCheckedForBlock = (bool)e.Value;
+        diasIntevalo.DiaInhabilitado = (bool)e.Value;
+        var isEnabledDay = SetEnabledDay(diasIntevalo.FechaAgenda.ToString("ddMMyyyy"));
+        diasIntevalo.IsChange = true;
+        // applicationShared.CitasIntervaParaBloquear = CitasIntervaloListado;
+        dataInformation._CitasIntervalos = CitasIntervaloListado;
+        await ActivateAllDayBlockCallbak.InvokeAsync(new ActiveCheckboxAllDay
+        {
+            Day = diasIntevalo.FechaAgenda.ToString("ddMMyyyy"),
+            Status = isEnabledDay
+        });
+        StateHasChanged();
+    }
+
+    List<DiasIntevalo> FilteredList = new List<DiasIntevalo>();
+    protected override void OnParametersSet()
+    {
+        FilteredList = new List<DiasIntevalo>();
+        foreach (var item in BlockDays)
+        {
+            foreach (var intervalo in CitasIntervaloListado.Where(c => !c.EsHoraAlmuerzo))
+            {
+                intervalo.DiasIntervalo.Where(x => x.FechaAgenda.ToString("ddMMyyyy") == item.Key).ToList().ForEach(c =>
+                {
+                    FilteredList.Add(new DiasIntevalo
+                    {
+                        DiaInhabilitado = item.Value,
+                        FechaAgenda = c.FechaAgenda,
+                        IsChange = true
+                    });
+                    if (HandlerBlock && HandlerDayBlock == c.FechaAgenda.ToString("ddMMyyyy"))
+                    {
+                        intervalo.DiaInhabilitado = item.Value;
+                        c.DiaInhabilitado = item.Value;
+                        c.Cita.ForEach(ct =>
+                        {
+                            ct.IsCheckedForBlock = item.Value;
+                            ct.IsChange = true;
+                        });
+
+                        c.IsChange = true;
+                    }
+                });
+            }
+
+        }
+    }
+
+    private bool SetEnabledDay(string day)
+    {
+        List<bool> resultCitas = new List<bool>();
+        List<bool> resultDias = new List<bool>();
+        foreach (var intervalo in CitasIntervaloListado.Where(c => !c.EsHoraAlmuerzo))
+        {
+            foreach (var dia in intervalo.DiasIntervalo.Where(x => x.FechaAgenda.ToString("ddMMyyyy") == day))
+            {
+                resultDias.Add(dia.DiaInhabilitado);
+                resultCitas.Add(dia.Cita.Where(filter => filter.TipoCita != TipoCita.BloqueadoPorConfiguracion).All(x => x.IsCheckedForBlock));
+            }
+        }
+
+        return resultCitas.All(x => x);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            dataInformation._CitasIntervalos = CitasIntervaloListado;
+        }
+    }
+}

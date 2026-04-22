@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "nombre": "Motocicleta"
+    },
+    {
+      "id": 2,
+      "nombre": "Automóvil"
+    },
+    {
+      "id": 3,
+      "nombre": "Campero"
+    },
+    {
+      "id": 4,
+      "nombre": "Camioneta"
+    },
+    {
+      "id": 5,
+      "nombre": "Microbús"
+    },
+    {
+      "id": 6,
+      "nombre": "Camión rígido"
+    },
+    {
+      "id": 7,
+      "nombre": "Buseta"
+    },
+    {
+      "id": 8,
+      "nombre": "Bus"
+    },
+    {
+      "id": 9,
+      "nombre": "Vehículo artículado"
+    }
+  ]
+}

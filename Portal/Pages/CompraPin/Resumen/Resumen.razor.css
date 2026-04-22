@@ -1,0 +1,150 @@
+﻿
+.boton-texto {
+    height: min-content;
+    padding: 0;
+    font-size: 0.85em;
+}
+
+.alinear_derecha {
+    margin-inline-start: auto;
+}
+
+.resumen {
+    grid-area: left;
+    background: var(--color-gris-50);
+    padding: var(--text-lg);
+    border: 1px var(--color-gris-300) solid;
+    border-radius: 0.75rem;
+    margin-block-end: 1.5rem;
+}
+
+.resumen-item:not(:last-child) {
+    --padding: 0.75rem;
+    padding-bottom: var(--padding);
+    margin-block-end: var(--padding);
+}
+
+.item-encabezado {
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    column-gap: 0.5rem;
+}
+
+    .item-encabezado a {
+        font-weight: 400;
+        font-size: 1rem;
+    }
+
+        .item-encabezado a:visited {
+            color: var(--color-azul-600);
+        }
+
+.valores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    row-gap: 0.1rem;
+}
+
+    .valores .valor {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .valores.detalle {
+        --padding-fondo: 0.5rem;
+        padding-bottom: var(--padding-fondo);
+        border-bottom: 1px solid black;
+        margin-block-end: var(--padding-fondo);
+        grid-template-rows: repeat(4, 1fr);
+    }
+
+    .valores.total {
+        font-weight: 600;
+    }
+
+.valor.total {
+    font-weight: 800;
+}
+
+.instrucciones {
+    margin-block-end: 1.5rem;
+}
+
+@media screen and (min-width: 640px) {
+    .columnas {
+        max-width: 70rem;
+        display: flex;
+        flex-direction: row;
+        column-gap: var(--text-2xl);
+        margin-block-end: 1.5rem;
+    }
+
+    .resumen--limit { /* solo cuando NO es confirmación */
+        max-width: 420px;
+    }
+
+    .resumen {
+        flex: 1 0 max-content;
+    }
+
+    .instrucciones {
+        flex: 1 1 42ch;
+        position: sticky;
+        top: 1.5rem;
+        height: max-content;
+    }
+}
+
+.oculto {
+    display: none;
+}
+
+.item-contenido p {
+    margin: 0;
+}
+
+
+.total-resumen .tabla-resumen table {
+  border-collapse: collapse;
+  margin: 0;
+  width: 100%;
+  margin-block-end: calc($Interlineado / 2);
+}
+
+.total-resumen .tabla-resumen td {
+  padding-right: 0;
+}
+
+.total-resumen .tabla-resumen .num-tabla {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.total-resumen .valor-total {
+  text-align: right;
+}
+
+.total-resumen .valor-total p {
+  margin-block-end: 0;
+}
+
+tr:nth-child(odd) {
+    background-color: transparent !important;
+}
+
+.valor-total .fila-total {
+    display: flex;
+    justify-content: space-between; /* Izquierda y derecha */
+    margin: 0; /* opcional, quita márgenes extra */
+}
+
+.valor-total .numerico {
+    font-weight: bold; /* opcional, resaltar valor */
+    text-align: right; /* asegura alineación del número */
+}
+
+

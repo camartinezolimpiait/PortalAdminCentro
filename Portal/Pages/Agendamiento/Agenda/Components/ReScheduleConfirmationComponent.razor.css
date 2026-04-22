@@ -1,0 +1,15 @@
+﻿.schedule-detail {
+    margin-top: 10px;
+}
+
+.agenda-details-title {
+    background: var(--color-azul-200) !important;
+    color: var(--color-azul-800) !important;
+}
+
+.action-form {
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    margin-top: 20px;
+}

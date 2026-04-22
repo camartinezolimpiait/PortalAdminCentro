@@ -1,0 +1,74 @@
+﻿@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data
+@using Blazored.Toast.Configuration
+
+
+<div class="admin-layout">
+    <nav>
+        <div class="header-lista">
+            <div class="flex flex-row">
+                <svg class="logo-negocio">
+                    @if (menuService != null && menuService.Plataforma == "CRC")
+                    {
+                        <use xlink:href="assets/iconos.svg#logomicrc" />
+                    }
+                    else if (menuService != null && menuService.Plataforma == "CEA")
+                    {
+                        <use xlink:href="assets/iconos.svg#logomicea" />
+                    }
+                    else if (menuService != null && menuService.Plataforma == "Armas")
+                    {
+                        <use xlink:href="assets/iconos.svg#logomiarmas" />
+                    }
+                    else
+                    {
+                        <use xlink:href="assets/iconos.svg#logomicda" />
+                    }
+                </svg>
+                <div class="separador"></div>
+            </div>
+
+            <NavMenuPrincipal></NavMenuPrincipal>
+
+            <div class="dropdown dropdown-bottom dropdown-end">
+                <details>
+                    <summary class="btn btn-ghost">
+                        @if (menuService != null)
+                        {
+                            @if (string.IsNullOrEmpty(menuService.FirstNameUser))
+                            {
+                                <svg class="feather">
+                                    <use xlink:href="assets/feather-sprite.svg#user" />
+                                </svg>
+
+                                <span class="nombre_usuario"><strong>Usuario:</strong> </span>
+                            }
+                            else
+                            {
+                                <svg class="feather">
+                                    <use xlink:href="assets/feather-sprite.svg#user" />
+                                </svg>
+
+                                <span class="nombre_usuario"><strong>@menuService.FirstNameUser</strong></span>
+                            }
+                        }
+                    </summary>
+                    <ul class="menu dropdown-content bg-base-200 rounded-box z-1 m-0 w-fit p-2 shadow-sm">
+                        <li>
+                            <a href="" @onclick="(() => LogOut())"
+                               class="no-underline whitespace-nowrap">
+                                <svg class="feather">
+                                    <use xlink:href="assets/feather-sprite.svg#log-out" />
+                                </svg><span>Cerrar sesión</span>
+                            </a>
+                        </li>
+                    </ul>
+                </details>
+            </div>
+        </div>
+
+    </nav>
+
+    @Body
+    <BlazoredToasts Position="ToastPosition.BottomRight" Timeout="10" ShowProgressBar="true" />
+</div>

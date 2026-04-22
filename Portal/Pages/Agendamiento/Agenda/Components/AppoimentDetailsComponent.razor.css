@@ -1,0 +1,19 @@
+﻿.detail-group label {
+    font-size: small;
+    opacity: 0.7;
+}
+
+.detail-group span {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.agenda-details-title_enrolamiento {
+    background: var(--color-verde-200) !important;
+    color: var(--color-verde-900) !important;
+}
+
+.agenda-details-title_continuacion {
+    background: var(--color-azul-200) !important;
+    color: var(--color-azul-900) !important;
+}

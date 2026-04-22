@@ -1,0 +1,77 @@
+﻿@page "/configuracion/configuracion-cupos"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <h3>3. Configuración de cupos</h3>
+        <h4>Tipo de agenda</h4>
+        <p>
+            Defina cómo funcionará su agenda. Escoja "Cupos limitados" para tener mayor control sobre
+            el número de personas que pueden llegar a su CRC. Escoja "Ilimitada" para darle más control
+            a los ciudadanos sobre cuándo asistir.
+        </p>
+        <fieldset disabled="@ReadOnly" class="radio-grande">
+            <input ReadOnly="@ReadOnly" type="radio" checked="@(IsIlimitado == false)" name="TipoAgenda" value="limitado" id="TipoagendaA"
+                   @onchange="Show" />
+            <label for="TipoagendaA">
+                <b>Tipo A: Cupos limitados</b><br>
+                Número limitado de cupos para cada intervalo.
+                Los ciudadanos pueden ver los horarios con cupos disponibles.
+            </label>
+            <input ReadOnly="@ReadOnly" type="radio" checked="@(IsIlimitado == true)" name="TipoAgenda" value="ilimitado" id="TipoagendaB"
+                   @onchange="Show" />
+            <label for="TipoagendaB">
+                <b>Tipo B: Cupos Ilimitados</b><br>
+                Sin límite de cupos. Los ciudadanos pueden ver todos los horarios
+                con el número de personas agendadas en cada uno
+            </label>
+        </fieldset>
+        <div hidden="@IsIlimitado">
+            <h4>Cantidad de cupos</h4>
+            <label>
+                <b>Cupos por intervalo</b>
+            </label>
+            <input ReadOnly="@ReadOnly" type="number" class="form-control" @bind-value="applicationShared.CuposIntervalo"
+                   @onblur="CalcalularRegistroAsync" />
+            <p>
+                De acuerdo con su selección, este es el número de cupos que quedaran disponibles para agendar con la
+                configuración
+                actual.
+                Recuerde que su centro tiene una capacidad de: <b>@CapacidadMaxima</b> certificados por día.
+            </p>
+            <table class="tabla-responsive">
+                <thead>
+                    <tr>
+                        <th>Día</th>
+                        <th class="num">Cupos totales</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>Lunes a Viernes</td>
+                    <td class="num"> @TotalCitasLV</td>
+                </tr>
+                <tr>
+                    <td>Sábado</td>
+                    <td class="num"> @TotalCitasS</td>
+                </tr>
+                <tr>
+                    <td>Domingo</td>
+                    <td class="num"> @TotalCitasD</td>
+                </tr>
+            </table>
+        </div>
+        @if (applicationShared.CreateNewConfiguration)
+        {
+            <button class="boton-secundario" @onclick="Atras">Atrás</button>
+            <button class="boton-primario" @onclick="GuardarConfiguracionReglas">Guardar y continuar</button>
+        }
+
+    </ContentTemplate>
+</SpinLoader>

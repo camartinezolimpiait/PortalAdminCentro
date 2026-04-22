@@ -1,0 +1,7 @@
+﻿.curso_instructor {
+    margin-block-start: -0.75rem;
+}
+
+    .curso_instructor summary {
+        color: var(--color-azul-900);
+    }

@@ -1,0 +1,186 @@
+﻿@page "/supertransporte/centro/registro-reps"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Registro especial de prestadores de servicios de salud</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo III</h4>
+        <p>1. Contar con la inscripción en el "Registro especial de prestadores de servicios de salud - REPS" del sistema obligatorio de garantía de calidad de la salud, de conformidad la normatividad que expida el Ministerio de Salud y  Protección Social</p>
+    </div>
+</details>
+
+<EditForm Model=@_registroREPS OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label for="codigo_inscripcion">Nº código de Inscripción:</label>
+    <ValidationMessage For="() => _registroREPS.codigo_inscripcion" />
+    <InputText id="codigo_inscripcion" @bind-Value="_registroREPS.codigo_inscripcion" />
+
+    <div class="dos_columnas">
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de inscripción
+                </legend>
+                <ValidationMessage For="() => _registroREPS.dia_inscripcion" />
+                <ValidationMessage For="() => _registroREPS.mes_inscripcion" />
+                <ValidationMessage For="() => _registroREPS.anio_inscripcion" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_inscripcion">Día</label>
+                        <InputNumber id="dia_inscripcion" @bind-Value="_registroREPS.dia_inscripcion" />
+                    </div>
+                    <div>
+                        <label for="mes_inscripcion">Mes</label>
+                        <InputNumber id="mes_inscripcion" @bind-Value="_registroREPS.mes_inscripcion" />
+                    </div>
+                    <div>
+                        <label for="anio_inscripcion">Año</label>
+                        <InputNumber id="anio_inscripcion" @bind-Value="_registroREPS.anio_inscripcion" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de vencimiento
+                </legend>
+                <ValidationMessage For="() => _registroREPS.dia_vencimiento" />
+                <ValidationMessage For="() => _registroREPS.mes_vencimiento" />
+                <ValidationMessage For="() => _registroREPS.anio_vencimiento" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_vencimiento">Día</label>
+                        <InputNumber id="dia_vencimiento" @bind-Value="_registroREPS.dia_vencimiento" />
+                    </div>
+                    <div>
+                        <label for="mes_vencimiento">Mes</label>
+                        <InputNumber id="mes_vencimiento" @bind-Value="_registroREPS.mes_vencimiento" />
+                    </div>
+                    <div>
+                        <label for="anio_vencimiento">Año</label>
+                        <InputNumber id="anio_vencimiento" @bind-Value="_registroREPS.anio_vencimiento" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de renovación
+                </legend>
+                <ValidationMessage For="() => _registroREPS.dia_renovacion" />
+                <ValidationMessage For="() => _registroREPS.mes_renovacion" />
+                <ValidationMessage For="() => _registroREPS.anio_renovacion" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_renovacion">Día</label>
+                        <InputNumber id="dia_renovacion" @bind-Value="_registroREPS.dia_renovacion" />
+                    </div>
+                    <div>
+                        <label for="mes_renovacion">Mes</label>
+                        <InputNumber id="mes_renovacion" @bind-Value="_registroREPS.mes_renovacion" />
+                    </div>
+                    <div>
+                        <label for="anio_renovacion">Año</label>
+                        <InputNumber id="anio_renovacion" @bind-Value="_registroREPS.anio_renovacion" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de la última autoevaluación de las condiciones de habilitación y declaración en el REPS
+                </legend>
+                <ValidationMessage For="() => _registroREPS.dia_ultima_autoevaluacion" />
+                <ValidationMessage For="() => _registroREPS.mes_ultima_autoevaluacion" />
+                <ValidationMessage For="() => _registroREPS.anio_ultima_autoevaluacion" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_ultima_autoevaluacion">Día</label>
+                        <InputNumber id="dia_ultima_autoevaluacion" @bind-Value="_registroREPS.dia_ultima_autoevaluacion" />
+                    </div>
+                    <div>
+                        <label for="mes_ultima_autoevaluacion">Mes</label>
+                        <InputNumber id="mes_ultima_autoevaluacion" @bind-Value="_registroREPS.mes_ultima_autoevaluacion" />
+                    </div>
+                    <div>
+                        <label for="anio_ultima_autoevaluacion">Año</label>
+                        <InputNumber id="anio_ultima_autoevaluacion" @bind-Value="_registroREPS.anio_ultima_autoevaluacion" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <fieldset class="pregunta_sn">
+        <legend>
+            Secretaría de salud donde realizó la inscripción
+        </legend>
+        <label for="secretaria_de_salud">Nombre de la secretaría:</label>
+        <ValidationMessage For="() => _registroREPS.secretaria_de_salud" />
+        <InputSelect id="secretaria_de_salud" @bind-Value="_registroREPS.secretaria_de_salud">
+            <option value="">-</option>
+            @foreach (var item in _selectSecretaria)
+            {
+                <option value="@item.id">@item.nombre</option>
+            }
+        </InputSelect>
+
+        <label for="departamento">Departamento</label>
+        <ValidationMessage For="() => _registroREPS.departamento" />
+        <InputSelect id="departamento" @bind-Value="_registroREPS.departamento">
+            <option value="">-</option>
+            @foreach (var item in _selectDepartamento)
+            {
+                <option value="@item.codigoDep">@item.nombre</option>
+            }
+        </InputSelect>
+
+        <label for="ciudad">Ciudad</label>
+        <ValidationMessage For="() => _registroREPS.ciudad" />
+        <InputSelect id="ciudad" @bind-Value="_registroREPS.ciudad">
+            <option value="">-</option>
+            @if (validarCidudadseleccionada())
+            {
+                @if (_selectDepartamento.Find(w => w.codigoDep == _registroREPS.departamento) != null)
+                {
+                    @if (_selectDepartamento.Find(w => w.codigoDep == _registroREPS.departamento).ciudades != null)
+                    {
+                        @foreach (var item in _selectDepartamento.Find(w => w.codigoDep == _registroREPS.departamento).ciudades)
+                        {
+                            <option value="@item.codigo">@item.nombre</option>
+                        }
+                    }
+                }
+            }
+        </InputSelect>
+    </fieldset>
+
+    <label>Adjuntar el formulario de inscripción en el REPS</label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_registroREPS.nombre_adjunto_formulario_inscripcion</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileFormulario">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <ValidationMessage For="@(() => _registroREPS.formulario_inscripcion)" />
+    <InputFile class="file-input w-full p-0" id="formulario_inscripcion" OnChange="HandleArchivoSeleccionado" />
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>
+

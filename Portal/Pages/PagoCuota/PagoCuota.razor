@@ -1,0 +1,166 @@
+﻿@page "/compradepin/pagoCuota"
+@inherits LayoutComponentBase
+
+@using portalAdministrativoSISEC.Data.CompraPin
+@using portalAdministrativoSISEC.Pages.Common
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+@using portalAdministrativoSISEC.Pages.PagoCuota.ResumenPagoCuota
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Util.Extension
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo
+@using System.Globalization;
+@using portalAdministrativoSISEC.Pages.PagoCuota.ConfirmacionCompraCuota
+@using portalAdministrativoSISEC.Enum.Devoluciones;
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+
+        @if (!ConfirmacionCompra)
+        {
+            <EditForm EditContext="@editContext" OnValidSubmit="submitCuotas">
+                <DataAnnotationsValidator />
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- Opciones de pago -->
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-0">Opciones de pago</h3>
+                        <InputRadioGroup @bind-Value="paymentOptionModel.PaymentType" Name="opcionPago" @bind-Value:after="OnPaymentOptionChanged">
+                            <!-- Elegir número de cuotas -->
+                            <div class="space-y-3 py-3">
+                                <ValidationMessage For="@(() => paymentOptionModel.Cuotas)" />
+                                <!-- Primera opción: elegir número de cuotas -->
+                                <label class="ring-azul-200 has-checked:border-azul-400 flex cursor-pointer items-center gap-3 rounded-lg border border-neutral-300 bg-neutral-50 px-3 hover:ring-2 has-checked:ring-2">
+                                    <InputRadio type="radio"
+                                                name="opcionPago"
+                                                Value="PaymentType.Cuotas"
+                                                class="size-6 text-azul-600 focus:ring-azul-600"
+                                                @onchange="@(() => opcionPago = "Cuotas")" />
+
+                                    <span class="inline-block w-46">Elegir número de cuotas:</span>
+
+                                    <fieldset class="join ml-3 flex items-center border-none m-0" disabled="@(!EsPagoPorCuotas)">
+                                        <button class="join-item btn btn-soft"
+                                                type="button"
+                                                @onclick="RestarCuotas"
+                                                disabled="@(!EsPagoPorCuotas)">
+                                            −
+                                        </button>
+
+                                        <InputNumber type="number"
+                                                     @bind-Value="paymentOptionModel.Cuotas"
+                                                     name="numeroCuotas"
+                                                     class="hide-spin-button join-item w-16 border-gray-200 text-center"
+                                                     min="1"
+                                                     max="6"
+                                                     disabled="@(!EsPagoPorCuotas)" />
+
+                                        <button class="join-item btn btn-soft"
+                                                type="button"
+                                                @onclick="AgregarCuotas"
+                                                disabled="@(!EsPagoPorCuotas)">
+                                            +
+                                        </button>
+                                    </fieldset>
+                                </label>
+
+                                <ValidationMessage For="@(() => paymentOptionModel.ValorParcial)" />
+                                <label class="ring-azul-200 has-checked:border-azul-400 flex cursor-pointer items-center gap-3 rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-3 hover:ring-2 has-checked:ring-2">
+                                    <InputRadio type="radio"
+                                                name="opcionPago"
+                                                class="size-6 text-azul-600 focus:ring-azul-600"
+                                                checked
+                                                @onchange="@(() => opcionPago = "Parcial")"
+                                                Value="PaymentType.Parcial" />
+                                    <!-- Texto con ancho fijo -->
+                                    <span class="inline-block w-52">Ingresar otro valor</span>
+                                    <InputNumber type="text"
+                                                 class="border border-neutral-300 rounded px-3 py-1 w-28 text-right"
+                                                 placeholder="$ 0.00"
+                                                 @bind-Value="paymentOptionModel.ValorParcial" />
+                                </label>
+
+                                <!-- Opción 2 -->
+                                <label class="ring-azul-200 has-checked:border-pa-azul-400 flex cursor-pointer items-center gap-3 rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-3 hover:ring-2 has-checked:ring-2">
+                                    <InputRadio type="radio"
+                                                name="opcionPago"
+                                                class="size-6 text-azul-600 focus:ring-azul-600"
+                                                Value="PaymentType.Total"
+                                                @onchange="@(() => opcionPago = "Total")" />
+                                    <!-- Texto con el mismo ancho -->
+                                    <span class="inline-block w-52">Pago Total de la deuda</span>
+                                    <span class="px-3 py-1 w-28 text-right font-medium"> @ValorTotal.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO")) </span>
+                                </label>
+
+                            </div>
+                        </InputRadioGroup>
+                    </div>
+
+                    <!-- Resumen del pago -->
+                    <div class="w-full md:w-80 h-fit">
+                        <h4 class="text-lg mb-4">Resumen de tu pago</h4>
+
+                        <div class="rounded-lg border bg-gray-50 p-3">
+                            <div class="space-y-2 text-gray-800">
+                                <div class="flex justify-between">
+                                    <span class="text-base">Valor a pagar</span>
+                                    <span>@paymentOptionModel.MontoAPagar.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Costo por transacción</span>
+                                    <span>@InfoPin.Entidad.ValorAliadoCuota.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+                                </div>
+                                <div class="flex justify-between font-semibold text-azul-600">
+                                    <span>Total a pagar ahora</span>
+                                    <span>
+                                        @((paymentOptionModel.MontoAPagar + InfoPin.Entidad.ValorAliadoCuota)
+                                                                            .ToString("C0", CultureInfo.CreateSpecificCulture("es-CO")))
+                                                                                                                                    </span>
+                                                                                                                                </div>
+                                                                                                                            </div>
+
+                            <div class="mt-3 p-2 bg-white rounded border text-sm text-gray-700 flex justify-between">
+                                <span>Saldo pendiente tras el pago:</span>
+                                <span class="font-semibold">
+                                    @((ValorTotal - paymentOptionModel.MontoAPagar)
+                                                                    .ToString("C0", CultureInfo.CreateSpecificCulture("es-CO")))
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mt-5 flex justify-end gap-3">
+                        <button class="boton-secundario" type="button" @onclick="OnCancelar">
+                            Cancelar
+                        </button>
+                        <button class="boton-primario" type="submit">
+                            Pagar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            </EditForm>
+
+            <PagoCuotaModal @bind-Open="abrirModalCuotas"></PagoCuotaModal>
+        }
+        else
+        {
+            <ConfirmacionCompraCuota InfoPin="InfoPin" Pago="pago" ValorCompra="paymentOptionModel.MontoAPagar + InfoPin.Entidad.ValorAliadoCuota" />
+        }
+
+        <section>
+            @Body
+        </section>
+    </ContentTemplate>
+</SpinLoader>

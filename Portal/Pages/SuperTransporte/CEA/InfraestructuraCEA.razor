@@ -1,0 +1,401 @@
+﻿@page "/supertransporte/centro-cea/infraestructura"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+
+<h3>Infraestructura</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo I</h4>
+        <p>
+            4. Contar con la infraestructura, dotación, procedimientos, personal, equipos e instalaciones mínimas necesarias establecidas por el Ministerio de Transporte.
+        </p>
+    </div>
+</details>
+
+<EditForm Model=@_infraestructuraDtoCea OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <h4>Aulas de clase teórica</h4>
+    <EditForm Context="AulaContext" Model=@_aula OnValidSubmit="@((EditContext context) => AddAula(context, _aula))">
+        <DataAnnotationsValidator />
+
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Ubicacion</th>
+                    <th class="num">Nº de Sillas</th>
+                    <th class="num">Largo (m)</th>
+                    <th class="num">Ancho (m)</th>
+                    <th class="num">Area (m²)</th>
+                    <th class="num">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_listAulas != null)
+                {
+                    @foreach (var aula in _listAulas)
+                    {
+                        <tr>
+                            <td>@_selectUbicacion.Find(f => f.id == @aula.ubicacion)?.nombre</td>
+                            <td class="num">@aula.num_sillas</td>
+                            <td class="num">@aula.largo</td>
+                            <td class="num">@aula.ancho</td>
+                            <td class="num">@aula.area</td>
+                            <td class="num"><button type="button" class="btn btn-sm" @onclick="() => RemoveAula(aula)">Quitar</button></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <fieldset class="ancho">
+            <legend>
+                Agregar aula
+            </legend>
+            <ValidationMessage For="() => _aula.ubicacion" />
+            <ValidationMessage For="() => _aula.num_sillas" />
+            <ValidationMessage For="() => _aula.largo" />
+            <ValidationMessage For="() => _aula.ancho" />
+            <ValidationMessage For="() => _aula.area" />
+            <div class="flex_agregar">
+                <div>
+                    <label for="ubicacion">Ubicación</label>
+                    <InputSelect id="ubicacion" @bind-Value="_aula.ubicacion" style="width: 12ch;">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicacion)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+
+                </div>
+                <div>
+                    <label for="num_sillas">Sillas</label>
+                    <InputNumber id="num_sillas" @bind-Value="_aula.num_sillas" />
+                </div>
+                <div>
+                    <label for="largo">Largo (m)</label>
+                    <InputNumber id="largo" @bind-Value="_aula.largo" />
+                </div>
+                <div>
+                    <label for="ancho">Ancho (m)</label>
+                    <InputNumber id="ancho" @bind-Value="_aula.ancho" />
+                </div>
+                <div>
+                    <label for="area">Área (m²)</label>
+                    <InputNumber id="area" @bind-Value="_aula.area" />
+                </div>
+                <div>
+                    <button type="submit" class="boton-secundario">Añadir</button>
+                </div>
+            </div>
+        </fieldset>
+    </EditForm>
+
+    <h4>Espacio para clases prácticas</h4>
+
+    <fieldset class="pregunta_sn">
+        <legend>¿Dispone de espacio para realizar clases prácticas?</legend>
+        <ValidationMessage For="() => _infraestructuraDtoCea.espacio_clases_practicas" />
+        <div>
+            <InputCheckbox id="espacio_clases_practicas" @bind-Value="_infraestructuraDtoCea.espacio_clases_practicas" />
+            <label for="espacio_clases_practicas">Sí dispone de espacio para clases prácticas</label>
+        </div>
+    </fieldset>
+
+    @if (_infraestructuraDtoCea.espacio_clases_practicas)
+    {
+        <EditForm Context="PistaContext" Model=@_pista OnValidSubmit="@((EditContext context) => AddPista(context, _pista))">
+            <DataAnnotationsValidator />
+
+            <table class="tabla-responsive">
+                <thead style="vertical-align: bottom;">
+                    <tr>
+                        <th>Dirección</th>
+                        <th>Propio</th>
+                        <th style="width: 12ch;">Contrato o Permiso Vigente</th>
+                        <th style="width: 11ch;">Cert. Tradición y Libertad</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (_listPistasResponseCls != null)
+                    {
+                        @foreach (var pista in _listPistasResponseCls)
+                        {
+                            <tr>
+                                <td>@pista.direccion <br /> @_selectDepartamento.Find(f => f.codigoDep ==  @pista.departamento)?.nombre,  @_selectDepartamento.Find(f => f.codigoDep == @pista.departamento)?.ciudades.Find(ff => ff.codigo == @pista.ciudad)?.nombre</td>
+                                <td>@(pista.propio ? "Sí" : "No")</td>
+                                <td>
+                                    @if (!String.IsNullOrEmpty(@pista.contrato_vigente?.data?.attributes?.name))
+                                    {
+                                        <svg class="feather">
+                                            <use xlink:href="assets/feather-sprite.svg#check-square"></use>
+                                        </svg>
+                                    }
+                                    else
+                                    {
+                                        <svg class="feather">
+                                            <use xlink:href="assets/feather-sprite.svg#square"></use>
+                                        </svg>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!String.IsNullOrEmpty(@pista.ctl?.data?.attributes?.name))
+                                    {
+                                        <svg class="feather">
+                                            <use xlink:href="assets/feather-sprite.svg#check-square"></use>
+                                        </svg>
+                                    }
+                                    else
+                                    {
+                                        <svg class="feather">
+                                            <use xlink:href="assets/feather-sprite.svg#square"></use>
+                                        </svg>
+                                    }
+                                </td>
+                                <td><button type="button" class="btn btn-sm" @onclick="() => RemovePista(pista)">Quitar</button></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <fieldset class="ancho">
+                <legend>
+                    Agregar espacio para clases prácticas
+                </legend>
+                <ValidationMessage For="() => _pista.direccion" />
+                <ValidationMessage For="() => _pista.ciudad" />
+                <ValidationMessage For="() => _pista.departamento" />
+                <ValidationMessage For="() => _pista.propio" />
+                <div class="flex_agregar">
+                    <div>
+                        <label for="direccion">Dirección</label>
+                        <InputText id="direccion" @bind-Value="_pista.direccion" />
+                    </div>
+                    <div>
+                        <label for="departamento">Departamento</label>
+                        <InputSelect id="departamento" @bind-Value="_pista.departamento">
+                            <option value="">-</option>
+                            @foreach (var item in _selectDepartamento)
+                            {
+                                <option value="@item.codigoDep">@item.nombre</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div>
+                        <label for="ciudad">Ciudad</label>
+                        <InputSelect id="ciudad" @bind-Value="_pista.ciudad">
+                            <option value="">-</option>
+                            @if (validarCidudadseleccionada())
+                            {
+                                @if (_selectDepartamento.Find(w => w.codigoDep == _pista.departamento) != null)
+                                {
+                                    @if (_selectDepartamento.Find(w => w.codigoDep == _pista.departamento).ciudades != null)
+                                    {
+                                        @foreach (var item in _selectDepartamento.Find(w => w.codigoDep == _pista.departamento).ciudades)
+                                        {
+                                            <option value="@item.codigo">@item.nombre</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+                <div style="margin:0.75rem 0">
+                    <div class="">¿El espacio es propio o arrendado?</div>
+                    <InputCheckbox id="propio" @bind-Value="_pista.propio" />
+                    <label for="propio">Es propio</label>
+                </div>
+                <ValidationMessage For="@(() => _pista.contrato_vigente)" />
+                <label >Contrato o Permiso Vigente</label>
+                <InputFile class="file-input w-full p-0" id="contrato_vigente" OnChange="HandleContratoPista" />
+
+                <ValidationMessage For="@(() => _pista.ctl)" />
+                <label>Certificado de Tradición y Libertad</label>
+                <div class="explicacion">Máximo 30 Días de Expedición</div>
+                <InputFile class="file-input w-full p-0" id="ctl" OnChange="HandleCtlPista" />
+
+                <button type="submit" class="boton-secundario">Añadir</button>
+            </fieldset>
+        </EditForm>
+    }
+
+    <h4>Otros espacios</h4>
+
+    <fieldset class="ancho">
+        <legend>Oficina administrativa</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacio de oficina administrativa?</div>
+        <ValidationMessage For="() => _infraestructuraDtoCea.oficina_admin" />
+        <ValidationMessage For="() => _infraestructuraDtoCea.ubicacion_oficina" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="oficina_admin" @bind-Value="_infraestructuraDtoCea.oficina_admin" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 1)" />
+                <label for="oficina_admin">Sí cuenta</label>
+            </div>
+            @if (_infraestructuraDtoCea.oficina_admin)
+            {
+                <div >
+                    <div class="validation-message">@error_ubicacion_oficina</div>
+                    <label for="ubicacion_oficina">Ubicación</label>
+                    <InputSelect id="ubicacion_oficina" @bind-Value="_infraestructuraDtoCea.ubicacion_oficina" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 1)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicacion)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="ancho">
+        <legend>Recepción</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacio de recepción?</div>
+        <ValidationMessage For="() => _infraestructuraDtoCea.recepcion" />
+        <ValidationMessage For="() => _infraestructuraDtoCea.ubicacion_recepcion" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="recepcion" @bind-Value="_infraestructuraDtoCea.recepcion" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 3)" />
+                <label for="recepcion">Sí cuenta</label>
+            </div>
+            @if (_infraestructuraDtoCea.recepcion)
+            {
+                <div >
+                    <div class="validation-message">@error_ubicacion_recepcion</div>
+                    <label for="ubicacion_recepcion">Ubicación</label>
+                    <InputSelect id="ubicacion_recepcion" @bind-Value="_infraestructuraDtoCea.ubicacion_recepcion" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 3)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicacion)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="ancho">
+        <legend>Sala de espera</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacio de sala de espera?</div>
+        <ValidationMessage For="() => _infraestructuraDtoCea.sala_de_espera" />
+        <ValidationMessage For="() => _infraestructuraDtoCea.ubicacion_sala_de_espera" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="sala_de_espera" @bind-Value="_infraestructuraDtoCea.sala_de_espera" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 5)" />
+                <label for="sala_de_espera">Sí cuenta</label>
+            </div>
+            @if (_infraestructuraDtoCea.sala_de_espera)
+            {
+                <div >
+                    <div class="validation-message">@error_ubicacion_sala_de_espera</div>
+                    <label for="ubicacion_sala_de_espera">Ubicación</label>
+                    <InputSelect id="ubicacion_sala_de_espera" @bind-Value="_infraestructuraDtoCea.ubicacion_sala_de_espera"  @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 5)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicacion)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="ancho">
+        <legend>Servicios de aseo</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacios de servicios de aseo?</div>
+        <ValidationMessage For="() => _infraestructuraDtoCea.servicios_aseo" />
+        <ValidationMessage For="() => _infraestructuraDtoCea.ubicacion_aseo" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="servicios_aseo" @bind-Value="_infraestructuraDtoCea.servicios_aseo" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 2)" />
+
+                <label for="servicios_aseo">Sí cuenta</label>
+            </div>
+            @if (_infraestructuraDtoCea.servicios_aseo)
+            {
+                <div >
+                    <div class="validation-message">@error_ubicacion_aseo</div>
+                    <label for="ubicacion_aseo">Ubicación</label>
+                    <InputSelect id="ubicacion_aseo" @bind-Value="_infraestructuraDtoCea.ubicacion_aseo" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 2)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicacion)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="ancho">
+        <legend>Unidades sanitarias</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacio de unidades sanitarias?</div>
+        <ValidationMessage For="() => _infraestructuraDtoCea.unidades_sanitarias" />
+        <div >
+            <InputCheckbox id="unidades_sanitarias" @bind-Value="_infraestructuraDtoCea.unidades_sanitarias" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 4)" />
+            <label for="unidades_sanitarias">Sí cuenta</label>
+        </div>
+        @if (_infraestructuraDtoCea.unidades_sanitarias)
+        {
+            <EditForm Context="UnidadSanitariaContext" Model=@_unidad_sanitaria OnValidSubmit="@((EditContext context) => AddUnidadSanitaria(context, _unidad_sanitaria))">
+                <DataAnnotationsValidator />
+
+                <table class="tabla-responsive">
+                    <thead>
+                        <tr>
+                            <th>Ubicación</th>
+                            <th class="num">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (_listUnidadesSanitarias != null)
+                        {
+                            @foreach (var unidadSanitaria in _listUnidadesSanitarias)
+                            {
+                                <tr>
+                                    <td>@_selectUbicacion.Find(f => f.id == @unidadSanitaria.ubicacion_unidad_sanitaria)?.nombre</td>
+                                    <td class="num"><button type="button" class="btn btn-sm" @onclick="() => RemoveUnidadSanitaria(unidadSanitaria)">Quitar</button></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <fieldset>
+                    <legend>
+                        Agregar unidad sanitaria
+                    </legend>
+                    <ValidationMessage For="() => _unidad_sanitaria.ubicacion_unidad_sanitaria" />
+
+                    <div class="flex_agregar">
+                        <div style="flex: none;">
+                            <div class="validation-message">@error_ubicaciones_und_sanitarias</div>
+                            <label for="ubicacion_unidad_sanitaria">Ubicación</label>
+                            <InputSelect id="ubicacion_unidad_sanitaria" @bind-Value="_unidad_sanitaria.ubicacion_unidad_sanitaria" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 4)">
+                                <option value="">-</option>
+                                @foreach (var item in _selectUbicacion)
+                                {
+                                    <option value="@item.id">@item.nombre</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <button type="submit" class="boton-secundario">Añadir</button>
+                    </div>
+
+                </fieldset>
+            </EditForm>
+        }
+    </fieldset>
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

@@ -1,0 +1,195 @@
+  {
+    "data": [
+      {
+        "id": 1,
+        "nombre": "AMAZONAS",
+        "codigoDep": "91"
+      },
+      {
+        "id": 2,
+        "nombre": "ANTIOQUIA",
+        "codigoDep": "05"
+      },
+      {
+        "id": 3,
+        "nombre": "ARAUCA",
+        "codigoDep": "81"
+      },
+      {
+        "id": 4,
+        "nombre": "ATLANTICO",
+        "codigoDep": "08"
+      },
+      {
+        "id": 5,
+        "nombre": "BOGOTA D.C",
+        "codigoDep": "11"
+      },
+      {
+        "id": 6,
+        "nombre": "BOLIVAR",
+        "codigoDep": "13"
+      },
+      {
+        "id": 7,
+        "nombre": "BOYACÁ",
+        "codigoDep": "15"
+      },
+      {
+        "id": 8,
+        "nombre": "CALDAS",
+        "codigoDep": "17"
+      },
+      {
+        "id": 9,
+        "nombre": "CAQUETA",
+        "codigoDep": "18"
+      },
+      {
+        "id": 10,
+        "nombre": "CASANARE",
+        "codigoDep": "85"
+      },
+      {
+        "id": 11,
+        "nombre": "CAUCA",
+        "codigoDep": "19"
+      },
+      {
+        "id": 12,
+        "nombre": "CESAR",
+        "codigoDep": "20"
+      },
+      {
+        "id": 13,
+        "nombre": "CHOCÓ",
+        "codigoDep": "27"
+      },
+      {
+        "id": 14,
+        "nombre": "CORDOBA",
+        "codigoDep": "23"
+      },
+      {
+        "id": 15,
+        "nombre": "CUNDINAMARCA",
+        "codigoDep": "25"
+      },
+      {
+        "id": 16,
+        "nombre": "GUAINIA",
+        "codigoDep": "94"
+      },
+      {
+        "id": 17,
+        "nombre": "GUAVIARE",
+        "codigoDep": "95"
+      },
+      {
+        "id": 18,
+        "nombre": "HUILA",
+        "codigoDep": "41"
+      },
+      {
+        "id": 19,
+        "nombre": "LA GUAJIRA",
+        "codigoDep": "44"
+      },
+      {
+        "id": 20,
+        "nombre": "MAGDALENA",
+        "codigoDep": "47"
+      },
+      {
+        "id": 21,
+        "nombre": "META",
+        "codigoDep": "50"
+      },
+      {
+        "id": 22,
+        "nombre": "NARIÑO",
+        "codigoDep": "52"
+      },
+      {
+        "id": 23,
+        "nombre": "NORTE DE SANTANDER",
+        "codigoDep": "54"
+      },
+      {
+        "id": 24,
+        "nombre": "PUTUMAYO",
+        "codigoDep": "86"
+      },
+      {
+        "id": 25,
+        "nombre": "QUINDIO",
+        "codigoDep": "63"
+      },
+      {
+        "id": 26,
+        "nombre": "RISARALDA",
+        "codigoDep": "66"
+      },
+      {
+        "id": 27,
+        "nombre": "SAN ANDRÉS",
+        "codigoDep": "88"
+      },
+      {
+        "id": 28,
+        "nombre": "SANTANDER",
+        "codigoDep": "68"
+      },
+      {
+        "id": 29,
+        "nombre": "SUCRE",
+        "codigoDep": "70"
+      },
+      {
+        "id": 30,
+        "nombre": "TOLIMA",
+        "codigoDep": "73"
+      },
+      {
+        "id": 31,
+        "nombre": "VALLE DEL CAUCA",
+        "codigoDep": "76"
+      },
+      {
+        "id": 32,
+        "nombre": "VAUPES",
+        "codigoDep": "97"
+      },
+      {
+        "id": 33,
+        "nombre": "VICHADA",
+        "codigoDep": "99"
+      },
+      {
+        "id": 34,
+        "nombre": "BARRANQUILLA",
+        "codigoDep": "08"
+      },
+      {
+        "id": 35,
+        "nombre": "BUENAVENTURA",
+        "codigoDep": "76"
+      },
+      {
+        "id": 36,
+        "nombre": "CARTAGENA",
+        "codigoDep": "13"
+      },
+      {
+        "id": 37,
+        "nombre": "SANTA MARTA",
+        "codigoDep": "47"
+      },
+      {
+        "id": 38,
+        "nombre": "CALI",
+        "codigoDep": "76"
+      }
+    ]
+  }
+

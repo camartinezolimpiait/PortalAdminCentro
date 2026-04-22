@@ -1,0 +1,49 @@
+@layer base {
+  .cabecera-tramite-container.mobile {
+    display: none;
+  }
+
+  .cabecera-tramite-container {
+    width: 100%;
+    background-color: var(--color-amarillo-100);
+    vertical-align: middle;
+  }
+
+  .cabecera-tramite-content,
+  .pasos-content {
+    width: 90%;
+    font-weight: 700;
+    padding: 0.35rem 0;
+    margin: 0 auto;
+    display: flex;
+  }
+
+  .cabecera-tramite-content {
+    color: var(--color-amarillo-900);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cabecera-tramite-content a,
+  .cabecera-tramite-content p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  button.cancelar-desk {
+    background-color: transparent;
+    color: var(--color-rojo-600);
+    padding: 3px;
+  }
+
+  .btn-omitir,
+  button.cancelar-desk {
+    margin: 0;
+  }
+
+  .button.cancelar-mobile {
+    display: none;
+  }
+  /* - Fin cabecera trámite*/
+}

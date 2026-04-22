@@ -1,0 +1,60 @@
+﻿@page "/supertransporte/centro"
+@layout SupertransporteLayout;
+
+<div class="wrapper_st">
+    <div class="wrapper">
+        <h3>Formulario digital de requerimientos de habilitación para CRC</h3>
+        <div class="cuadricula">
+            <button class="@botonInfoBasica" @onclick="ComponenteInfoBasica">Información Básica</button>
+            <button class="@botonInfoHomologado" @onclick="ComponenteInfoHomologado">Información Homologado</button>
+            <button class="@botonRepresentanteLegal" @onclick="ComponenteRepresentanteLegal">Representante Legal</button>
+            <button class="@botonResolucionHabilitacion" @onclick="ComponenteResolucionHabilitacion">Resolución de habilitación</button>
+            <button class="@botonInfoConstitucion" @onclick="ComponenteInfoConstitucion">Información Constitución</button>
+            <button class="@botonEstadoAcreditacion" @onclick="ComponenteAcreditacionONAC">Acreditación ONAC</button>
+            <button class="@botonPoliza" @onclick="ComponentePoliza">Póliza</button>
+            <button class="@botonRegistroReps" @onclick="RegistroREPS">Registro REPS</button>
+            <button class="@botonProfesionalesCertificadores" @onclick="ComponenteProfesionalesCertificadores">Profesionales Certificadores</button>
+            <button class="@botonProfesionalesSalud" @onclick="ComponenteProfesionalesSalud">Profesionales de la salud</button>
+            <button class="@botonInfraestructura" @onclick="Componenteinfraestructura">Información de la infraestructura</button>
+            <button class="@botonInterconexionRUNT" @onclick="ComponenteInterconexionRUNT">Interconexión RUNT</button>
+        </div>
+        <div>
+            <EditForm Model=@_centroSuper OnValidSubmit=@GuardarInformacion>
+                <details class="detalles">
+                    <summary>Marcar requerimiento como finalizado</summary>
+                    <div class="contenido">
+                        <p style="margin-block-end: 0.75rem"> Si ya diligenció todas las secciones de este formulario, márquelo como completado. La Superintendencia de Transporte será informada de que ha cumplido con el requerimiento. </p>
+                        <div style="margin-block-end: 1.5rem">
+                            <InputCheckbox id="completado" @bind-Value="_centroSuper.completado" />
+                            <label for="completado">Hemos completado el formulario</label>
+                        </div>
+                        <div style="margin-block-end: 1rem">
+                            <label for="motivos">Motivos de no cargue de evidencias (opcional)</label>
+                            <div class="explicacion">Si por alguna razón no pudo cargar todas las evidencias solicitadas, por favor explique</div>
+                            <InputTextArea id="motivos" rows="4" @bind-Value="_centroSuper.motivos" />
+                        </div>
+                        <div>
+                            <BtnLoaderSuper loader="_loader" leyenda="Guardar respuesta"></BtnLoaderSuper>
+                        </div>
+                    </div>
+                </details>
+            </EditForm>
+        </div>
+        <div>
+            <hr />
+            <p>Si necesita asistencia técnica, puede comunicarse a través de:</p>
+            <ul class="list-disc list-inside">
+                <li>
+                    Chat de asistencia técnica, disponible en <a href="https://olimpiait.com/" target="_blank" rel="noopener noreferrer">nuestra página oficial</a>, donde podemos atenderle de lunes a viernes de
+                    07:00 a 17:00 y sábado de 8:00am a 12:00pm.
+                </li>
+                <li>Whatsapp, desde el número <a href="https://wa.me/573112074439" target="_blank" rel="noopener noreferrer">311-207-4439</a></li>
+                <li>Correo electrónico en <a href="mailto:soporte@olimpiait.com">soporte@olimpiait.com</a></li>
+                <li>Línea de atención telefónica <a href="tel:+576017441000">744-1000</a>, opción 1, luego opción 3</li>
+            </ul>
+            <p>Si necesita radicar una Petición, Queja, Reclamo o Sugerencia relacionada con este formulario, <NavLink href="supertransporte/pqrsf">ingrese aquí</NavLink> </p>
+        </div>
+    </div>
+</div>
+
+@code { }

@@ -1,0 +1,13 @@
+﻿main {
+    background-color: white;
+    overflow-y: auto;
+    display: grid;
+    grid-template-rows: 36px 1fr ;
+}
+
+#pageButtons {
+    display: flex;
+    padding-inline: 1rem;
+    background: var(--color-gris-50);
+    gap: 1rem;
+}

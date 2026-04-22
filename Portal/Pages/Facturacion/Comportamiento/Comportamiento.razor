@@ -1,0 +1,72 @@
+﻿@page "/configuracion/configurarFacturacion/comportamiento"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Entidades.Facturacion
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.Agendamiento;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@EditContext" id="ConfigurarFacturacion">
+        	<DataAnnotationsValidator />
+
+            <h4>Comportamiento</h4>
+            <div class="mb-20">
+                <InputCheckbox class="mb-0" id="facturacionActiva" maxlength="12" autocomplete="given-name" @bind-Value="ConfigurarComportamientoModel.FacturacionActiva" />
+                <label for="">Activar facturación</label>
+            </div>
+            <div>
+                <label class="bold-label" for="eventoFacturacion">Momento de facturación</label>
+            </div>
+            
+            <div class="flex-container">
+                <div class="flex-item legend-triple">
+                    <p class="paragraph-large-smaller">Especifique el momento en que SISEC enviará la solicitud de generación de factura a su proveedor</p>
+                </div>
+            </div>
+
+            <div class="flex-container">
+                <div class="flex-item double">
+
+                    <select class="mb-0" id="eventoFacturacion" @onchange="@((ChangeEventArgs e) => HandleInputChange("eventoFacturacion", e))">
+                        <option value="">Seleccione</option>
+                        @foreach (ConsultaGenericaTipos tipo in DisparadoresFacturacion)
+                        {
+                            <option value="@(int.Parse(tipo.Codigo))" selected="@(tipo.Codigo == ConfigurarComportamientoModel.EventoFacturacion)">@tipo.Nombre</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => ConfigurarComportamientoModel.EventoFacturacion)" />
+                </div>
+            </div>
+
+            <p class="paragraph-large"><strong>Atención: </strong> Al cambiar esta configuración, los pines ya generados mantendrán su configuración original, solo los generados después del cambio seguirán la nueva instrucción.</p>
+
+            <div class="div-btn">
+                <a class="btn-guardar boton-primario" @onclick="() => GuardarDatos()">Guardar configuración</a>
+            </div>
+        </EditForm>
+    </ContentTemplate>
+</SpinLoader>

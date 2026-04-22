@@ -1,0 +1,163 @@
+﻿@page "/ValPinCEA"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration;
+@using System.Net.Http;
+@using Microsoft.AspNetCore.Components.Forms;
+@using Newtonsoft.Json;
+@using Microsoft.JSInterop;
+@using portalAdministrativoSISEC.Data.ValidaPinCEA;
+@inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+
+<div class="formulario-2 ">
+    <h2>Validación PIN Estudiante</h2>
+    <label for='tipoDocumento' class="texto-label col-form-label">Número Documento: @menuservice.entradaEnrolamiento.NumeroDocumento</label>
+
+
+    <EditForm Model="@categoriaDTO">
+
+        <label class="texto-label col-form-label">Categoría</label>
+        <InputSelect name="origenPin" id="origenPin" class="form-group" @bind-Value="@categoriaDTO.Codigo">
+            <option value="" selected>Seleccione...</option>
+            @foreach (var itemCategoria in ListacategoriaDTO)
+            {
+                <option value="@itemCategoria.Codigo">@itemCategoria.Nombre</option>
+            }
+        </InputSelect>
+    </EditForm>
+
+
+    @if (respuestaValidacionValidacionPin.Respuesta)
+    {
+        <button type="button" class="boton-primario" @onclick="@Siguiente">Siguiente</button>
+    }
+    else
+    {
+        @if (showModalValida)
+        {
+            <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <h4>Validación PIN</h4>
+                            <p>@respuestaValidacionValidacionPin.RespuestaTexto</p>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            @*<button type="button" class="btn" @onclick="@(() => showModal = !showModal)">Cancelar</button>*@
+                            <button type="button" class="btn btn-primary" @onclick=@(() => closeValida())>Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    <button type="button" class="boton-primario" @onclick=@(() => ValidaPin())> Validar PIN</button>
+
+</div>
+
+@code {
+    List<CategoriaDTO> ListacategoriaDTO = new List<CategoriaDTO>();
+    CategoriaDTO categoriaDTO = new CategoriaDTO();
+
+    RespGeneralModel respuestaValidacionValidacionPin = new RespGeneralModel();
+    private ApplicationSevice menuservice = new ApplicationSevice();
+
+    bool showModalValida = false;
+    private string apiName = null;
+    private string message = null;
+    private string typeAlert = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListacategoriaDTO = await obtenerCategorias();
+    }
+
+    private async void ValidaPin()
+    {
+        showModalValida = true;
+        ValidaPinPaynetModel validaPinPaynetModel = new ValidaPinPaynetModel();
+
+        validaPinPaynetModel.CodigoCategoria = categoriaDTO.Codigo;
+        validaPinPaynetModel.CodigoRunt = Convert.ToString(menuservice.CodigoRUNTCentro);
+        validaPinPaynetModel.NumeroDocumento = menuservice.entradaEnrolamiento.NumeroDocumento;
+        validaPinPaynetModel.idPersona = menuservice.respuestaEnrolarPersona.IdPersonaCRCCEA;
+        validaPinPaynetModel.idTipoSolicitud = 0;
+        validaPinPaynetModel.idCategoria = categoriaDTO.Id;
+        validaPinPaynetModel.idProceso = menuservice.respuestaEnrolarPersona.IdProcesoCRCCEA;
+        validaPinPaynetModel.idCentro = menuservice.CentroUsuario;
+
+        respuestaValidacionValidacionPin.Respuesta = await ValidaPinServer(validaPinPaynetModel);
+        if (!respuestaValidacionValidacionPin.Respuesta)
+        {
+            respuestaValidacionValidacionPin.RespuestaTexto = "No se pudo realizar la validación del PIN";
+        }
+        StateHasChanged();
+    }
+
+
+
+    protected async Task<bool> ValidaPinServer(ValidaPinPaynetModel validaPinPaynetModelServer)
+    {
+        bool respGeneralModel = false;
+        Http = new HttpClient();
+        apiName = "validaPinCEA";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(validaPinPaynetModelServer), System.Text.Encoding.UTF8, "application/json");
+        var response = await Http.PostAsync(apiName, stringContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            respGeneralModel = JsonConvert.DeserializeObject<bool>(content);
+        }
+        return respGeneralModel;
+    }
+
+
+    private void closeValida()
+    {
+        showModalValida = false;
+        StateHasChanged();
+    }
+
+
+    void Siguiente()
+    {
+        // menuservice.idOrigenPin = Convert.ToInt32(origenPinDTO.IdOrigenPin);
+        UriHelper.NavigateTo("AuthData");
+    }
+
+    protected async Task<List<CategoriaDTO>> obtenerCategorias()
+    {
+        List<CategoriaDTO> origenCategoriaDTO = new List<CategoriaDTO>();
+        ConsultaClienteId consultaClienteId = new ConsultaClienteId();
+        RespGeneralModel respGeneralModel = new RespGeneralModel();
+        consultaClienteId.clienteId = menuservice.ClienteId;
+
+
+        Http = new HttpClient();
+        var apiName = "obtenerCategoriasAdmin";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+        var content = new StringContent(JsonConvert.SerializeObject(consultaClienteId), System.Text.Encoding.UTF8, "application/json");
+
+        var response = await Http.PostAsync(apiName, content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var resultado = await response.Content.ReadAsStringAsync();
+            origenCategoriaDTO = JsonConvert.DeserializeObject<List<CategoriaDTO>>(resultado);
+        }
+        return origenCategoriaDTO;
+    }
+}

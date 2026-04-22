@@ -1,0 +1,558 @@
+﻿@page "/compradepin/gestionarPin"
+@inherits LayoutComponentBase
+
+@using System.Globalization
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.Common
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Pages.PagoCuota
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>	
+		<div>
+            <header class="encabezadodos">
+                <div class="wrapper margen_general">
+                    <p class="linkdos">
+                        <a class="text-[#CFE3FF] text-base hover:underline cursor-pointer" @onclick="AbrirConfirmacionIrInicio">Regresar</a>
+                    </p>
+                    <GoHomeModal @bind-Open="abrirModalIrInicio"
+                    OnConfirm="ConfirmarIrInicio" />
+                    <p class="titulodos">@CentroSeleccionado.Nombre</p>
+
+                    <p class="text-lg">@CentroSeleccionado.Direccion</p>
+                </div>
+            </header>
+
+			<div class="row margen_general">
+				<div class="column">
+                    @if (!showStepCuotas)
+                    {
+                        <div>
+
+                            @if (!DevolucionRealizada)
+                            {
+                                <h3>Consulta de estado de PIN</h3>
+                                <p class="w-full max-w-full">Ingresa el número de PIN, selecciona el tipo de documento e introduce tu número de documento para conocer el estado y realizar las gestiones disponibles.</p>
+
+                                <ConsultaInfoPin IdRunt="@(CentroSeleccionado.CodigoRUNT?.ToString() ?? "")"
+                                                ConsultaDevolucionesChanged="ConsultaDevolucionesChanged"
+                                                PinPrefill="@Pin"
+                                                TipoIdPrefill="@TipoId"
+                                                NumeroIdPrefill="@NumeroId">
+                                </ConsultaInfoPin>
+                            }
+
+                            @if (mostrarBloque)
+                            {
+                                @if (isLoadingConsult)
+                                {
+                                    <div class="flex flex-col items-center justify-center h-64 w-full bg-neutral-100 rounded-md border border-neutral-300">
+                                        <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                        <p class="mt-4 text-gray-600 text-sm font-medium">Cargando resultados...</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    @if (DevolucionRealizada)
+                                    {
+                                        <h3>¡Operación completada exitosamente!</h3>
+
+                                        @if (infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PinDirecto).ToString())
+                                        {
+                                            <p>
+                                                El PIN <span class="font-semibold">@infoPin.Entidad.Pin</span> ha sido anulado.
+                                                <br />
+                                                La devolución se ha procesado exitosamente. El monto será abonado a la cuenta registrada.
+                                            </p>
+                                        }
+                                        else if (infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PseColpatria).ToString())
+                                        {
+                                            <div class="bg-white rounded-lg gap-5 mb-5">
+                                                <!-- Mensaje principal -->
+                                                <div class="flex items-start space-x-2 text-green-600  font-medium">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                        <path d="M8.6 14.6L15.65 7.55L14.25 6.15L8.6 11.8L5.75 8.95L4.35 10.35L8.6 14.6ZM10 20C8.61667 20 7.31667 19.7375 6.1 19.2125C4.88333 18.6875 3.825 17.975 2.925 17.075C2.025 16.175 1.3125 15.1167 0.7875 13.9C0.2625 12.6833 0 11.3833 0 10C0 8.61667 0.2625 7.31667 0.7875 6.1C1.3125 4.88333 2.025 3.825 2.925 2.925C3.825 2.025 4.88333 1.3125 6.1 0.7875C7.31667 0.2625 8.61667 0 10 0C11.3833 0 12.6833 0.2625 13.9 0.7875C15.1167 1.3125 16.175 2.025 17.075 2.925C17.975 3.825 18.6875 4.88333 19.2125 6.1C19.7375 7.31667 20 8.61667 20 10C20 11.3833 19.7375 12.6833 19.2125 13.9C18.6875 15.1167 17.975 16.175 17.075 17.075C16.175 17.975 15.1167 18.6875 13.9 19.2125C12.6833 19.7375 11.3833 20 10 20ZM10 18C12.2333 18 14.125 17.225 15.675 15.675C17.225 14.125 18 12.2333 18 10C18 7.76667 17.225 5.875 15.675 4.325C14.125 2.775 12.2333 2 10 2C7.76667 2 5.875 2.775 4.325 4.325C2.775 5.875 2 7.76667 2 10C2 12.2333 2.775 14.125 4.325 15.675C5.875 17.225 7.76667 18 10 18Z" fill="#007036" />
+                                                    </svg>
+                                                    <p class="text-base font-semibold mb-0">
+                                                        El PIN <span class="font-semibold">@infoPin.Entidad.Pin</span> ha sido anulado.
+                                                    </p>
+                                                </div>
+
+                                                <!-- Texto explicativo -->
+                                                <div class="mt-4">
+                                                    <p class="font-semibold text-gray-800 mb-4">¿Qué sigue?</p>
+                                                    <ol class="list-decimal list-inside text-gray-700 space-y-1">
+                                                        <li>Acceda al canal PQR en línea de Scotiabank Colpatria.</li>
+                                                        <li>Tenga en cuenta el número de referencia de devolución que aparece abajo.</li>
+                                                        <li>Revise su correo para la confirmación.</li>
+                                                    </ol>
+                                                </div>
+
+                                                <div class="w-full bg-blue-50 border border-blue-200 rounded-md p-2">
+                                                    <h5 class="text-base font-semibold text-gray-800 m-0">
+                                                        Número de referencia para solicitar reembolso:
+                                                    </h5>
+                                                    <h4 class="text-lg font-bold text-gray-800 m-0">
+                                                        @infoPin.Entidad.NUT
+                                                    </h4>
+                                                </div>
+                                            </div>
+
+                                        }
+                                    }
+
+                                    @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Referencia)
+                                    {
+                                        <div class="border border-azul-700 rounded-lg px-4 py-5 bg-white w-full mb-5">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-2">
+                                                    <!-- Icono (reemplázalo con tu SVG) -->
+                                                    <div class="flex items-center justify-center bg-azul-700 rounded-full w-[36px] h-[36px]">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 14 18" fill="none">
+                                                            <path d="M3.66732 15.666H10.334V13.166C10.334 12.2493 10.0076 11.4646 9.35482 10.8118C8.70204 10.1591 7.91732 9.83268 7.00065 9.83268C6.08398 9.83268 5.29926 10.1591 4.64648 10.8118C3.99371 11.4646 3.66732 12.2493 3.66732 13.166V15.666ZM0.333984 17.3327V15.666H2.00065V13.166C2.00065 12.3188 2.19857 11.5237 2.5944 10.7806C2.99023 10.0375 3.54232 9.44379 4.25065 8.99935C3.54232 8.5549 2.99023 7.96115 2.5944 7.2181C2.19857 6.47504 2.00065 5.6799 2.00065 4.83268V2.33268H0.333984V0.666016H13.6673V2.33268H12.0007V4.83268C12.0007 5.6799 11.8027 6.47504 11.4069 7.2181C11.0111 7.96115 10.459 8.5549 9.75065 8.99935C10.459 9.44379 11.0111 10.0375 11.4069 10.7806C11.8027 11.5237 12.0007 12.3188 12.0007 13.166V15.666H13.6673V17.3327H0.333984Z" fill="#E6E6E6" />
+                                                        </svg>
+                                                    </div>
+
+                                                    <h2 class="text-azul-700 font-semibold text-[20px] m-0">Transacción en proceso...</h2>
+                                                </div>
+
+                                                <!-- Botón -->
+                                                <button class="@ButtonClass"
+                                                        @onclick="ActualizarManualAsync"
+                                                        disabled="@IsUpdating">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9M20 20v-5h-.581m-15.357-2a8.003 8.003 0 0015.356 2" />
+                                                    </svg>
+                                                    @ButtonText
+                                                </button>
+                                            </div>
+
+                                            <!-- Línea inferior -->
+
+                                            <p class="text-gris-600 text-base mt-2 p-0 mb-0">
+                                                @if (IsUpdating)
+                                                {
+                                                    <span>Próxima actualización disponible en: @CountdownDisplay</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Última actualización: Hace @LastUpdateDisplay</span>
+                                                }
+                                            </p>
+                                        </div>
+                                    }
+
+                                    
+                                    // Inicio código generado por GitHub Copilot
+                                    @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Anulado && infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PseColpatria).ToString())
+                                    {
+                                        <div class="info-box w-full flex items-start gap-3" style="margin-bottom:1rem">
+                                            <svg class="feather info-icon">
+                                                <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
+                                            </svg>
+                                            <div class="info-text flex-1" style="font-size:14px">
+                                                <p class="mb-0 max-w-full">Para realizar o consultar el estado de su devolución de dinero, comuníquese a través de los <a href="https://canalvirtual.scotiabankcolpatria.com/app/colpatria/empresas/pyme/ask" target="_blank" rel="noopener noreferrer" class="text-blue-800 underline font-bold">canales de PQR en línea de Scotiabank Colpatria</a>.</p>
+                                                <p class="mb-0">Recuerde tener a la mano el número de referencia de la devolución: <strong>@infoPin.Entidad.NUT</strong>.</p>
+                                            </div>
+                                        </div>
+                                    }
+                                    // Fin código generado por GitHub Copilot
+
+                                    // Inicio código generado por GitHub Copilot
+                                    @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Usado)
+                                    {
+                                        <div class="info-box w-full flex items-start gap-3" style="margin-bottom:1rem">
+                                            <svg class="feather info-icon">
+                                                <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
+                                            </svg>
+                                            <div class="info-text flex-1" style="font-size:14px">
+                                                <p class="mb-0">El PIN <strong>@infoPin.Entidad.Pin</strong> se encuentra usado. No puede gestionarse devolución.</p>
+                                            </div>
+                                        </div>
+                                    }
+                                    // Fin código generado por GitHub Copilot
+
+                                    <div class="flex flex-col items-center justify-center h-auto w-full bg-neutral-100 rounded-md border border-neutral-300 p-4">
+                                    <div class="flex justify-between items-center w-full mb-4">
+                                            <!-- Contenedor izquierdo -->
+                                            <div class="w-1/2 flex justify-start">
+                                                <span class="@GetEstadoPinClass(infoPin.Entidad.EstadoPin)">
+                                                    @Enum.GetName(typeof(EnumEstadoPin), infoPin.Entidad.EstadoPin)
+                                                </span>
+                                            </div>
+
+                                            <!-- Contenedor derecho -->
+                                            <div class="w-1/2 flex items-baseline justify-start text-sm">
+                                                <span class="text-gray-600 font-medium mr-1 text-base">PIN:</span>
+                                                <span class="font-bold text-lg m-0 leading-none text-azul-800">@infoPin.Entidad.Pin</span>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="w-full bg-white rounded border border-neutral-300 p-4 mb-3 gap-4">
+                                            <h3 class="font-semibold text-base mb-2 text-azul-700">Datos del titular</h3>
+                                            <div class="grid grid-cols-2 text-sm text-gray-800">
+                                                <div>
+                                                    <p class="mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Nombre completo
+                                                        </span>
+                                                        <br>
+                                                        <span class="font-medium text-base text-gray-800">@infoPin.Entidad.NombreCompleto</span>
+                                                    </p>
+                                                    <p class="mt-2 mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Correo
+
+                                                        </span>
+                                                        <br>
+                                                        <span class="font-medium text-base text-gray-800"> @infoPin.Entidad.Email</span>
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p class="mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Documento
+                                                        </span>
+                                                        <br>
+                                                        @* Inicio código generado por GitHub Copilot *@
+                                                    @{
+                                                        var documentoSeleccionado = ListaDocumentos.FirstOrDefault(x => x.IdTipoSisec == infoPin.Entidad.TipoDocumento.ToString());
+                                                        var esPpt = documentoSeleccionado != null && Enum.TryParse<EnumTipoDocumento>(documentoSeleccionado.IdTipoSisec, out var tipoDocumento) && tipoDocumento == EnumTipoDocumento.PermisoPorProteccionTemporal;
+                                                        var descripcionDocumento = esPpt ? "PPT" : documentoSeleccionado?.CodigoACH;
+                                                    }
+                                                    <span class="font-medium text-base text-gray-800">
+                                                        @descripcionDocumento @infoPin.Entidad.NumeroDocumento
+                                                    </span>
+                                                    @* Fin código generado por GitHub Copilot *@
+                                                    </p>
+                                                    <p class="mt-2 mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Teléfono
+                                                        </span>
+                                                        <br>
+                                                        <span class="font-medium text-base text-gray-800">@infoPin.Entidad.Telefono</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="w-full bg-white rounded border border-neutral-300 p-4 mb-3 gap-4">
+                                            <h3 class="font-semibold text-base mb-2 text-azul-700">Datos del trámite</h3>
+                                            @{
+                                                var tramiteSecundario = (EnumTramite)infoPin.Entidad.TipoTramite2;
+                                                var tieneTramiteSecundario = !string.IsNullOrWhiteSpace(infoPin.Entidad.Categoria2);
+                                                var descripcionTramiteSecundario = DescripcionesTramite.Descripcion.TryGetValue(tramiteSecundario, out var descripcion)
+                                                    ? descripcion
+                                                    : tramiteSecundario.ToString();
+                                            }
+                                            <div class="grid grid-cols-2 text-sm text-gray-800">
+                                                <div>
+                                                    <p class="mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Trámite y categoría principal
+                                                        </span>
+                                                        <br>
+                                                        <span class="font-medium text-base text-gray-800">@DescripcionesTramite.Descripcion[(EnumTramite)infoPin.Entidad.TipoTramite] - @infoPin.Entidad.Categoria</span>
+                                                    </p>
+                                                    <p class="mt-2 mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Medio de pago
+
+                                                        </span>
+                                                        <br>
+                                                        <span class="font-medium text-base text-gray-800">
+                                                            @{
+                                                                var medio = MediosPago.FirstOrDefault(x => x.Id == int.Parse(infoPin.Entidad.IdMedioRecaudo));
+                                                            }
+                                                            @medio.Nombre
+                                                        </span>
+                                                    </p>
+                                                    <p class="mt-2 mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            NUT
+
+                                                        </span>
+                                                        <br>
+                                                        <span class="font-medium text-base text-gray-800">@infoPin.Entidad.NUT</span>
+                                                    </p>
+                                                    @* Inicio código generado por GitHub Copilot *@
+                                                    @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Anulado)
+                                                    {
+                                                        <p class="mt-2 mb-0">
+                                                            <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                                Referencia de devolución
+
+                                                            </span>
+                                                            <br>
+                                                            <span class="font-medium text-base text-gray-800">@infoPin.Entidad.NUT</span>
+                                                        </p>
+                                                    }
+                                                    @* Fin código generado por GitHub Copilot *@
+                                                </div>
+                                                <div>
+                                                    @if (tieneTramiteSecundario)
+                                                    {
+                                                        <p class="mb-0">
+                                                            <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                                Trámite y categoría secundario
+                                                            </span>
+                                                            <br>
+                                                            <span class="font-medium text-base text-gray-800">
+                                                                @($"{descripcionTramiteSecundario} - {infoPin.Entidad.Categoria2}")
+                                                            </span>
+                                                        </p>
+                                                    }
+                                                    <p class="@(tieneTramiteSecundario ? "mt-2 mb-0" : "mb-0")">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Fecha de compra
+                                                        </span>
+                                                        <br>
+                                                        @* Inicio código generado por GitHub Copilot *@
+                                                        <span class="font-medium text-base text-gray-800">
+                                                            @((infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Referencia
+                                                                ? infoPin.Entidad.FechaReferencia
+                                                                : infoPin.Entidad.FechaRecaudo).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture))
+                                                        </span>
+                                                        @* Fin código generado por GitHub Copilot *@
+
+                                                    </p>
+
+                                                    <p class="mt-2 mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Valor total
+                                                        </span>
+                                                        <br>
+                                                        @* Inicio código generado por GitHub Copilot *@
+                                                        <span class="font-medium text-base text-gray-800">
+                                                            @(infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Referencia
+                                                                ? "Pago pendiente"
+                                                                : ValorTotal.ToString("C0", new CultureInfo("es-CO")))
+                                                        </span>
+                                                        @* Fin código generado por GitHub Copilot *@
+                                                    </p>
+                                                    @* Inicio código generado por GitHub Copilot *@
+                                                    @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Anulado)
+                                                    {
+                                                    <p class="mt-2 mb-0">
+                                                        <span class="font-normal text-base tracking-normal align-middle text-gris-600">
+                                                            Fecha de devolución
+                                                        </span>
+                                                        <br>
+                                                            <span class="font-medium text-base text-gray-800">@infoPin.Entidad.FechaAnulacion.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)</span>
+                                                    </p>
+                                                    }
+                                                    @* Fin código generado por GitHub Copilot *@
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Activo && !DevolucionRealizada)
+                                        {
+                                            <div class="w-full flex justify-end">
+                                                <button class="boton-primario" @onclick="AbrirConfirmacionDevolucion">
+                                                    Realizar devolución
+                                                </button>
+                                            </div>
+
+                                            <DevolucionModal @bind-Open="abrirModalConfirmacion"
+                                                             OnConfirm="ConfirmarDevolucion" />
+
+                                            <DevolucionProcesoModal @bind-Open="abrirModalProceso" />
+                                        }
+                                        else if (DevolucionRealizada)
+                                        {
+                                            @if (infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PinDirecto).ToString())
+                                            {
+                                                <div class="flex items-center justify-between w-full mt-1">
+                                                    <button type="button" class="boton-secundario" @onclick='() => NavManager.NavigateTo("/compradepin")'>
+                                                        Ir al inicio
+                                                    </button>
+                                                    <button class="boton-primario" tabindex="0" @onclick='() => NavManager.NavigateTo("/compradepin/gestionarPin", forceLoad: true)'>
+                                                        Nueva Consulta
+                                                    </button>
+                                                </div>
+                                            }
+                                            else if (infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PseColpatria).ToString())
+                                            {
+                                                <div class="flex items-center justify-between w-full mt-1">
+                                                    <!-- Botón a la izquierda -->
+                                                    <a href="/compradepin" class="text-base underline hover:text-blue-800">
+                                                        Ir al inicio
+                                                    </a>
+
+                                                    <!-- Botones a la derecha -->
+                                                    <div class="flex items-center space-x-3">
+                                                        <button type="button" class="boton-secundario" @onclick='() => NavManager.NavigateTo("/compradepin/gestionarPin", forceLoad: true)'>
+                                                            Nueva Consulta
+                                                        </button>
+                                                        <a href="https://canalvirtual.scotiabankcolpatria.com/app/colpatria/empresas/pyme/ask" class="boton-primario" tabindex="0" target="_blank" rel="noopener noreferrer">
+                                                            Ir al canal PQR Colpatria
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+
+                                        @if (HistorialPagos != null && HistorialPagos.Any())
+                                        {
+
+                                            <div class="w-full bg-white rounded border border-neutral-300 p-4 mb-3 gap-4">
+
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <h3 class="font-semibold text-base text-azul-700 leading-none flex items-center">Pago a cuotas</h3>
+                                                    @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Usado)
+                                                    {
+                                                        <button class="boton-primario flex items-center justify-center" @onclick="showCuotaStep">
+                                                            Pagar cuotas
+                                                        </button>
+                                                    }
+                                                </div>
+
+
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
+                                                    <div>
+                                                        <p class="text-gray-600 mb-0">Valor total</p>
+                                                        <p class="font-semibold text-gray-900">@ValorTotal.ToString("C0", new CultureInfo("es-CO"))</p>
+                                                    </div>
+
+                                                    <div>
+                                                        <p class="text-gray-600 mb-0">Abonos realizados</p>
+                                                        <p class="font-semibold text-gray-900">@infoPin.Entidad.Pagos.Sum(x => x.ValorTransaccion).ToString("C0", new CultureInfo("es-CO"))</p>
+                                                    </div>
+
+                                                    <div>
+                                                        <p class="text-gray-600 mb-0">Número de cuotas</p>
+                                                        <p class="font-semibold text-gray-900">
+                                                            @(@infoPin.Entidad.CuotasPactadas - @infoPin.Entidad.CuotasPendientes) de @infoPin.Entidad.CuotasPactadas
+                                                        </p>
+                                                    </div>
+
+                                                    <div>
+                                                        <p class="text-gray-600 mb-0">Saldo pendiente</p>
+                                                        <p class="font-semibold text-gray-900">@infoPin.Entidad.SaldoPendiente.ToString("C0", new CultureInfo("es-CO"))</p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bg-gray-100 shadow rounded-2xl collapse collapse-arrow">
+                                                    <input type="checkbox" class="peer">
+                                                    <h3 class="text-base font-semibold collapse-title m-0">Historial de pagos</h3>
+                                                    <div class="collapse-content">
+                                                        <div class="info-box" style="margin-bottom:1rem">
+                                                            <svg class="feather info-icon">
+                                                                <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
+                                                            </svg>
+                                                            <div class="info-text text-base" style="">
+                                                                <p class="mb-0">El costo de la transacción no está incluido en cada pago o abono.</p>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="overflow-x-auto rounded-box border border-gray-300 bg-white">
+                                                            <table class="table" style="margin-block-end:0px">
+                                                                <thead class="">
+                                                                    <tr class="border-b border-gray-300">
+                                                                        @foreach (var col in Columnas)
+                                                                        {
+                                                                            <th class="font-semibold text-gray-900 text-base">@col.NameColumn</th>
+                                                                        }
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach (var row in HistorialPagos)
+                                                                    {
+                                                                        <tr class="">
+                                                                            @foreach (var col in row.Row)
+                                                                            {
+                                                                                if (col.NameColumn == "Estado")
+                                                                                {
+                                                                                    <td class="px-4 py-2 text-base">
+                                                                                        @if (col.Value.Contains("Pagada", StringComparison.OrdinalIgnoreCase))
+                                                                                        {
+                                                                                            <span class="bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">Pagado</span>
+                                                                                        }
+                                                                                        else if (col.Value.Contains("Parcial", StringComparison.OrdinalIgnoreCase))
+                                                                                        {
+                                                                                            <span class="bg-yellow-100 text-yellow-700 text-xs font-medium px-3 py-1 rounded-full">Pago parcial</span>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <span class="bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1 rounded-full">Pendiente</span>
+                                                                                        }
+                                                                                    </td>
+                                                                                }
+                                                                                else if (col.NameColumn.Contains("Valor pagado"))
+                                                                                {
+                                                                                    <td class="text-base text-green-700">@col.Value</td>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <td class="text-base">@col.Value</td>
+                                                                                }
+                                                                            }
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            }
+                            else if (!mostrarBloque && !string.IsNullOrEmpty(messageError))
+                            {
+                                <div class="w-full">
+                                    <div class="msg_error w-full max-w-full !max-w-full" style="background:var(--color-Naranja-50, #FFDE9E)">
+                                        <svg class="feather">
+                                            <use xlink:href="assets/alert-triangle.svg" />
+                                        </svg>
+                                        <p>
+                                            @messageError
+                                        </p>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    }else
+                    {
+                        <PagoCuota InfoPin="infoPin">
+
+                        </PagoCuota>
+                    }
+
+				</div>
+
+			</div>	
+		</div>
+		<section>
+			@Body
+		</section>
+
+	</ContentTemplate>
+</SpinLoader>

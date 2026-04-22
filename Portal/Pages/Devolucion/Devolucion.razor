@@ -1,0 +1,155 @@
+﻿@page "/compradepin/devoluciones"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+
+@inject NavigationManager NavManager
+
+ <SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>	
+		<div>
+			<header class="encabezadodos">
+				<div class="wrapper margen_general">
+					<p class="linkdos"><a @onclick="()=> VolverCompraPin()">Regresar</a></p>
+					<p class="titulodos">Devolución de PIN Directo Colpatria</p>
+				</div>
+			</header>
+
+			<div class="row margen_general">
+				<div class="column">
+					@if (!DevolucionRealizada)
+					{
+						<div>
+							<div>
+								<p>
+									Ingrese un PIN pagado por medio de PIN Directo Colpatria para consultar su estado y realizar:
+								</p>
+								<ul>
+									<li>Devolución: repone el dinero inmediatamente en la cuenta Colpatria debitada</li>
+								</ul>
+								
+								<ConsultaInfoPin IdRunt="@(CentroSeleccionado.CodigoRUNT?.ToString() ?? "")" ConsultaDevolucionesChanged="ConsultaDevolucionesChanged" OnFormCompleteChanged="OnFormCompleteChanged"></ConsultaInfoPin>
+
+								<button disabled="@(isFormComplete == false)" class="boton-primario" @onclick="ConsultaDevolucionPin">Consultar</button>
+
+								@*
+								<ValidationMessage For="@(() => ConsultaDevolucionesModel.Pin)" />
+								<ValidationMessage For="@(() => ConsultaDevolucionesModel.TipoDocumento)" />
+								<ValidationMessage For="@(() => ConsultaDevolucionesModel.Documento)" />*@
+
+							</div>
+						</div>
+					}
+
+					@if (ShowValidation)
+					{
+						<div class="msg_error">
+							<svg class="feather">
+								<use href="{feather_sprite}#alert-triangle" />
+							</svg>
+							<p>
+								Este formulario solo permite devolver pines recaudados con PIN Directo Colpatria. Diríjase a
+								<strong> centro.milicencia.co</strong> o <strong> milicencia.co </strong> para gestionar este PIN
+							</p>
+						</div>
+					}
+
+					@if (DevolucionRealizada)
+					{
+						<div>
+							<div class="wrapper">
+								<h2>Operación completada exitosamente</h2>
+								<p>
+									La devolución del PIN @(ConsultaInfoPin.Data.Entidad.Pin) fue exitosa. Pronto verá el dinero reflejado en su cuenta
+									Scotiabank Colpatria
+								</p>
+								<a @onclick="()=> VolverCompraPin()" class="boton-primario">Volver al menú principal</a>
+							</div>
+						</div>
+					}
+				</div>
+
+				<SpinLoader IsLoading="IsLoadingData">
+					<LoadingTemplate>
+						<div style="height:100%; display:flex; align-items:center; justify-content:center;">
+							<br />
+							<Circle mar Center="true" Color="var(--color-azul-600)"></Circle>
+						</div>
+					</LoadingTemplate>
+					<ContentTemplate>
+					@if (!DevolucionRealizada && ConsultaInfoPin.Ok && ConsultaInfoPin.Data.Entidad != null)
+					{
+						<div>
+							<div class="respuesta_pin">
+								<h2>Datos del PIN</h2>
+								<div class="cuadricula">
+									<div>
+										<div>Nombre completo</div>
+										<div>@ConsultaInfoPin.Data.Entidad.NombreCompleto.CamelCase()</div>
+									</div>
+									<div>
+										<div>Documento</div>
+										<div>@PagoPinConst.DescripcionDocumento[(EnumTipoDocumento)ConsultaInfoPin.Data.Entidad.TipoDocumento] @ConsultaInfoPin.Data.Entidad.NumeroDocumento</div>
+									</div>
+
+									<div>
+										<div>PIN</div>
+										<div>@ConsultaInfoPin.Data.Entidad.Pin</div>
+									</div>
+									<div>
+										<div>Trámite y categoría</div>
+										<div>@SetTramiteCategoria()</div>
+									</div>
+
+									<div>
+										<div>Correo</div>
+										<div>@ConsultaInfoPin.Data.Entidad.Email</div>
+									</div>
+									<div>
+										<div>Teléfono</div>
+										<div>@ConsultaInfoPin.Data.Entidad.Telefono</div>
+									</div>
+
+									<div>
+										<div>Fecha de compra</div>
+										<div>@ConsultaInfoPin.Data.Entidad.FechaRecaudo.ToString("dd/MM/yyyy hh:mm:ss tt")</div>
+									</div>
+									<div>
+										<div>Valor total</div>
+										<div>@FormatearMoneda(ConsultaInfoPin.Data.Entidad.ValorTransaccion)</div>
+									</div>
+								</div>
+
+								<div class="botones">
+										<a hidden="@(!AllowReturn)" type="submit" class="boton-primario" @onclick="() => RealizarDevolucion()">Realizar devolución</a>
+								</div>
+							</div>
+						</div>
+					}
+					</ContentTemplate>
+				</SpinLoader>
+			</div>
+		</div>
+		<section>
+			@Body
+		</section>
+	</ContentTemplate>
+</SpinLoader>

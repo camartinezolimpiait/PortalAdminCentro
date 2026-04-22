@@ -1,0 +1,401 @@
+﻿@page "/compradepin/Resumencompra"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.Common
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen;
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using System.Globalization
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <div>
+            <div class="">
+                <h3 class="mb-4 font-bold">Detalles de la compra</h3>
+                @if (infoPin != null && infoPin.EstadoPin == (int)EnumEstadoPin.Activo)
+                {
+                    <div class="flex flex-col items-start gap-8 md:flex-row">
+                        <!-- Columna izquierda -->
+                        <div class="max-w-[547px] flex-1 bg-white md:min-h-[440px]">
+                            <div class="flex items-center rounded-sm border border-green-500 bg-white p-3 text-green-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5 text-green-500" viewBox="0 0 16 16" fill="currentColor">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 10.97l4.992-4.992-1.415-1.414L6.97 8.143 5.383 6.557 3.97 7.97l3 3z" />
+                                </svg>
+                                <strong>Compra exitosa</strong>
+                            </div>
+
+                            <div class="mt-4 w-full rounded-md border border-gray-300 bg-white p-5 text-sm text-gray-800">
+                                <!-- Información de la compra -->
+                                <p class="mb-2 font-semibold text-blue-900">Información de la compra</p>
+                                <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
+                                    <div class="font-medium text-gray-700">Estado transacción</div>
+                                    <div class="font-semibold text-green-600">Aprobada</div>
+
+                                    <div class="font-medium text-gray-700">NUT</div>
+                                    <div>@PagoPin.Nut</div>
+
+                                    <div class="font-medium text-gray-700">Descripción</div>
+                                    <div>@ObtenerDescripcion(PagoPin.ClienteCompra)</div>
+
+                                    <div class="font-medium text-gray-700">Fecha de la transacción</div>
+                                    <div>@infoPin.FechaRecaudo.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)</div>
+
+                                    <div class="font-medium text-gray-700">Valor de pago</div>
+                                    <div>@infoPin.ValorTransaccion.ToString("C0", new CultureInfo("es-CO"))</div>
+                                </div>
+
+
+                                <hr class="my-2 border-gray-200">
+
+                                <!-- Datos del aspirante -->
+                                <p class="mb-2 font-semibold text-blue-900">Datos del aspirante</p>
+                                <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
+                                    <div class="font-medium text-gray-700">Nombre</div>
+                                    <div>@infoPin.NombreCompleto</div>
+
+                                    <div class="font-medium text-gray-700">Edad y género</div>
+                                    <div>@((EnumSexo)Enum.Parse(typeof(EnumSexo), (PagoPin.Usuario.Genero != 0 ? PagoPin.Usuario.Genero.ToString() : "1"))) de @CalcularEdad(@infoPin.FechaNacimiento) años</div>
+
+                                    <div class="font-medium text-gray-700">Identificación</div>
+                                    <div>@* Inicio código generado por GitHub Copilot *@
+                                    @{
+                                        var esPpt = PagoPin?.Usuario?.TipoDocumento == (int)EnumTipoDocumento.PermisoPorProteccionTemporal;
+                                        var descripcionDocumento = esPpt ? "PPT" : PagoPin?.Usuario?.TipoDocumentoDescpcion;
+                                    }
+                                    <div>@descripcionDocumento @infoPin.NumeroDocumento</div>
+                                    @* Fin código generado por GitHub Copilot *@</div>
+
+                                    <div class="font-medium text-gray-700">Correo electrónico</div>
+                                    <div>@infoPin.Email</div>
+
+                                    <div class="font-medium text-gray-700">Teléfono</div>
+                                    <div>@infoPin.Telefono</div>
+                                </div>
+
+
+                                <hr class="my-2 border-gray-200">
+
+                                @if (PagoPin.FacturacionActiva)
+                                {
+                                    @* Inicio código generado por GitHub Copilot *@
+                                    var datosFacturacion = PagoPin.DatosFacturacion;
+                                    var esOtraPersona = PagoPin.EmisionOtraPersona && datosFacturacion != null;
+
+                                    string tipoPersonaFactura = esOtraPersona
+                                        ? (datosFacturacion.TipoPersonaFacturacion == 1 ? "Persona jurídica" : "Persona natural")
+                                        : "Persona natural";
+
+                                    string nombreFactura = esOtraPersona
+                                        ? (datosFacturacion.TipoPersonaFacturacion == 1
+                                            ? (!string.IsNullOrWhiteSpace(datosFacturacion.RazonSocialFacturacion)
+                                                ? datosFacturacion.RazonSocialFacturacion
+                                                : datosFacturacion.NombreComercialFacturacion)
+                                            : $"{datosFacturacion.NombresFacturacion} {datosFacturacion.ApellidosFacturacion}".Trim())
+                                        : $"{PagoPin.Usuario.Nombre} {PagoPin.Usuario.Apellido}".Trim();
+
+                                    string identificacionFactura = ObtenerIdentificacionFactura();
+
+                                    string correoFactura = esOtraPersona
+                                        ? datosFacturacion.CorreoFacturacion
+                                        : PagoPin.Usuario.Correo;
+                                    <p class="mb-2 font-semibold text-blue-900">Datos factura electrónica</p>
+                                    <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
+                                        <div class="font-medium text-gray-700">Tipo de persona</div>
+                                        <div>@tipoPersonaFactura</div>
+
+                                        <div class="font-medium text-gray-700">Nombre</div>
+                                        <div>@nombreFactura</div>
+
+                                        <div class="font-medium text-gray-700">Identificación</div>
+                                        <div>@identificacionFactura</div>
+
+                                        <div class="font-medium text-gray-700">Correo electrónico</div>
+                                        <div>@correoFactura</div>
+                                    </div>
+                                    @* Fin código generado por GitHub Copilot *@
+
+                                    <hr class="my-2 border-gray-200">
+                                }
+
+                                <!-- Detalles del trámite -->
+                                <p class="mb-2 font-semibold text-blue-900">Detalles del trámite</p>
+                                @* Inicio código generado por GitHub Copilot *@
+                                <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
+                                    <div class="font-medium text-gray-700">@ObtenerTipoCentro()</div>
+                                    <div>@CentroSeleccionado.Nombre</div>
+
+                                    <div class="font-medium text-gray-700">Trámite principal</div>
+                                    <div>@($"{DescripcionesTramite.Descripcion[(EnumTramite)PagoPin.TipoTramite]} - {PagoPin.Categoria1}")</div>
+
+                                    @if (PagoPin.TipoTramite2.HasValue && !string.IsNullOrWhiteSpace(PagoPin.Categoria2))
+                                    {
+                                        <div class="font-medium text-gray-700">Trámite secundario</div>
+                                        <div>@($"{DescripcionesTramite.Descripcion[(EnumTramite)PagoPin.TipoTramite2]} - {PagoPin.Categoria2}")</div>
+                                    }
+
+                                    <div class="font-medium text-gray-700">Medio de pago</div>
+                                    <div>
+                                        @{
+                                            var medio = PagoPin.MediosPago.FirstOrDefault(x => x.Id == PagoPin.TipoRecaudoCtrl);
+                                        }
+                                        @medio.Nombre
+                                    </div>
+                                </div>
+                                @* Fin código generado por GitHub Copilot *@
+
+
+                                <hr class="my-2 border-gray-200">
+
+                                <!-- Plan de pago -->
+                                @if (PagoPin.ConfiguracionCuotas.CuotaSeleccionada != null && PagoPin.ConfiguracionCuotas.CuotaSeleccionada.NumeroCuotas > 1)
+                                {
+                                    <p class="mb-2 font-semibold text-blue-900">Plan de pago a @PagoPin.Cuotas cuotas</p>
+                                    <div class="mb-4 space-y-1">
+                                        <div class="flex justify-between">
+                                            <span>Pago inicial:</span>
+                                            <span class="font-medium">@PagoPin.ConfiguracionCuotas.CuotaSeleccionada.PrimeraCuota.ToString("C0")</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>Cuotas restantes:</span>
+                                            <span>
+                                                <span style="color:#9FA1A3" class="mr-1">@((PagoPin?.ConfiguracionCuotas?.CuotaSeleccionada?.NumeroCuotas ?? 0) - 1)x</span>
+                                                <span class="tabular-nums">@PagoPin.ConfiguracionCuotas.CuotaSeleccionada.ValorCuota.ToString("C0")</span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex justify-between border-t border-gray-200 pt-2 font-medium">
+                                        <span>Total del trámite</span>
+                                        <span>@PagoPin.ConfiguracionCuotas.CuotaSeleccionada.ValorTotal.ToString("C0")</span>
+                                    </div>
+
+                                    <hr class="my-3 border-gray-200">
+                                }
+
+                                <!-- Desglose del pago -->
+                                <p class="mb-2 font-semibold text-blue-900">Desglose del pago</p>
+                                <div class="mb-2 space-y-1">
+                                    <div class="flex justify-between"><span>ANSV</span><span>@PagoPin.ValorDiscriminadoCotizacion.Ansv.ToString("C0", new CultureInfo("es-CO"))</span></div>
+                                    <div class="flex justify-between"><span>Recaudo*</span><span>@PagoPin.ValorDiscriminadoCotizacion.Banco.ToString("C0", new CultureInfo("es-CO"))</span></div>
+                                    <div class="flex justify-between"><span>Tarifa @(PagoPin.ClienteCompra == (int)EnumTipoCliente.CRC ? "CRC" : "CEA")</span><span>
+                                            @if (PagoPin.ConfiguracionCuotas.CuotaSeleccionada != null && PagoPin.ConfiguracionCuotas.CuotaSeleccionada.NumeroCuotas > 1)
+                                            {
+                                                @(((PagoPin.ValorDiscriminadoCotizacion.Crc) / PagoPin.ConfiguracionCuotas.CuotaSeleccionada.NumeroCuotas).ToString("C0", new CultureInfo("es-CO")))
+                                            }
+                                            else
+                                            {
+                                                @PagoPin.ValorDiscriminadoCotizacion.Crc.ToString("C0", new CultureInfo("es-CO"))
+                                            }
+                                    </span></div>
+                                    <div class="flex justify-between"><span>SICOV</span><span>@PagoPin.ValorDiscriminadoCotizacion.Sicov.ToString("C0", new CultureInfo("es-CO"))</span></div>
+                                </div>
+
+                                <div class="flex justify-between border-t border-gray-200 pt-2 font-bold text-blue-900">
+                                    <span>Total pagado</span>
+                                    <span>
+                                        @if (PagoPin.ClienteCompra == (int)EnumTipoCliente.CRC)
+                                        {
+                                            @PagoPin.ValorDiscriminadoCotizacion.ValorTotal.ToString("C0", new CultureInfo("es-CO"))
+                                        }
+                                        else if (PagoPin.Cuotas == 0)
+                                        {
+                                            @PagoPin.ValorDiscriminadoCotizacion.ValorTotal.ToString("C0", new CultureInfo("es-CO"))
+                                        }
+                                        else
+                                        {
+                                            @(PagoPin.Cuotas != null
+                                                                                ? PagoPin.CostoCuotas[(int)PagoPin.Cuotas - 1].PrimeraCuota.ToString("C0", new CultureInfo("es-CO"))
+                                                                                : PagoPin.CostoCuotas[0].PrimeraCuota.ToString("C0", new CultureInfo("es-CO")))
+                                                                        }
+                                    </span>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="mx-8 self-stretch border-l border-gray-300"></div>
+
+
+
+                        <!-- Columna derecha -->
+                        <div>
+                            <p class="mb-2">Ya puedes enrolar al aspirante con este PIN</p>
+                            <div class="aspect-[1.86] h-auto w-90 rounded-xl bg-black bg-[url(/assets/card.svg)] bg-cover bg-center bg-no-repeat">
+
+                                <div class="grid h-full grid-rows-4 p-5 text-white">
+                                    <p class="self-start text-center leading-none font-medium">
+                                        PIN <br />
+                                        @ObtenerDescripcion(PagoPin.ClienteCompra)
+                                    </p>
+
+                                    <div class="row-span-2 flex flex-col items-center self-center">
+                                        <div class="text-xl font-bold">@PagoPin.PinGenerado</div>
+                                        <button type="button"
+                                                class="btn btn-xs w-40 transition-colors duration-300 ease-in-out @(btnCopied ? "btn-success" : "btn-outline")"
+                                                @onclick="CopiarPin">
+                                            @if (!btnCopied)
+                                            {
+                                                <svg class="feather size-3">
+                                                    <use href="assets/feather-sprite.svg#copy" />
+                                                </svg>
+                                                <span>Copiar al portapapeles</span>
+                                            }
+                                            else
+                                            {
+                                                <span>¡Copiado!</span>
+                                            }
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 flex w-full justify-center space-x-3">
+                                <button @onclick="Salir" class="boton-secundario max-w-xs flex-1">
+                                    Salir
+                                </button>
+
+                                <button @onclick="ComprarOtroPin" class="boton-primario max-w-xs flex-1">
+                                    Comprar otro PIN
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+                else if (infoPin == null)
+                {
+                    <div class="w-sm">
+                        <div class="info-box">
+                            <svg class="feather info-icon">
+                                <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
+                            </svg>
+                            <div class="info-text">
+                                <div>Ha ocurrido un error obteniendo la información del pin. <br> Vuelve a intentarlo en unos minutos.</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex justify-end space-x-3">
+                            <button @onclick="Salir" class="boton-secundario">
+                                Salir
+                            </button>
+
+                            <button @onclick="ComprarOtroPin" class="boton-primario">
+                                Comprar otro PIN
+                            </button>
+                        </div>
+                    </div>
+
+
+
+                }
+                else
+                {
+                    <div class="max-w-[471px] flex-1 bg-white md:min-h-[440px]">
+                        <!-- Encabezado de compra fallida -->
+                        <div class="flex items-center rounded-sm border border-rojo-500 bg-white p-3 text-rojo-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+                                <path d="M15 17.2263L18.8271 21.053C19.1298 21.356 19.5007 21.5041 19.9399 21.4974C20.3793 21.4905 20.7503 21.3357 21.053 21.033C21.356 20.73 21.5074 20.359 21.5074 19.9199C21.5074 19.4807 21.356 19.1097 21.053 18.8067L17.2263 15L21.053 11.1729C21.356 10.8702 21.5074 10.4993 21.5074 10.0601C21.5074 9.62072 21.356 9.24968 21.053 8.94697C20.7503 8.64403 20.3793 8.49256 19.9399 8.49256C19.5007 8.49256 19.1298 8.64403 18.8271 8.94697L15 12.7737L11.1729 8.94697C10.8702 8.64403 10.5026 8.49256 10.0701 8.49256C9.63766 8.49256 9.26995 8.64403 8.96701 8.94697C8.66431 9.24968 8.51295 9.62072 8.51295 10.0601C8.51295 10.4993 8.66431 10.8702 8.96701 11.1729L12.7737 15L8.94697 18.8271C8.64403 19.1298 8.4959 19.4974 8.50258 19.9299C8.50949 20.3623 8.66431 20.73 8.96701 21.033C9.26995 21.3357 9.641 21.487 10.0801 21.487C10.5193 21.487 10.8903 21.3357 11.1933 21.033L15 17.2263ZM15 30C12.9123 30 10.9574 29.6075 9.13518 28.8225C7.31299 28.0372 5.72742 26.9702 4.37849 25.6215C3.02979 24.2726 1.96281 22.687 1.17754 20.8648C0.392515 19.0426 0 17.0877 0 15C0 12.9123 0.392515 10.9574 1.17754 9.13518C1.96281 7.31299 3.02979 5.72742 4.37849 4.37849C5.72742 3.02979 7.31299 1.96281 9.13518 1.17754C10.9574 0.392514 12.9123 0 15 0C17.0877 0 19.0426 0.392514 20.8648 1.17754C22.687 1.96281 24.2726 3.02979 25.6215 4.37849C26.9702 5.72742 28.0372 7.31299 28.8225 9.13518C29.6075 10.9574 30 12.9123 30 15C30 17.0877 29.6075 19.0426 28.8225 20.8648C28.0372 22.687 26.9702 24.2726 25.6215 25.6215C24.2726 26.9702 22.687 28.0372 20.8648 28.8225C19.0426 29.6075 17.0877 30 15 30Z" fill="#E61B14" />
+                            </svg>
+                            <strong class="ml-3">Compra Fallida</strong>
+                        </div>
+
+                        <!-- Información de la compra -->
+
+                        <div class="mt-4 w-full rounded-md border border-gray-300 bg-white p-5 text-sm text-gray-800">
+                            <p class="mb-2 font-semibold text-blue-900">Información de la compra</p>
+                            <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
+                                <div class="font-medium text-gray-700">Estado transacción</div>
+                                <div class="font-semibold text-rojo-600">Rechazada</div>
+
+                                <div class="font-medium text-gray-700">NUT</div>
+                                <div>@PagoPin.Nut</div>
+
+                                <div class="font-medium text-gray-700">Descripción</div>
+                                <div>
+                                    @(PagoPin.ClienteCompra == (int)EnumTipoCliente.CEA
+                                                                    ? "Licencia de conducción"
+                                                                    : PagoPin.ClienteCompra == (int)EnumTipoCliente.CRC
+                                                                    ? "Exámenes médicos"
+                                                                    : "")
+                            </div>
+                            <div class="font-medium text-gray-700">Empresa</div>
+                            <div>
+                                @{
+                                        var medio = PagoPin.MediosPago.FirstOrDefault(x => x.Id == PagoPin.TipoRecaudoCtrl);
+                                    }
+                                    @medio.Nombre
+                                </div>
+
+
+                                <div class="font-medium text-gray-700">Valor de pago</div>
+                                <div>
+                                    @if (PagoPin.ClienteCompra == (int)EnumTipoCliente.CRC)
+                                    {
+                                        @PagoPin.ValorDiscriminadoCotizacion.ValorTotal.ToString("C0", new CultureInfo("es-CO"))
+                                    }
+                                    else if (PagoPin.Cuotas == 0)
+                                    {
+                                        @PagoPin.ValorDiscriminadoCotizacion.ValorTotal.ToString("C0", new CultureInfo("es-CO"))
+                                    }
+                                    else
+                                    {
+                                        @(PagoPin.Cuotas != null
+                                                                        ? PagoPin.CostoCuotas[(int)PagoPin.Cuotas - 1].PrimeraCuota.ToString("C0", new CultureInfo("es-CO"))
+                                                                        : PagoPin.CostoCuotas[0].PrimeraCuota.ToString("C0", new CultureInfo("es-CO")))
+                                                                }
+                            </div>
+
+                            <div class="font-medium text-gray-700">Fecha de pago</div>
+                            <div>
+                                @(!string.IsNullOrEmpty(PagoPin.FechaPago)
+                                                                ? PagoPin.FechaPago
+                                                                : DateTime.Now.ToString("dd/MM/yyyy"))
+                            </div>
+
+                            </div>
+
+                            <div class="info-box">
+                                <svg class="feather info-icon">
+                                    <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
+                                </svg>
+                                <div class="info-text">
+                                    <div>Ha ocurrido un error con la entidad financiera. <br> Vuelve a intentarlo en unos minutos.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-end space-x-3">
+                            <button @onclick="Salir" class="boton-secundario">
+                                Salir
+                            </button>
+
+                            <button @onclick="ComprarOtroPin" class="boton-primario">
+                                Comprar otro PIN
+                            </button>
+                        </div>
+                    </div>
+                                }
+
+            </div>
+
+
+        </div>
+        <section>
+            @Body
+        </section>
+    </ContentTemplate>
+</SpinLoader>
+

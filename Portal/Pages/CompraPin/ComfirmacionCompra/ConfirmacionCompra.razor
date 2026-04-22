@@ -1,0 +1,54 @@
+﻿@page "/compradepin/confirmacioncompra"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.Common
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.Common
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.ProcesoDePago
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen;
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Pages.CompraPin.ResumenCompra;
+@using portalAdministrativoSISEC.Pages.CompraPin.Transaccion
+@inject NavigationManager NavManager
+
+@if (!isTransactionInProgress && !proceedToPayment && !TransactionDone)
+{
+    <h2>Confirmar compra</h2>
+
+    <div class="grid gap-8 md:grid-cols-2">
+        <Resumen pagoPin="PagoPin" EsConfirmacion="true" OnNavegarResumen="CambiarAVista" />
+
+        <div class="instrucciones">
+            <p class="text-md mb-3">
+                Verifica que tu información este correcta. Enviaremos la confirmación de la compra al correo electrónico registrado. Además los datos serán usados por el usuario para gestionar su PIN
+            </p>
+            <slot />
+            <div class="flex gap-2">
+                <button class="boton-secundario" @onclick="() => Volver()">Atrás</button>
+                <button class="boton-primario" @onclick="() => PagarReferenciaPinDirecto()">Continuar con el pago</button>
+            </div>
+        </div>
+    </div>
+}
+
+<ModalGeneracionPin @bind-Open="abrirModal"></ModalGeneracionPin>
+
+@if (proceedToPayment)
+{
+    <ProceedToPayment nut="@PagoPin.Nut" copiaNut="copiaNut"></ProceedToPayment>
+}
+
+@if (isTransactionInProgress)
+{
+    <TransactionProgress PagoPin="PagoPin" transactionInfo="transactionInfo" TransactionDone="TransactionSuccess" />
+
+}
+
+@if (TransactionDone)
+{
+    <ResumenCompra PagoPin="PagoPin" transactionInfo="transactionInfo"></ResumenCompra>
+}

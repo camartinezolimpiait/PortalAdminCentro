@@ -1,0 +1,86 @@
+﻿@page "/compradepincda/datospersonalesCDA"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@editContext" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            <h3>Datos personales</h3>
+            <p>Ingrese los datos de la persona que trae el vehículo. El resumen de la compra con el PIN se enviará a la dirección de correo electrónico que registre.</p>
+            <div class="field">
+                <label for="email">Correo electrónico</label>
+                <!-- bind permite la comunicación bidireccional entre el campo de entrada y la propiedad-->
+                <input autocomplete="on" @bind-value="DatosPersonalesModel.Correo" @bind-value:event="oninput" @onblur="@(() => OnBlur("correo"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("correo", e))" />
+                @if (isFieldTouched("correo"))
+                {
+                    <ValidationMessage For="@(() => DatosPersonalesModel.Correo)" />
+                }
+            </div>
+            <div class="field">
+                <label for="celular">Celular</label>
+                <input inputmode="numeric" pattern="[0-9]*" maxlength="10" type="tel" id="celular" autocomplete="tel" @onblur="@(() => OnBlur("celular"))" @bind-value="DatosPersonalesModel.Celular" @bind-value:event="oninput" @onchange="@((ChangeEventArgs e) => HandleInputChange("celular", e))" />
+                @if (isFieldTouched("celular"))
+                {
+                    <ValidationMessage For="@(() => DatosPersonalesModel.Celular)" />
+                }
+            </div>
+            <div class="field">
+                <label for="nombres">Nombre(s)</label>
+                <input type="text" id="nombres" maxlength="200" autocomplete="given-name" @bind-value:event="oninput" @bind-value="DatosPersonalesModel.Nombre" @onblur="@(() => OnBlur("nombre"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("nombre", e))" />
+                @if (isFieldTouched("nombre"))
+                {
+                    <ValidationMessage For="@(() => DatosPersonalesModel.Nombre)" />
+                }
+                
+            </div>
+            <div class="field">
+                <label for="apellidos">Apellidos</label>
+                <input type="text" id="apellidos" maxlength="200" autocomplete="family-name" @bind-value:event="oninput" @bind-value="DatosPersonalesModel.Apellidos" @onblur="@(() => OnBlur("apellidos"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("apellidos", e))" />
+                @if (isFieldTouched("apellidos"))
+                {
+                    <ValidationMessage For="@(() => DatosPersonalesModel.Apellidos)" />
+                }
+
+            </div>
+            <div class="field">
+                <label for="tipoDocumento">Tipo de documento</label>
+                <select id="tipoDocumento" @onblur="@(() => OnBlur("tipoDocumento"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("tipoDocumento", e))">
+                    <option value="">Seleccione un tipo de documento</option>
+                    @foreach (var doc in ListaDocumentos)
+                    {
+                        <option value="@doc.IdTipoSisec" selected="@(int.Parse(doc.IdTipoSisec) == DatosPersonalesModel.TipoDocumento ? true : false)">@doc.Nombre</option>
+                    }
+                </select>
+                @if (isFieldTouched("tipoDocumento") || isFieldTouched("documento"))
+                {
+                    <ValidationMessage For="@(() => DatosPersonalesModel.TipoDocumento)" />
+                }
+            </div>
+            <div class="field">
+                <label for="documento">Documento</label>
+                <input inputmode="numeric" pattern="[0-9]*" maxlength="24" type="text" id="documento"
+                       style="text-transform: uppercase;" autocomplete="on" @bind-value:event="oninput" @bind-value="DatosPersonalesModel.Documento" @onblur="@(() => OnBlur("documento"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("documento", e))" />
+                @if (isFieldTouched("documento"))
+                {
+                    <ValidationMessage For="@(() => DatosPersonalesModel.Documento)" />
+                }
+            </div>
+        </EditForm>
+
+    </ContentTemplate>
+</SpinLoader>

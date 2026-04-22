@@ -1,0 +1,112 @@
+﻿@page "/configuracion/configurarFacturacion/numeracion"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.Agendamiento;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@EditContext" id="ConfigurarFacturacion">
+        	<DataAnnotationsValidator />
+
+            <h4>Número de resolución, prefijo y consecutivo</h4>
+            <p class="paragraph mw-max">
+                Asegúrese de que la siguiente configuración coincida exactamente con la información establecida en el portal del proveedor tecnológico.
+            </p>
+
+            <div class="flex-container">
+                <div class="flex-item">
+                    <label for="prefijo">Número de resolución</label>
+                    <input class="mb-0" type="text" id="resolucion" maxlength="20" autocomplete="given-name" @bind-value:event="oninput" @bind-value="ConfigurarNumeracionModel.NumeroResolucion" 
+                        @onchange="@((ChangeEventArgs e) => HandleInputChange("numeroResolucion", e))" />
+                    <ValidationMessage For="@(() => ConfigurarNumeracionModel.NumeroResolucion)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="inicio">Fecha de inicio</label>
+                    <input class="mb-0" type="date" id="inicio" maxlength="50" autocomplete="given-name" @bind-value:event="oninput" @bind-value="ConfigurarNumeracionModel.FechaInicio" 
+                        @onchange="@((ChangeEventArgs e) => HandleInputChange("desde", e))" />
+                    <ValidationMessage For="@(() => ConfigurarNumeracionModel.FechaInicio)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="fin">Fecha fin</label>
+                    <input class="mb-0" type="date" id="fin" maxlength="50" autocomplete="given-name" @bind-value:event="oninput" @bind-value="ConfigurarNumeracionModel.Fechafin" 
+                        @onchange="@((ChangeEventArgs e) => HandleInputChange("hasta", e))" />
+                    <ValidationMessage For="@(() => ConfigurarNumeracionModel.Fechafin)" />
+                </div>
+            </div>
+
+            <div class="flex-container">
+                <div class="flex-item">
+                    <label for="prefijo">Prefijo</label>
+                    <input class="mb-0" type="text" id="prefijo" maxlength="4" autocomplete="given-name" @bind-value:event="oninput" @bind-value="ConfigurarNumeracionModel.Prefijo" 
+                        @onchange="@((ChangeEventArgs e) => HandleInputChange("prefijo", e))" />
+                    <ValidationMessage For="@(() => ConfigurarNumeracionModel.Prefijo)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="desde">Desde</label>
+                    <input class="mb-0" type="text" id="desde" maxlength="12" autocomplete="given-name" @bind-value:event="oninput" @bind-value="ConfigurarNumeracionModel.Desde" 
+                        @onchange="@((ChangeEventArgs e) => HandleInputChange("desde", e))" />
+                    <ValidationMessage For="@(() => ConfigurarNumeracionModel.Desde)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="hasta">Hasta</label>
+                    <input class="mb-0" type="text" id="hasta" maxlength="12" autocomplete="given-name" @bind-value:event="oninput" @bind-value="ConfigurarNumeracionModel.Hasta" 
+                        @onchange="@((ChangeEventArgs e) => HandleInputChange("hasta", e))" />
+                    <ValidationMessage For="@(() => ConfigurarNumeracionModel.Hasta)" />
+                </div>
+            </div>
+
+            <div class="flex-container">
+                <div class="flex-item">
+                    <InputCheckbox class="mb-0" id="desde" maxlength="12" autocomplete="given-name" @bind-Value="ConfigurarNumeracionModel.ConsecutivoEspecifico" />
+                    <label for="consecutivoEspecifico">Facturar desde un consecutivo especifico</label>
+                    <ValidationMessage For="@(() => ConfigurarNumeracionModel.ConsecutivoEspecifico)" />
+                </div>
+            </div>
+
+            @if (ConfigurarNumeracionModel.ConsecutivoEspecifico)
+            {
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <label for="empezarDesde">Empezar desde</label>
+                        <input class="mb-0" type="text" id="empezarDesde" maxlength="12" autocomplete="given-name" @bind-value:event="oninput" @bind-value="ConfigurarNumeracionModel.EmpezarDesde" 
+                            @onchange="@((ChangeEventArgs e) => HandleInputChange("empezarDesde", e))" />
+                        <ValidationMessage For="@(() => ConfigurarNumeracionModel.EmpezarDesde)" />
+                    </div>
+                </div>
+            }
+
+            <div class="div-btn">
+                <a class="btn-guardar boton-primario" @onclick="() => GuardarDatos()">Guardar configuración</a>
+            </div>
+
+        </EditForm>
+    </ContentTemplate>
+</SpinLoader>

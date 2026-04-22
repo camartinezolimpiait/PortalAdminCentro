@@ -1,0 +1,158 @@
+﻿.resumen-box {
+    border: 1px solid gray; /* Borde del recuadro */
+    background-color: #f5f5f5;
+    padding: 30px;
+    border-radius: 5px; /* Bordes redondeados */
+    margin-top: 10px; /* Espacio por encima del recuadro */
+    display: flex;
+    flex-direction: column; /* Los elementos se organizan en columna */
+    gap: 10px; /* Espacio entre elementos */
+    margin: 0 auto; /* Centrar el recuadro */
+    font-size: 18px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los textos de "Valor total" */
+    align-items: center; /* Alinea verticalmente */
+    font-weight: bold;
+    color: #0d72d0; /* Texto en color azul */
+}
+
+.valor-total-texto, .valor-total-valor {
+    font-weight: bold; /* Texto en negrita */
+    font-size: 16px;
+}
+
+.line {
+    border-top: 1px solid #ccc; /* Línea separadora */
+    margin: 5px 0; /* Espacio arriba y abajo de la línea */
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los textos de las filas */
+    font-size: 14px;
+}
+
+.info-left {
+    font-weight: bold;
+}
+
+.info-right {
+    color: #2c3e50; /* Color del texto de la derecha */
+}
+
+.pay-button {
+    background-color: #0056b3;
+    color: #fff;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 20px; /* Espacio superior al botón */
+    margin-left: auto; /* Empujar a la derecha */
+}
+
+    .pay-button:hover {
+        background-color: #007bff;
+    }
+.contenedor-button-pagar {
+    display: flex;
+    justify-content: flex-end; /* Alinear a la derecha */
+}
+/* Estilos específicos para el segundo resumen */
+.resumen-box-segundo {
+    border: 1px solid gray; /* Borde gris del recuadro */
+    background-color: #f5f5f5; /* Fondo grisáceo */
+    padding: 30px;
+    border-radius: 5px; /* Bordes redondeados */
+    margin-top: 15px; /* Espacio por encima del recuadro */
+    display: flex;
+    flex-direction: column; /* Los elementos se organizan en columna */
+    gap: 10px; /* Espacio entre elementos */
+    margin: 0 auto; /* Centrar el recuadro */
+    font-size: 18px;
+}
+
+.header-segundo {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los textos de "Valor a pagar" */
+    align-items: center; /* Alinea verticalmente */
+    font-weight: bold;
+    color: #0d72d0; /* Texto en color azul */
+}
+
+.valor-total-texto-segundo, .valor-total-valor-segundo {
+    font-weight: bold; /* Texto en negrita */
+    font-size: 16px;
+}
+
+.info-row-segundo {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los textos de las filas */
+    font-size: 14px;
+}
+
+.info-left-segundo-saldo {
+    font-weight: bold;
+}
+
+.info-right-segundo-saldo {
+    font-weight: bold;
+}
+
+
+.info-right-segundo {
+    color: #2c3e50; /* Color del texto de la derecha */
+}
+
+.saldo-restante {
+    border: 1px solid gray; /* Borde gris */
+    background-color: #ffffff; /* Fondo blanco */
+    padding: 5px; /* Espacio interno */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.pay-button-segundo {
+    background-color: #0056b3;
+    color: #fff;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    width: auto; /* Botón del tamaño del texto */
+    display: inline-block;
+    margin-bottom: 6px;
+}
+.pay-button-segundo:hover {
+    background-color: #007bff;
+}
+.boton-secundario {
+    font-size: 16px;
+    width: auto; /* Botón del tamaño del texto */
+    padding: 15px;
+}
+.boton-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end; /* Alinear a la derecha */
+    gap: 20px; /* Espacio entre los botones */
+}
+nota {
+    padding: 0.625rem;
+    border-radius: 0.5rem;
+    background: var(--color-amarillo-100, #fff4e5);
+    font-size: 0.875rem;
+}
+
+.modal-cuotas {
+    width: fit-content;
+    max-width: 66vw;
+    border-radius: 1rem;
+    border: 1px solid var(--color-gris-300);
+    box-shadow: var(--elevacion-5);
+    padding: 2rem;
+}

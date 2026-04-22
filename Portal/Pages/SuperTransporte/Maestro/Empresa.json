@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "nombre": "ASSURANCE CERTIFICATION WORD S.A.S.  "
+    },
+    {
+      "id": 2,
+      "nombre": "AQ CERTIFICATION S.A.S."
+    },
+    {
+      "id": 3,
+      "nombre": "BVQI COLOMBIA LTDA"
+    },
+    {
+      "id": 4,
+      "nombre": "COMPAÑÍA DE CERTIFICACIÓN DE COLOMBIA S.A.S."
+    },
+    {
+      "id": 5,
+      "nombre": "CERTIFICATION QUALITY RESOURCES SAS"
+    },
+    {
+      "id": 6,
+      "nombre": "INSTITUTO COLOMBIANO DE CERTIFICACIÓN S.A.S."
+    },
+    {
+      "id": 7,
+      "nombre": "INSTITUTO COLOMBIANO DE NORMAS TÉCNICAS Y CERTIFICACIÓN - ICONTEC"
+    },
+    {
+      "id": 8,
+      "nombre": "IVS COMPAÑÍA DE CERTIFICACIONES S.A.S."
+    },
+    {
+      "id": 9,
+      "nombre": "SGS COLOMBIA S.A.S. – SGS"
+    }
+  ]
+}

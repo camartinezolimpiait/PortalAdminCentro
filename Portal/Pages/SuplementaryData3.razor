@@ -1,0 +1,327 @@
+﻿@page "/SuplData3"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+@using Newtonsoft.Json;
+@using Microsoft.JSInterop
+@inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Http
+@using portalAdministrativoSISEC.Util.Helpers
+@inject IHttpContextAccessor httpContextAccessor
+
+<div class="formulario-2 ">
+    <h2>Datos Complementarios</h2>
+    <div class="tabs-content">
+        <div>
+            <div class="formulario-2">
+                <table>
+                    <tr>
+                        <td style="width:550px">
+                            <label for='EstadoCivil'>Estado Civil</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="EstadoCivil"
+                                             id="EstadoCivil"
+                                             class="form-group"
+                                             @bind-Value="@menuservice.entradaEnrolamiento.EstadoCivilId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemEstadoCivil in ListaEstadoCivil)
+                                    {
+                                        <option value="@itemEstadoCivil.Id">@itemEstadoCivil.Nombre</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                        <td style="width:550px">
+                            <label for='Eps'>Eps</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="Eps"
+                                             id="Eps"
+                                             class="form-group"
+                                             @bind-Value="@menuservice.entradaEnrolamiento.EpsId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemEps in ListaEps)
+                                    {
+                                        <option value="@itemEps.Id">@itemEps.Nombre</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:550px">
+                            <label for='GradoEscolaridad'>Grado Escolaridad</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="GradoEscolaridad"
+                                             id="GradoEscolaridad"
+                                             class="form-group"
+                                             @bind-Value="@menuservice.entradaEnrolamiento.GradoEscolaridadId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemGradoEscolaridad in ListaGradoEscolaridad)
+                                    {
+                                        <option value="@itemGradoEscolaridad.Id">@itemGradoEscolaridad.Nombre</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                        <td style="width:550px">
+                            <label for='GrupoSanguineo'>Grupo Sanguineo</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="GrupoSanguineo"
+                                             id="GrupoSanguineo"
+                                             class="form-group"
+                                             @bind-Value="@menuservice.entradaEnrolamiento.GrupoSanguinioId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemGrupoSanguineo in ListaGrupoSanguineo)
+                                    {
+                                        <option value="@itemGrupoSanguineo.Id">@itemGrupoSanguineo.Nombre</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:550px">
+                            <label for='Ocupacion'>Ocupación</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="Ocupacion"
+                                             id="Ocupacion"
+                                             class="form-group"
+                                             @bind-Value="@menuservice.entradaEnrolamiento.OcupacionId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemOcupacion in ListaOcupacion)
+                                    {
+                                        <option value="@itemOcupacion.Id">@itemOcupacion.Nombre</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                        <td style="width:550px">
+                            <label for='RegimeAfiliacion'>Régimen Afiliación</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="RegimeAfiliacion"
+                                             id="RegimeAfiliacion"
+                                             class="form-group"
+                                             @bind-Value="@menuservice.entradaEnrolamiento.RegimenAfiliacionId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemRegimeAfiliacion in ListaRegimeAfiliacion)
+                                    {
+                                        <option value="@itemRegimeAfiliacion.Id">@itemRegimeAfiliacion.Nombre</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                    </tr>
+                </table>
+                <button type="button" class="boton-primario" @onclick="@Siguiente">Siguiente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    List<EstadoCivilDTO> ListaEstadoCivil = new List<EstadoCivilDTO>();
+    List<EpsDTO> ListaEps = new List<EpsDTO>();
+    List<GradoEscolaridadDTO> ListaGradoEscolaridad = new List<GradoEscolaridadDTO>();
+    List<GrupoSanguineoDTO> ListaGrupoSanguineo = new List<GrupoSanguineoDTO>();
+    List<OcupacionDTO> ListaOcupacion = new List<OcupacionDTO>();
+    List<RegimenAfiliacionDTO> ListaRegimeAfiliacion = new List<RegimenAfiliacionDTO>();
+    private ApplicationSevice menuservice = new ApplicationSevice();
+    [Inject]
+    public IApiService _apiService { get; set; }
+
+    private string apiName = null;
+    private string message = null;
+    private string typeAlert = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaEstadoCivil = await ObtenerEstadoCivil();
+        ListaEps = await ObtenerEps();
+        ListaGradoEscolaridad = await ObtenerGradoEscolaridad();
+        ListaGrupoSanguineo = await ObtenerGrupoSanguineo();
+        ListaOcupacion = await ObtenerOcupacion();
+        ListaRegimeAfiliacion = await ObtenerRegimenAfiliacion();
+    }
+    private async void Siguiente()
+    {
+        menuservice.entradaEnrolamiento.Sincronizar = true;
+        menuservice.entradaEnrolamiento.procesoNuevo = false;
+
+        Http = new HttpClient();
+        apiName = "RegistrarPersonaProceso";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(menuservice.entradaEnrolamiento), System.Text.Encoding.UTF8, "application/json");
+        var response = await Http.PostAsync(apiName, stringContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            menuservice.respuestaEnrolarPersona = JsonConvert.DeserializeObject<RespuestaEnrolarPersona>(content);
+            if (menuservice.respuestaEnrolarPersona.codigoError != "0")
+            {
+                message = menuservice.respuestaEnrolarPersona.DescripcionError;
+                typeAlert = "success";
+            }
+            else
+            {
+                if (menuservice.ClienteId == 1)
+                {
+                    UriHelper.NavigateTo("ValPinCRC");
+                }
+                else
+                {
+
+                    UriHelper.NavigateTo("ValPinCEA");
+                }
+            }
+        }
+        else
+        {
+            message = response.ReasonPhrase;
+            typeAlert = "danger";
+        }
+        //showLoader = false;
+        //UriHelper.NavigateTo("AuthData");
+
+    }
+
+    protected async Task<List<EstadoCivilDTO>> ObtenerEstadoCivil()
+    {
+        List<EstadoCivilDTO> estadoCivilDTO = new List<EstadoCivilDTO>();
+
+        ApiResponse<List<EstadoCivilDTO>> response = await _apiService.CallApiAsync<List<EstadoCivilDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "EstadoCivil/ObtenerEstadoCivilTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            estadoCivilDTO = response.Content
+                .OrderBy(x => x.Nombre)
+                .ToList();
+        }
+
+        return estadoCivilDTO;
+    }
+
+
+    protected async Task<List<EpsDTO>> ObtenerEps()
+    {
+        List<EpsDTO> epsDTO = new List<EpsDTO>();
+
+        ApiResponse<List<EpsDTO>> response = await _apiService.CallApiAsync<List<EpsDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "Eps/ObtenerEpsTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            epsDTO = response.Content
+                .OrderBy(x => x.Nombre)
+                .ToList();
+        }
+
+        return epsDTO;
+    }
+
+
+    protected async Task<List<GradoEscolaridadDTO>> ObtenerGradoEscolaridad()
+    {
+        List<GradoEscolaridadDTO> gradoEscolaridadDTO = new List<GradoEscolaridadDTO>();
+
+        ApiResponse<List<GradoEscolaridadDTO>> response = await _apiService.CallApiAsync<List<GradoEscolaridadDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "GradoEscolaridad/ObtenerGradoEscolaridadTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            gradoEscolaridadDTO = response.Content
+                .OrderBy(x => x.Nombre)
+                .ToList();
+        }
+
+        return gradoEscolaridadDTO;
+    }
+
+
+    protected async Task<List<GrupoSanguineoDTO>> ObtenerGrupoSanguineo()
+    {
+        List<GrupoSanguineoDTO> grupoSanguineoDTO = new List<GrupoSanguineoDTO>();
+
+        ApiResponse<List<GrupoSanguineoDTO>> response = await _apiService.CallApiAsync<List<GrupoSanguineoDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "GrupoSanguineo/ObtenerGrupoSanguineoTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            grupoSanguineoDTO = response.Content
+                .OrderBy(x => x.Nombre)
+                .ToList();
+        }
+
+        return grupoSanguineoDTO;
+    }
+
+
+    protected async Task<List<OcupacionDTO>> ObtenerOcupacion()
+    {
+        List<OcupacionDTO> ocupacionDTO = new List<OcupacionDTO>();
+
+        ApiResponse<List<OcupacionDTO>> response = await _apiService.CallApiAsync<List<OcupacionDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "Ocupacion/ObtenerOcupacionTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            ocupacionDTO = response.Content
+                .OrderBy(x => x.Nombre)
+                .ToList();
+        }
+
+        return ocupacionDTO;
+    }
+
+
+    protected async Task<List<RegimenAfiliacionDTO>> ObtenerRegimenAfiliacion()
+    {
+        List<RegimenAfiliacionDTO> regimenAfiliacionDTO = new List<RegimenAfiliacionDTO>();
+
+        ApiResponse<List<RegimenAfiliacionDTO>> response = await _apiService.CallApiAsync<List<RegimenAfiliacionDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "RegimenAfiliacion/ObtenerRegimenAfiliacionTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            regimenAfiliacionDTO = response.Content
+                .OrderBy(x => x.Nombre)
+                .ToList();
+        }
+
+        return regimenAfiliacionDTO;
+    }
+
+}

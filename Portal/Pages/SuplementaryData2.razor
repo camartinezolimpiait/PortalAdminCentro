@@ -1,0 +1,257 @@
+﻿@page "/SuplData2"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+@using Newtonsoft.Json;
+@using Microsoft.JSInterop
+@inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Http
+@using portalAdministrativoSISEC.Util.Helpers
+@inject IHttpContextAccessor httpContextAccessor
+
+
+<div class="formulario-2 ">
+    <h2>Datos Complementarios</h2>
+    <div class="tabs-content">
+        <div>
+            <div class="formulario-2">
+                <table>
+                    <tr>
+                        <td style="width:550px">
+                            <label for='Genero'>Genero</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="Genero" id="Genero" class="form-group" @bind-Value="@menuservice.entradaEnrolamiento.SexoId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemGenero in ListaSexoGral)
+                                    {
+                                        <option value="@itemGenero.Id">@itemGenero.Nombre</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Indicativo Teléfono</label>
+                            <input type="text" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.IndicativoTelefono" inputmode="numeric" pattern="[0-9]" id="IndicativoTelefono" name="IndicativoTelefono" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:550px">
+                            <label for='DeptoExpedicion'>Departamento Expedición</label>
+                            <EditForm Model="@DeptoExp">
+                                <InputSelect name="DeptoExpedicion"
+                                             id="DeptoExpedicion"
+                                             class="form-group"
+                                             Value="@DeptoExp.Id"
+                                             ValueExpression="@( () => DeptoExp.Id)"
+                                             ValueChanged="@((string s) => ObtenerCiudad(s,1))">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemDepto in ListaDeptoExp)
+                                    {
+                                        <option value="@itemDepto.Id">@itemDepto.NombreDepartamento</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                        <td style="width:550px">
+                            <label for='CiudadExp'>Ciudad Expedición</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="CiudadExp" id="CiudadExp" class="form-group" @bind-Value="@menuservice.entradaEnrolamiento.CiudadExpedicionId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemCiudad in ListaCiudadExp)
+                                    {
+                                        <option value="@itemCiudad.Id">@itemCiudad.NombreMunicipio</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:550px">
+                            <label for='DeptoNacimiento'>Departamento Nacimiento</label>
+                            <EditForm Model="@DeptoNac">
+                                <InputSelect name="DeptoNacimiento"
+                                             id="DeptoNacimiento"
+                                             class="form-group"
+                                             Value="@DeptoNac.Id"
+                                             ValueExpression="@( () => DeptoNac.Id)"
+                                             ValueChanged="@((string s) => ObtenerCiudad(s,2))">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemDepto in ListaDeptoNac)
+                                    {
+                                        <option value="@itemDepto.Id">@itemDepto.NombreDepartamento</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                        <td style="width:550px">
+                            <label for='CiudadNac'>Ciudad Nacimiento</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="CiudadNac" id="CiudadNac" class="form-group" @bind-Value="@menuservice.entradaEnrolamiento.CiudadNacimientoId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemCiudad in ListaCiudadNac)
+                                    {
+                                        <option value="@itemCiudad.Id">@itemCiudad.NombreMunicipio</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="width:550px">
+                            <label for='DeptoResidencia'>Departamento Residencia</label>
+                            <EditForm Model="@DeptoRes">
+                                <InputSelect name="DeptoResidencia"
+                                             id="DeptoResidencia"
+                                             class="form-group"
+                                             Value="@DeptoRes.Id"
+                                             ValueExpression="@( () => DeptoRes.Id)"
+                                             ValueChanged="@((string s) => ObtenerCiudad(s,3))">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemDepto in ListaDeptoRes)
+                                    {
+                                        <option value="@itemDepto.Id">@itemDepto.NombreDepartamento</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                        <td style="width:550px">
+                            <label for='CiudadRes'>Ciudad Residencia</label>
+                            <EditForm Model="@menuservice.entradaEnrolamiento">
+                                <InputSelect name="CiudadRes" id="CiudadRes" class="form-group" @bind-Value="@menuservice.entradaEnrolamiento.LugarResidenciaId">
+                                    <option value="" selected>Seleccione...</option>
+                                    @foreach (var itemCiudad in ListaCiudadRes)
+                                    {
+                                        <option value="@itemCiudad.Id">@itemCiudad.NombreMunicipio</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </td>
+                    </tr>
+                </table>
+
+
+                <button type="button" class="boton-primario" @onclick="@Siguiente">Siguiente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    DepartamentoDTO DeptoExp = new DepartamentoDTO();
+    DepartamentoDTO DeptoNac = new DepartamentoDTO();
+    DepartamentoDTO DeptoRes = new DepartamentoDTO();
+
+    List<SexoDTO> ListaSexoGral = new List<SexoDTO>();
+    List<DepartamentoDTO> ListaDeptoExp = new List<DepartamentoDTO>();
+    List<DepartamentoDTO> ListaDeptoNac = new List<DepartamentoDTO>();
+    List<DepartamentoDTO> ListaDeptoRes = new List<DepartamentoDTO>();
+    List<CiudadDTO> ListaCiudadExp = new List<CiudadDTO>();
+    List<CiudadDTO> ListaCiudadNac = new List<CiudadDTO>();
+    List<CiudadDTO> ListaCiudadRes = new List<CiudadDTO>();
+    private ApplicationSevice menuservice = new ApplicationSevice();
+    [Inject]
+    public IApiService _apiService { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaSexoGral = await ObtenerGenero();
+        ListaDeptoExp = await ObtenerDepartamentos();
+        ListaDeptoNac = ListaDeptoExp;
+        ListaDeptoRes = ListaDeptoExp;
+    }
+
+
+    private async void Siguiente()
+    {
+        UriHelper.NavigateTo("SuplData3");
+    }
+
+
+    protected async Task<List<SexoDTO>> ObtenerGenero()
+    {
+        List<SexoDTO> sexoDTO = new List<SexoDTO>();
+
+        ApiResponse<List<SexoDTO>> response = await _apiService.CallApiAsync<List<SexoDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "Sexo/ObtenerSexoTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            sexoDTO = response.Content
+                .OrderBy(x => x.Nombre)
+                .ToList();
+        }
+
+        return sexoDTO;
+    }
+
+
+    protected async Task<List<DepartamentoDTO>> ObtenerDepartamentos()
+    {
+        List<DepartamentoDTO> departamentoDTO = new List<DepartamentoDTO>();
+
+        ApiResponse<List<DepartamentoDTO>> response = await _apiService.CallApiAsync<List<DepartamentoDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "Departamento/ObtenerDepartamentoTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            departamentoDTO = response.Content
+                .OrderBy(x => x.NombreDepartamento)
+                .ToList();
+        }
+
+        return departamentoDTO;
+    }
+
+
+    protected async Task ObtenerCiudad(string idDepto, int opcion)
+    {
+        List<CiudadDTO> ciudadDTO = new List<CiudadDTO>();
+
+        ApiResponse<List<CiudadDTO>> response = await _apiService.CallApiAsync<List<CiudadDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: $"Ciudad/ObtenerCiudadxDepartamento/{idDepto}",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            ciudadDTO = response.Content;
+        }
+
+        if (opcion == 1)
+        {
+            DeptoExp.Id = idDepto;
+            ListaCiudadExp = ciudadDTO;
+        }
+        else if (opcion == 2)
+        {
+            DeptoNac.Id = idDepto;
+            ListaCiudadNac = ciudadDTO;
+        }
+        else if (opcion == 3)
+        {
+            DeptoRes.Id = idDepto;
+            ListaCiudadRes = ciudadDTO;
+        }
+
+        StateHasChanged();
+    }
+
+
+}

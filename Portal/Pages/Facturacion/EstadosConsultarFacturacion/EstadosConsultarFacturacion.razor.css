@@ -1,0 +1,77 @@
+/* Inicio código generado por GitHub Copilot */
+
+/* ===================================================================
+   ESTILOS PARA EL COMPONENTE DE CONSULTA DE FACTURACIÓN ELECTRÓNICA
+   =================================================================== */
+
+/* ------------------------------------------------------------------
+   QUICKGRID - Estado de Carga
+   ------------------------------------------------------------------ */
+/* Remover estilos de fondo de carga*/ 
+::deep .quickgrid.table.loading,
+::deep table.loading {
+    background-image: none !important;
+    background-color: transparent !important;
+    opacity: 1 !important;
+}
+
+/* ------------------------------------------------------------------
+   QUICKGRID - Encabezados (thead)
+   ------------------------------------------------------------------ */
+
+/* Estilos para los encabezados de columnas */
+::deep .quickgrid thead th {
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+    padding-left: 1px !important;
+}
+
+/* ------------------------------------------------------------------
+   QUICKGRID - Filas Alternas (tbody)
+   ------------------------------------------------------------------ */
+
+/* Fila impar - fondo gris claro */
+::deep .quickgrid tbody tr:nth-child(odd) td {
+    background-color: #F9FAFB;
+}
+
+/* Fila par - fondo transparente */
+::deep .quickgrid tbody tr:nth-child(even) td {
+    background-color: transparent;
+}
+
+/* ------------------------------------------------------------------
+   QUICKGRID - Dimensiones de Celdas
+   ------------------------------------------------------------------ */
+
+/* Altura fija para encabezados y celdas */
+::deep .quickgrid th,
+::deep .quickgrid td {
+    height: 40px !important;
+    line-height: 1.15;
+}
+
+/* ------------------------------------------------------------------
+   MODAL - Detalle de Transacción
+   ------------------------------------------------------------------ */
+
+/* Ancho máximo del modal de detalle */
+::deep .modal-detalle-transaccion .modal-box {
+    max-width: 800px !important;
+    width: min(100%, 800px);
+}
+
+/* Fin código generado por GitHub Copilot */
+
+.btn-red-500 {
+    background-color: #E61B14;
+    border-color: #E61B14;
+    color: white;
+}
+
+.btn-red-500:disabled {
+    background-color: #F5A3A0;
+    border-color: #F5A3A0;
+    color: white;
+    cursor: not-allowed;
+}

@@ -1,0 +1,59 @@
+﻿@page "/supertransporte/centro/representante-legal-CRC"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Representante Legal</h3>
+
+<EditForm Model=@_representanteLegalDto OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        Estos datos del representante legal se obtienen desde el Sistema Nacional de Supervisión al Transporte - VIGÍA.
+        Si están desactualizados, la Superintendencia de Transporte los invita a actualizarlos directamente en VIGÍA.
+    </p>
+    <label for="tipo_doc">Tipo de documento</label>
+    <InputText id="tipo_doc" @bind-Value="_representanteLegalDto.tipo_doc" disabled />
+
+    <label for="num_doc">Nº de Documento:</label>
+    <InputText id="num_doc" @bind-Value="_representanteLegalDto.num_doc" disabled />
+
+    <label for="nombre">Nombre:</label>
+    <InputText id="nombre" @bind-Value="_representanteLegalDto.nombre" disabled />
+
+    <label for="email">Correo electrónico</label>
+    <InputText id="email" @bind-Value="_representanteLegalDto.email" disabled />
+
+    <label for="direccion">Dirección</label>
+    <InputText id="direccion" @bind-Value="_representanteLegalDto.direccion" disabled />
+
+    <label for="telefono">Teléfono</label>
+    <InputText id="telefono" @bind-Value="_representanteLegalDto.telefono" disabled />
+
+    <hr />
+
+    <label>Certificado de existencia y representación legal</label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_representanteLegalDto.nombre_adjunto_certificado_existencia</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileCertificado">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="explicacion">
+        Por favor adjunte una copia del certificado de existencia y representación legal no mayor a 30 días de expedición
+    </div>
+    <ValidationMessage For="@(() => _representanteLegalDto.certificado_existencia)" />
+    <InputFile class="file-input w-full p-0" id="certificado_existencia" name="files" OnChange="HandleArchivoSeleccionado" />
+
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

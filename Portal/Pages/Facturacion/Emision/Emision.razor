@@ -1,0 +1,154 @@
+﻿@page "/configuracion/configurarFacturacion/emision"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Entidades.Facturacion
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.Agendamiento;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@EditContext" id="ConfigurarFacturacion">
+        	<DataAnnotationsValidator />
+
+            <h4>Datos del comercio</h4>
+
+            <div class="flex-container">
+
+                <div class="flex-item">
+                    <label for="tipoPersona">Tipo de persona</label>
+                    <select class="mb-0" id="tipoPersona" @onchange="@((ChangeEventArgs e) => HandleInputChange("TipoPersona", e))">
+                        <option value=null>Seleccione</option>
+                        @foreach (ConsultaGenericaTipos tipo in TiposPersona)
+                        {
+                            <option value="@(int.Parse(tipo.Codigo))" selected="@(int.Parse(tipo.Codigo) == ConfigurarEmisionModel.TipoPersona)">@tipo.Nombre</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.TipoPersona)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="nit">NIT</label>
+                    <input class="mb-0" type="text" id="nit" maxlength="15" autocomplete="given-adress" @bind-value:event="oninput" @bind-value="ConfigurarEmisionModel.NIT" @onchange="@((ChangeEventArgs e) => HandleInputChange("NIT", e))" />
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.NIT)" />
+                </div>
+
+                <div class="flex-item item-dv">
+                    <label for="dv">DV</label>
+                    <input class="dv mb-0" type="text" id="dv" maxlength="1" autocomplete="given-adress" @bind-value:event="oninput" @bind-value="ConfigurarEmisionModel.Dv" @onchange="@((ChangeEventArgs e) => HandleInputChange("Dv", e))" />
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.Dv)" />
+                </div>
+
+                <div class="flex-item item-regimen">
+                    <label for="tipoRegimen">Régimen contributivo</label>
+                    <select class="mb-0" id="tipoRegimen" @onchange="@((ChangeEventArgs e) => HandleInputChange("tipoRegimen", e))">
+                        <option value=null>Seleccione</option>
+                        @foreach (ConsultaGenericaTipos tipo in Regimen)
+                        {
+                            <option value="@(Regimen.IndexOf(tipo))" selected="@(Regimen.IndexOf(tipo) == Regimen.IndexOf(Regimen.FirstOrDefault(x => x.Codigo == ConfigurarEmisionModel.RegimenContributivo)))">@tipo.Nombre</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.RegimenContributivo)" />
+                </div>
+
+                <div class="flex-item triple">
+                    <label for="rsocial">Razón social</label>
+                    <input class="mw-max mb-0" type="text" id="rsocial" maxlength="255" autocomplete="given-adress" @bind-value:event="oninput" @bind-value="ConfigurarEmisionModel.RazonSocial" @onchange="@((ChangeEventArgs e) => HandleInputChange("RazonSocial", e))" />
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.RazonSocial)" />
+                </div>
+
+                <div class="flex-item semi-double">
+                    <label for="Correo">Correo electrónico</label>
+                    <input class="mw-max mb-0" type="text" id="Correo" maxlength="255" autocomplete="given-adress" @bind-value:event="oninput" @bind-value="ConfigurarEmisionModel.Correo" @onchange="@((ChangeEventArgs e) => HandleInputChange("Correo", e))" />
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.Correo)" />
+                </div>
+
+                <div class="flex-item semi-double">
+                    <label for="Celular">Celular</label>
+                    <input class="mw-max mb-0" type="text" id="Celular" maxlength="255" autocomplete="given-adress" @bind-value:event="oninput" @bind-value="ConfigurarEmisionModel.Celular" @onchange="@((ChangeEventArgs e) => HandleInputChange("Celular", e))" />
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.Celular)" />
+                </div>
+            </div>
+
+            <h4>Datos de la sede o establecimiento</h4>
+
+            <div class="flex-container">
+                <div class="flex-item triple">
+                    <label for="nomcomercial">Nombre comercial o del establecimiento</label>
+                    <input class="mw-max mb-0" type="text" id="nomcomercial" maxlength="255" autocomplete="given-adress" @bind-value:event="oninput" @bind-value="ConfigurarEmisionModel.NombreComercial" @onchange="@((ChangeEventArgs e) => HandleInputChange("NombreComercial", e))" />
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.NombreComercial)" />
+                </div>
+            </div>
+
+            <div class="flex-container">
+                <div class="flex-item">
+                    <label for="direccion">Dirección</label>
+                    <input class="mb-0" type="text" id="direccion" maxlength="255" autocomplete="given-adress" @bind-value:event="oninput" @bind-value="ConfigurarEmisionModel.Direccion" @onchange="@((ChangeEventArgs e) => HandleInputChange("direccion", e))" />
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.Direccion)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="departamento">Departamento</label>
+                    <select class="mb-0" id="departamento" @onchange="@((ChangeEventArgs e) => HandleInputChange("departamento", e))">
+                        <option value=null>Seleccione</option>
+                        @foreach (ConsultaGenericaTipos dep in Departamentos)
+                        {
+                            <option value="@(int.Parse(dep.Codigo))" selected="@(int.Parse(dep.Codigo) == ConfigurarEmisionModel.Departamento)">@dep.Nombre</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.Departamento)" />
+                </div>
+
+                <div class="flex-item">
+                    <label for="ciudad">Ciudad</label>
+                    <select class="mb-0" id="ciudad" @onchange="@((ChangeEventArgs e) => HandleInputChange("ciudad", e))">
+                        <option value="0" selected="@(ConfigurarEmisionModel.Ciudad == 0)">Seleccione</option>
+                        @foreach (ConsultaMunicipios mun in Municipios.Where(x => int.Parse(x.CodigoDepartamento) == ConfigurarEmisionModel.Departamento))
+                        {
+                            <option value="@(int.Parse(mun.CodigoMunicipio))" selected="@(int.Parse(mun.CodigoMunicipio) == ConfigurarEmisionModel.Ciudad)">@mun.NombreMunicipio.ToTitleCase()</option>
+                        }
+                    </select>
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.Ciudad)" />
+                </div>
+
+            </div>
+
+            <h4>Nota</h4>
+
+            <div class="flex-container">
+                <div class="flex-item triple">
+                    <label for="nomcomercial">Personalice el mensaje que aparecerá en el PDF de cada factura</label>
+                    <textarea class="mw-max observaciones" type="text" id="nomcomercial" maxlength="255" autocomplete="given-adress" @bind-value:event="oninput" @bind-value="ConfigurarEmisionModel.Observaciones" @onchange="@((ChangeEventArgs e) => HandleInputChange("observaciones", e))" />
+                    <ValidationMessage For="@(() => ConfigurarEmisionModel.Observaciones)" />
+                </div>
+            </div>
+
+            <div class="div-btn">
+                <a class="btn-guardar boton-primario" @onclick="() => GuardarDatos()">Guardar configuración</a>
+            </div>
+
+        </EditForm>
+    </ContentTemplate>
+</SpinLoader>

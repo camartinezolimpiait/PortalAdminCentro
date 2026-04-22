@@ -1,0 +1,126 @@
+﻿@page "/Photo"
+@inject IJSRuntime jsRuntime
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration
+@using System.IO;
+@using Microsoft.AspNetCore.Mvc;
+@inject IConfiguration Configuration
+@inject HttpClient Http
+<link href="~/css/Tramite/pasos.css" rel="stylesheet" />
+<div class="col-12 paso-captura-foto">
+    <h3>Fotografía</h3>
+    <div class="captura-foto-container">
+        <video muted="muted" id="video" width="400" height="350" hidden="@(!Capturando)">
+        </video>
+        <img width="400" height="350" src="@Foto" hidden="@Capturando" />
+        <div class="btn-captura-container">
+            <div hidden="@(!Capturando)">
+                <button class="boton-primario" id="cambiarcamra" hidden="@(!Capturando)"
+                        @onclick="cambiar">
+                    Cambiar cámara
+                </button>
+            </div>
+            <button class="boton-primario" id="botonIniciarCaptura" @onclick="Capturar">
+                @TextoBoton
+            </button>
+            <button type="button" class="boton-primario" @onclick="@Siguiente">Usar esta imagen</button>
+        </div>
+    </div>
+</div>
+
+@*<div class="formulario-2">
+        <h2>Fotografía</h2>
+        <div class="rectangulo-foto"></div>
+        <div class="formulario-2">
+            <div style="text-align: center;">
+                <img src="img/boton-captura.svg" />
+                <input type="file" name="file" />
+                <button type="button" class="boton-secundario" @onclick="@Siguiente">Descartar</button>
+                <button type="button" class="boton-primario" @onclick="@Siguiente">Usar esta imagen</button>
+            </div>
+        </div>
+    </div>*@
+
+@code {
+
+    private string apiName = null;
+    bool showModal = true;
+    bool showModalValida = false;
+    private string message = null;
+    private string typeAlert = null;
+    private ApplicationSevice menuservice = new ApplicationSevice();
+
+    void Siguiente()
+    {
+        string[] img = Foto.Split(",");
+        registrarostro(img[1]);
+        UriHelper.NavigateTo("Finger");
+    }
+
+    [Inject]
+    public IJSRuntime JsRuntime { get; set; }
+    private string TextoBoton { get => Capturando ? "Tomar foto" : "Iniciar nueva captura"; }
+    private bool Capturando { get; set; } = false;
+    [Parameter]
+    public string Foto { get; set; }
+
+    [Parameter]
+    public EventCallback<string> FotoChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> ReadyChanged { get; set; }
+    private async Task Capturar()
+    {
+        if (!Capturando)
+        {
+            Capturando = await JsRuntime.InvokeAsync<bool>("IniciarCaptura");
+            await ReadyChanged.InvokeAsync(false);
+        }
+        else
+        {
+            Foto = await JsRuntime.InvokeAsync<string>("TerminarCaptura");
+            await FotoChanged.InvokeAsync(Foto);
+            await ReadyChanged.InvokeAsync(true);
+            Capturando = false;
+        }
+        StateHasChanged();
+    }
+
+    private async Task cambiar()
+    {
+        await JsRuntime.InvokeAsync<string>("cambiarcamra");
+        //await ReadyChanged.InvokeAsync(true);
+    }
+
+
+    private async void registrarostro(string base64ImageRepresentation)
+    {
+        EntradaRegistroRostro entradaRegistroRostro = new EntradaRegistroRostro();
+        entradaRegistroRostro.Numerodocumento = menuservice.entradaEnrolamiento.NumeroDocumento;
+        entradaRegistroRostro.idTipoDocumento = Convert.ToInt32(menuservice.entradaEnrolamiento.TipoDocumentoId);
+        entradaRegistroRostro.idCliente = menuservice.ClienteId;
+        entradaRegistroRostro.IdAfis = menuservice.TipoAfisId;
+        entradaRegistroRostro.ImagenRostroBase64 = base64ImageRepresentation;
+
+        Http = new HttpClient();
+        apiName = "RegistraRostroSISEC";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(entradaRegistroRostro), System.Text.Encoding.UTF8, "application/json");
+        var response = await Http.PostAsync(apiName, stringContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            RespGeneralModel RespGeneralModel = JsonConvert.DeserializeObject<RespGeneralModel>(content);
+        }
+        else
+        {
+            message = response.ReasonPhrase;
+            typeAlert = "danger";
+        }
+
+    }
+}

@@ -1,0 +1,129 @@
+﻿<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <div style="width:80%">
+            <h3>
+                Datos para la factura electrónica
+            </h3>
+
+            <p>
+                Estos datos serán los que aparecerán en tu factura electrónica.
+            </p>
+            <EditForm EditContext="editContext" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <div class="field mb-4">
+                    <label for="tipoDocumento">Tipo de persona</label>
+                    <ValidationMessage For="@(() => DatosFacturaModel.TipoPersonaFacturacion)" />
+                    <select class="w-full max-w-none" id="tipoDocumento" @bind-value=" DatosFacturaModel.TipoPersonaFacturacion" @bind-value:event="oninput" @onchange="OnTipoPersonaChanged">
+                        @foreach (var doc in TiposPersona)
+                        {
+                            <option value="@doc.Codigo">@doc.Nombre</option>
+                        }
+                    </select>
+                </div>
+                <!-- Si es Persona Natural -->
+                @if (DatosFacturaModel.TipoPersonaFacturacion == 2)
+                {
+                    <div class="field mb-4">
+                        <label for="nombres">Nombre(s)</label>
+                        <ValidationMessage For="@(() => DatosFacturaModel.NombresFacturacion)" />
+                        <input class="w-full max-w-none" type="text" id="nombres" maxlength="50"
+                               autocomplete="given-name"
+                               @bind-value:event="oninput"
+                               @bind-value="DatosFacturaModel.NombresFacturacion" />
+                    </div>
+
+                    <div class="field mb-4">
+                        <label for="apellidos">Apellido(s)</label>
+                        <ValidationMessage For="@(() => DatosFacturaModel.ApellidosFacturacion)" />
+                        <input class="w-full max-w-none" type="text" id="apellidos" maxlength="50"
+                               autocomplete="family-name"
+                               @bind-value:event="oninput"
+                               @bind-value="DatosFacturaModel.ApellidosFacturacion" />
+                    </div>
+
+                    <div class="field mb-4">
+                        <label for="tipoDocumento">Tipo de documento</label>
+                        <ValidationMessage For="@(() => DatosFacturaModel.TipoIdentificacionFacturacion)" />
+                        <select class="w-full max-w-none" id="tipoDocumento" @bind-value="DatosFacturaModel.TipoIdentificacionFacturacion" @bind-value:event="oninput">
+                            <option value="0">Seleccione un tipo de documento</option>
+                            @foreach (var doc in ListaDocumentos)
+                            {
+                                <option value="@doc.IdTipoSisec" selected="@(int.Parse(doc.IdTipoSisec) == DatosFacturaModel.TipoIdentificacionFacturacion ? true : false)">@doc.Nombre</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="field mb-4">
+                        <label for="numeroDocumento">Número de documento</label>
+                        <ValidationMessage For="@(() => DatosFacturaModel.NumeroIdentificacionFacturacion)" />
+                        <input class="w-full max-w-none" type="text" id="numeroDocumento"
+                               @bind-value:event="oninput"
+                               @bind-value="DatosFacturaModel.NumeroIdentificacionFacturacion" />
+                    </div>
+                }
+
+                <!-- Si es Persona Jurídica -->
+                @if (DatosFacturaModel.TipoPersonaFacturacion == 1)
+                {
+                    <div class="field mb-4">
+                        <label for="nit">Número de NIT sin DV</label>
+                        <ValidationMessage For="@(() => DatosFacturaModel.NumeroIdentificacionFacturacion)" />
+                        <input class="w-full max-w-none" type="text" id="nit"
+                               @bind-value:event="oninput"
+                               @bind-value="DatosFacturaModel.NumeroIdentificacionFacturacion" />
+                    </div>
+
+                    <div class="field mb-4">
+                        <label for="razonSocial">Nombre comercial</label>
+                        <ValidationMessage For="@(() => DatosFacturaModel.NombreComercialFacturacion)" />
+                        <input class="w-full max-w-none" type="text" id="nombreComercialFacturacion" maxlength="100"
+                               @bind-value:event="oninput"
+                               @bind-value="DatosFacturaModel.NombreComercialFacturacion" />
+                    </div>
+
+                    <div class="field mb-4">
+                        <label for="razonSocial">Razón Social</label>
+                        <ValidationMessage For="@(() => DatosFacturaModel.RazonSocialFacturacion)" />
+                        <input class="w-full max-w-none" type="text" id="razonSocial" maxlength="100"
+                               @bind-value:event="oninput"
+                               @bind-value="DatosFacturaModel.RazonSocialFacturacion" />
+                    </div>
+                }
+
+                <!-- Campo común (ambos casos) -->
+                <div class="field mb-4">
+                    <label for="correo">Correo electrónico</label>
+                    <ValidationMessage For="@(() => DatosFacturaModel.CorreoFacturacion)" />
+                    <input class="w-full max-w-none" type="email" id="correo" maxlength="100"
+                           autocomplete="email"
+                           @bind-value:event="oninput"
+                           @bind-value="DatosFacturaModel.CorreoFacturacion" />
+                </div>
+
+                <div class="info-box" style="margin-bottom:1rem">
+                    <svg class="feather info-icon">
+                        <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
+                    </svg>
+                    <div class="info-text" style="font-size:14px">
+                        <div><strong>Verifica que la información esté correcta.</strong></div>
+                        <div>Estos datos serán usados para gestionar el PIN.</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center mt-5 space-x-3">
+                    <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">
+                        Atrás
+                    </button>
+                    <button type="submit" class="boton-primario"> Siguiente </button>
+                </div>
+
+            </EditForm>
+        </div>
+    </ContentTemplate>
+</SpinLoader>

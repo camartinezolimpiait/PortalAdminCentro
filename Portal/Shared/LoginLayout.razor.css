@@ -1,0 +1,14 @@
+.main {
+    min-height: 100dvh;
+    background-image: url('img/fondo_login.svg');
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+
+    display: grid;
+    place-items: center center;
+
+    padding-inline: 0.75rem;
+    padding-top: 4rem;
+    padding-bottom: 15dvh;
+}

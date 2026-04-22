@@ -1,0 +1,72 @@
+﻿@page "/supertransporte/centro/resolucion-habilitacion"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Resolución de habilitación</h3>
+
+<EditForm Model=@_resolucionHabilitacion OnValidSubmit=@GuardarInformacion>
+    
+    
+    <fieldset class="pregunta_sn">
+        <legend>
+          ¿Tiene Resolución de habilitación expedida por el Ministerio de Transporte?
+        </legend>
+         <div class="explicacion">Expedida con anterioridad a la entrada de vigencia de la Resolución 11355 del 2020, cuando el Ministerio de Transporte habilitaba a lo Organismos de Apoyo al Tránsito a través de Resolución de habilitación.</div>
+        <div>
+            <InputCheckbox id="tiene_resolucion" @bind-Value="_resolucionHabilitacion.tiene_resolucion" />
+            <label for="tiene_resolucion">Sí tengo</label>
+        </div>
+    </fieldset>
+
+@if (_resolucionHabilitacion.tiene_resolucion) {
+    <DataAnnotationsValidator/>
+    <label for="num_resolucion">Nº de Resolución</label>
+    <ValidationMessage For="() => _resolucionHabilitacion.num_resolucion" />
+    <InputText id="num_resolucion" @bind-Value="_resolucionHabilitacion.num_resolucion" />
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha Resolución
+        </legend>
+            <ValidationMessage For="() => _resolucionHabilitacion.dia" />
+            <ValidationMessage For="() => _resolucionHabilitacion.mes" />
+            <ValidationMessage For="() => _resolucionHabilitacion.anio" />
+        <div class="fecha-flex">
+            <div>
+                <label for="dia">Día</label>
+                <InputNumber id="dia" @bind-Value="_resolucionHabilitacion.dia" />
+            </div>
+            <div>
+                <label for="mes">Mes</label>
+                <InputNumber id="mes" @bind-Value="_resolucionHabilitacion.mes" />
+            </div>
+            <div>
+                <label for="anio">Año:</label>
+                <InputNumber id="anio" @bind-Value="_resolucionHabilitacion.anio" />
+            </div>
+        </div>
+    </fieldset>
+
+    <label>Resolución de habilitación</label>
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Archivo adjunto</th>
+                    <th class="num"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@_resolucionHabilitacion.nombre_adjunto_resolucion_habiltacion</td>
+                    <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileResolucionHabilitacion">Descargar</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <ValidationMessage For="@(() => _resolucionHabilitacion.resolucion_de_habilitacion)" />
+    <InputFile class="file-input w-full p-0" id="resolucion_de_habilitacion" name="files" OnChange="HandleArchivoSeleccionado" />
+
+}
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+
+</EditForm>

@@ -1,0 +1,58 @@
+﻿@page "/compradepin/tramite-crc"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite.TipoTramite
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        @if (componentePrincipal)
+        {
+            <h3>Cantidad de trámites</h3>
+
+            <p style="margin-top:5px">
+                Pagando un 50% adicional, el examen médico puede ser usado para dos
+                trámites a la vez.
+            </p>
+            <p>
+                De lo contrario, escoge <strong>un solo trámite</strong> para continuar.
+            </p>
+
+            <div style="margin-bottom:10px">
+
+                <EditForm EditContext="editContext" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <InputRadioGroup @bind-Value="cantidadModel.Cantidad" @bind-Value:after="HandleAfterSubmit">
+                        @foreach (var tramite in Tramites)
+                        {
+                            <div class="form-check mb-1 flex items-center">
+                                <InputRadio type="radio" id="@tramite" TValue="int?"
+                                            value="@((int)tramite)" />
+                                <label for="@tramite">@DescripcionOpcionTramite[(int)tramite]</label>
+                            </div>
+                        }
+                    </InputRadioGroup>
+                    <ValidationMessage For="@(() => cantidadModel.Cantidad)" />
+                    <div class="flex items-center mt-3 space-x-3">
+                        <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">
+                            Atrás
+                        </button>
+                        <button type="submit" class="boton-primario"> Siguiente </button>
+                    </div>
+                </EditForm>
+
+            </div>
+        }else{
+            <TipoTramite pagoPin="PagoPin" OnFormValidChanged="HandleFormValidChangedTramite" PagoPinChanged="PagoPinChanged" OnRetroceder="Retroceder"></TipoTramite>
+        }
+    </ContentTemplate>
+
+</SpinLoader>

@@ -1,0 +1,86 @@
+﻿@page "/compradepin/cuotasCeas"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Util.Extension
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+		<div class="w-[90%]">
+		<h3 class="text-azul-900 mb-2 text-xl font-bold">Pago en cuotas</h3>
+		<p class="mb-4">
+			Puede diferir el pago hasta 6 cuotas sin intereses ni fecha de corte. Todas deben ser pagadas para
+			poder emitir el certificado al final del curso.
+		</p>
+
+		<EditForm EditContext="editContext" OnValidSubmit="RadioSelection">
+			<DataAnnotationsValidator />
+				<fieldset style="max-width:none" class="mb-6 w-[95%] space-y-3 border-none pl-0">
+					<InputRadioGroup @bind-Value="PagoCuotasModel.NumeroCuotas" Name="tramite" @bind-Value:after="ValidacionCuota">
+					@foreach (var cuota in PagoPin?.CostoCuotas ?? Enumerable.Empty<CostoCuota>())
+					{
+						<label class="ring-azul-200 has-checked:border-azul-400 flex cursor-pointer items-center gap-3 rounded-lg border border-neutral-300 bg-neutral-50 p-3 hover:ring-2 has-checked:ring-2"
+							   for="@($"cuota-{cuota.NumeroCuotas}")">
+							<InputRadio id="@($"cuota-{cuota.NumeroCuotas}")"
+										class=""
+										Value="@(cuota.NumeroCuotas)" />
+							<span class="leading-snug">
+								@if (cuota.NumeroCuotas == 1)
+								{
+									<span>Pago único de <span class="valor_cuota font-bold">$ @cuota.PrimeraCuota.ToString("N0")</span></span>
+								}
+								else
+								{
+									<span>
+											Pago inicial de <span class="valor_cuota font-bold">$ @cuota.PrimeraCuota.ToString("N0")</span> más @(cuota.NumeroCuotas - 1)
+										@(cuota.NumeroCuotas - 1 > 1 ? "cuotas" : "cuota") de
+											<span class="valor_cuota font-bold">$ @cuota.ValorCuota.ToString("N0")</span>
+									</span>
+								}
+							</span>
+						</label>
+					}
+				</InputRadioGroup>
+					<ValidationMessage For="@(() => PagoCuotasModel.NumeroCuotas)" />
+
+					<div class="mx-auto max-w-3xl rounded-md border-2 border-[#4CACFF] pt-[15px] pr-[20px] pb-[15px] pl-[20px]">
+						<div class="flex items-center gap-4">
+							<!-- Imagen/ilustración -->
+							<img src="/img/iconos/moto-mi-licencia 1@2x.jpg" alt="" class="h-20 w-20 shrink-0 rounded-full object-cover" />
+							<!-- Texto -->
+							<div class="text-neutral-800">
+								<p class="text-base leading-snug mb-0">
+									<span class="font-semibold">Ofrece tu curso a cuotas:</span>
+									Solo necesitan hacer un pago inicial para comenzar, y luego completar el resto en cuotas.
+								</p>
+								<p class="mt-1 text-base leading-snug mb-0">
+									El certificado se entrega una vez finalicen todos los pagos.
+								</p>
+							</div>
+						</div>
+					</div>
+
+			</fieldset>
+
+
+
+			<div class="flex items-center mt-5 space-x-3">
+				<button type="button" class="boton-secundario mr-2" @onclick="Retroceder">
+					Atrás
+				</button>
+				<button type="submit" class="boton-primario"> Siguiente </button>
+			</div>
+		</EditForm>
+		</div>
+    </ContentTemplate>
+
+</SpinLoader>

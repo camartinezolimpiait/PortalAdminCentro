@@ -1,0 +1,380 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "nombre": "Secretaría de Educación de Antíoquia"
+    },
+    {
+      "id": 2,
+      "nombre": "Secretaría de Educación de Apartado"
+    },
+    {
+      "id": 3,
+      "nombre": "Secretaría de Educación de Arauca"
+    },
+    {
+      "id": 4,
+      "nombre": "Secretaría de Educación de Armenia"
+    },
+    {
+      "id": 5,
+      "nombre": "Secretaría de Educación de Atlántico"
+    },
+    {
+      "id": 6,
+      "nombre": "Secretaría de Educación de Barrancabermeja"
+    },
+    {
+      "id": 7,
+      "nombre": "Secretaría de Educación de Barranquilla"
+    },
+    {
+      "id": 8,
+      "nombre": "Secretaría de Educación de Bello"
+    },
+    {
+      "id": 9,
+      "nombre": "Secretaría de Educación de Bogotá"
+    },
+    {
+      "id": 10,
+      "nombre": "Secretaría de Educación de Bolivar"
+    },
+    {
+      "id": 11,
+      "nombre": "Secretaría de Educación de Boyacá"
+    },
+    {
+      "id": 12,
+      "nombre": "Secretaría de Educación de Bucaramanga"
+    },
+    {
+      "id": 13,
+      "nombre": "Secretaría de Educación de Buenaventura"
+    },
+    {
+      "id": 14,
+      "nombre": "Secretaría de Educación de Buga"
+    },
+    {
+      "id": 15,
+      "nombre": "Secretaría de Educación de Caldas"
+    },
+    {
+      "id": 16,
+      "nombre": "Secretaría de Educación de Cali"
+    },
+    {
+      "id": 17,
+      "nombre": "Secretaría de Educación de Caqueta"
+    },
+    {
+      "id": 18,
+      "nombre": "Secretaría de Educación de Cartagena"
+    },
+    {
+      "id": 19,
+      "nombre": "Secretaría de Educación de Cartago"
+    },
+    {
+      "id": 20,
+      "nombre": "Secretaría de Educación de Casanare"
+    },
+    {
+      "id": 21,
+      "nombre": "Secretaría de Educación de Cauca"
+    },
+    {
+      "id": 22,
+      "nombre": "Secretaría de Educación de Cesár"
+    },
+    {
+      "id": 23,
+      "nombre": "Secretaría de Educación de Chía"
+    },
+    {
+      "id": 24,
+      "nombre": "Secretaría de Educación de Chocó"
+    },
+    {
+      "id": 25,
+      "nombre": "Secretaría de Educación de Cienaga"
+    },
+    {
+      "id": 26,
+      "nombre": "Secretaría de Educación de Córdoba"
+    },
+    {
+      "id": 27,
+      "nombre": "Secretaría de Educación de Cúcuta"
+    },
+    {
+      "id": 28,
+      "nombre": "Secretaría de Educación de Cundinamarca"
+    },
+    {
+      "id": 29,
+      "nombre": "Secretaría de Educación de Dosquebradas"
+    },
+    {
+      "id": 30,
+      "nombre": "Secretaría de Educación de Duitama"
+    },
+    {
+      "id": 31,
+      "nombre": "Secretaría de Educación de Envigado"
+    },
+    {
+      "id": 32,
+      "nombre": "Secretaría de Educación de Facatativa"
+    },
+    {
+      "id": 33,
+      "nombre": "Secretaría de Educación de Florencia"
+    },
+    {
+      "id": 34,
+      "nombre": "Secretaría de Educación de Floridablanca"
+    },
+    {
+      "id": 35,
+      "nombre": "Secretaría de Educación de Fusagasuga"
+    },
+    {
+      "id": 36,
+      "nombre": "Secretaría de Educación de Girardot"
+    },
+    {
+      "id": 37,
+      "nombre": "Secretaría de Educación de Girón"
+    },
+    {
+      "id": 38,
+      "nombre": "Secretaría de Educación de Guainía"
+    },
+    {
+      "id": 39,
+      "nombre": "Secretaría de Educación de Guaviare"
+    },
+    {
+      "id": 40,
+      "nombre": "Secretaría de Educación de Huila"
+    },
+    {
+      "id": 41,
+      "nombre": "Secretaría de Educación de Ibagué"
+    },
+    {
+      "id": 42,
+      "nombre": "Secretaría de Educación de Ipiales"
+    },
+    {
+      "id": 43,
+      "nombre": "Secretaría de Educación de Itaguí"
+    },
+    {
+      "id": 44,
+      "nombre": "Secretaría de Educación de Jamundí"
+    },
+    {
+      "id": 45,
+      "nombre": "Secretaría de Educación de La Guajira"
+    },
+    {
+      "id": 46,
+      "nombre": "Secretaría de Educación de Lorica"
+    },
+    {
+      "id": 47,
+      "nombre": "Secretaría de Educación de Magangue"
+    },
+    {
+      "id": 48,
+      "nombre": "Secretaría de Educación de Magdalena"
+    },
+    {
+      "id": 49,
+      "nombre": "Secretaría de Educación de Maicao"
+    },
+    {
+      "id": 50,
+      "nombre": "Secretaría de Educación de Malambo"
+    },
+    {
+      "id": 51,
+      "nombre": "Secretaría de Educación de Manizales"
+    },
+    {
+      "id": 52,
+      "nombre": "Secretaría de Educación de Medellin"
+    },
+    {
+      "id": 53,
+      "nombre": "Secretaría de Educación de Meta"
+    },
+    {
+      "id": 54,
+      "nombre": "Secretaría de Educación de Monteria"
+    },
+    {
+      "id": 55,
+      "nombre": "Secretaría de Educación de Mosquera"
+    },
+    {
+      "id": 56,
+      "nombre": "Secretaría de Educación de Nariño"
+    },
+    {
+      "id": 57,
+      "nombre": "Secretaría de Educación de Neiva"
+    },
+    {
+      "id": 58,
+      "nombre": "Secretaría de Educación de Norte De Santander"
+    },
+    {
+      "id": 59,
+      "nombre": "Secretaría de Educación de Palmira"
+    },
+    {
+      "id": 60,
+      "nombre": "Secretaría de Educación de Pasto"
+    },
+    {
+      "id": 61,
+      "nombre": "Secretaría de Educación de Pereira"
+    },
+    {
+      "id": 62,
+      "nombre": "Secretaría de Educación de Piedecuesta"
+    },
+    {
+      "id": 63,
+      "nombre": "Secretaría de Educación de Pitalito"
+    },
+    {
+      "id": 64,
+      "nombre": "Secretaría de Educación de Popayán"
+    },
+    {
+      "id": 65,
+      "nombre": "Secretaría de Educación de Putumayo"
+    },
+    {
+      "id": 66,
+      "nombre": "Secretaría de Educación de Quibdó"
+    },
+    {
+      "id": 67,
+      "nombre": "Secretaría de Educación de Quindío"
+    },
+    {
+      "id": 68,
+      "nombre": "Secretaría de Educación de Riohacha"
+    },
+    {
+      "id": 69,
+      "nombre": "Secretaría de Educación de Rionegro"
+    },
+    {
+      "id": 70,
+      "nombre": "Secretaría de Educación de Risaralda"
+    },
+    {
+      "id": 71,
+      "nombre": "Secretaría de Educación de Sabaneta"
+    },
+    {
+      "id": 72,
+      "nombre": "Secretaría de Educación de Sahagún"
+    },
+    {
+      "id": 73,
+      "nombre": "Secretaría de Educación de San Andres"
+    },
+    {
+      "id": 74,
+      "nombre": "Secretaría de Educación de Santa Marta"
+    },
+    {
+      "id": 75,
+      "nombre": "Secretaría de Educación de Santander"
+    },
+    {
+      "id": 76,
+      "nombre": "Secretaría de Educación de Sincelejo"
+    },
+    {
+      "id": 77,
+      "nombre": "Secretaría de Educación de Soacha"
+    },
+    {
+      "id": 78,
+      "nombre": "Secretaría de Educación de Sogamoso"
+    },
+    {
+      "id": 79,
+      "nombre": "Secretaría de Educación de Soledad"
+    },
+    {
+      "id": 80,
+      "nombre": "Secretaría de Educación de Sucre"
+    },
+    {
+      "id": 81,
+      "nombre": "Secretaría de Educación de Tolima"
+    },
+    {
+      "id": 82,
+      "nombre": "Secretaría de Educación de Tulúa"
+    },
+    {
+      "id": 83,
+      "nombre": "Secretaría de Educación de Tumaco"
+    },
+    {
+      "id": 84,
+      "nombre": "Secretaría de Educación de Tunja"
+    },
+    {
+      "id": 85,
+      "nombre": "Secretaría de Educación de Turbo"
+    },
+    {
+      "id": 86,
+      "nombre": "Secretaría de Educación de Uribia"
+    },
+    {
+      "id": 87,
+      "nombre": "Secretaría de Educación de Valle"
+    },
+    {
+      "id": 88,
+      "nombre": "Secretaría de Educación de Valledupar"
+    },
+    {
+      "id": 89,
+      "nombre": "Secretaría de Educación de Vaupés"
+    },
+    {
+      "id": 90,
+      "nombre": "Secretaría de Educación de Vichada"
+    },
+    {
+      "id": 91,
+      "nombre": "Secretaría de Educación de Villavicencio"
+    },
+    {
+      "id": 92,
+      "nombre": "Secretaría de Educación de Yopal"
+    },
+    {
+      "id": 93,
+      "nombre": "Secretaría de Educación de Yumbo"
+    },
+    {
+      "id": 94,
+      "nombre": "Secretaría de Educación de Zipaquirá"
+    }
+  ]
+}

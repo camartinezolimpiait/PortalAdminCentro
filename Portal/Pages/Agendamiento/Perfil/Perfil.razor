@@ -1,0 +1,56 @@
+﻿@page "/configuracion/PerfilMilicencia"
+@using portalAdministrativoSISEC.Pages.Facturacion
+@inherits LayoutComponentBase
+@layout Configuracion
+
+<SpinLoader IsLoading="isLoading">
+	<LoadingTemplate>
+		<div style="height:100%;display:flex">
+			<br />
+			<Circle Center="true" Color="var(--color-azul-600)"></Circle>
+		</div>
+	</LoadingTemplate>
+	<ContentTemplate>
+		<div>
+			<h3>Perfil en MiLicencia.co</h3>
+			<h4 class="centro_razon">@data.Nombre</h4>
+			<h4 class="centro_direccion">@data.Direccion</h4>
+			<div class="dos-columnas">
+				<div class="responsive-map-container">
+					<iframe width=" 450" height="250" frameborder="0" style="border:0" src="@urlMap">
+					</iframe>
+				</div>
+				<div>
+					<div>
+						<label for="name" class="form-label font-semibold">Nombre Comercial</label>
+						<input type="text" id="name" placeholder="Sisec Centro" maxlength="50" class="mb-3"
+						@bind-value="data.Nombre" @attributes="SetReadonly()" />
+					</div>
+					<div>
+						<label class="form-label font-semibold">Teléfono #1</label>
+						<input type="tel" id="movil" placeholder="3101111111" minlength="10" maxlength="10" class="mb-3" @bind-value="data.Movil" @attributes="SetReadonly()" />
+					</div>
+					<div>
+						<label class="form-label font-semibold">Teléfono #2</label>
+						<input type="tel" id="fijo" placeholder="6012222222" minlength="10" maxlength="10" class="mb-3" @bind-value="data.Fijo" @attributes="SetReadonly()" />
+					</div>
+					<div>
+						<label class="form-label font-semibold">Correo Electrónico</label>
+						<input type="email" id="email" placeholder="Sisec Centro" maxlength="50" class="mb-3"
+						@bind-value="data.Email" @attributes="SetReadonly()" />
+					</div>
+					@if (!applicationShared.Plataforma.Equals("CDA"))
+					{
+						<div>
+							@if (!isReadOnly)
+							{
+								<input class="boton-primario" type='button' @onclick="UpdateCentro" value='Guardar Cambios'>
+							}
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</ContentTemplate>
+</SpinLoader> 
+

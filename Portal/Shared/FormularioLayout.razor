@@ -1,0 +1,24 @@
+﻿@inject NavigationManager UriHelper
+@inherits LayoutComponentBase
+@layout SupertransporteLayout
+
+    <div class="wrapper_st">
+
+        <div class="retornar">
+            @if (menuService.Plataforma == "CRC")
+            {
+                url = "/supertransporte/centro";
+            }
+            else if (menuService.Plataforma == "CEA")
+            {
+                url = "/supertransporte/centro-cea";
+            }
+            <NavLink href="@url">
+                Regresar
+            </NavLink>
+
+        </div>
+        <div class="wrapper">
+            @Body
+        </div>
+    </div>

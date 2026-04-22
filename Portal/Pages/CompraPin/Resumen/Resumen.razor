@@ -1,0 +1,279 @@
+﻿@page "/compradepin/resumen"
+@inherits LayoutComponentBase
+@using System.Globalization
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Enum.CompraPin
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+@using portalAdministrativoSISEC.Util.Extension
+@inject NavigationManager NavManager
+
+<div class="rounded-lg border border-neutral-300 bg-neutral-100 px-5 py-4 text-sm shadow-lg md:mb-4">
+    <h2 class="text-md m-0 font-bold text-black">Resumen de la compra</h2>
+    <div class="divide-y divide-neutral-300">
+
+        <div class="py-2">
+            <div class="font-semibold">
+                @ObtenerTipoCentro()
+            </div>
+            @pagoPin.CentroSeleccionado.Nombre
+        </div>
+
+        @if (pagoPin.IsValidDatosBasicos)
+        {
+            <div class="py-2">
+                <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                    Datos básicos
+                    <button type="submit" class="boton-texto" @onclick="() => cambiarAVista(PasosCotizacion.DatosBasicos)">Modificar</button>
+                </div>
+                <div>
+                    @((EnumSexo)Enum.Parse(typeof(EnumSexo), (pagoPin.Usuario.Genero != 0 ? pagoPin.Usuario.Genero.ToString() : "1"))) de @pagoPin.EdadAspirante años
+                </div>
+            </div>
+        }
+
+        @if (pagoPin.TipoTramite > 0)
+        {
+            <div class="py-2">
+                <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                    Trámite Principal
+                    @if (pagoPin.EdadAspirante >= 18 && !EsModificacion)
+                    {
+                        <button class="boton-texto" @onclick="() => cambiarAVista(PasosCotizacion.Tramite)"> Modificar </button>
+                    }
+
+                </div>
+                <div>
+                    @DescripcionesTramite.Descripcion[(EnumTramite)pagoPin.TipoTramite]
+                </div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(pagoPin.Categoria))
+        {
+            <div class="py-2">
+                <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                    Categoría principal
+                    @if (!EsModificacion)
+                    {
+                        <button class="boton-texto" @onclick="() => cambiarAVista(PasosCotizacion.Categoria)"> Modificar </button>
+                    }
+                </div>
+                <div>
+                    @pagoPin.Categoria1
+                </div>
+            </div>
+            @if (pagoPin.TipoTramite2 != null && pagoPin.ClienteCompra == (int)EnumTipoCliente.CRC)
+            {
+                <div class="py-2">
+                    <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                        Trámite secundario
+                        @if (pagoPin.EdadAspirante >= 18 && !EsModificacion)
+                        {
+                            <button class="boton-texto" @onclick="() => cambiarAVista(PasosCotizacion.TramiteDos)"> Modificar </button>
+                        }
+                    </div>
+                    <div>
+                        @DescripcionesTramite.Descripcion[(EnumTramite)pagoPin.TipoTramite2]
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(pagoPin.Categoria2))
+            {
+                <div class="py-2">
+                    <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                        Categoría secundaria
+                        @if (!EsModificacion)
+                        {
+                            <button class="boton-texto" @onclick="() => cambiarAVista(PasosCotizacion.CategoriaDos)"> Modificar </button>
+                        }
+                    </div>
+                    <div>
+                        @pagoPin.Categoria2
+                    </div>
+                </div>
+            }
+
+            @if (datosPersonales && !string.IsNullOrEmpty(pagoPin.Categoria))
+            {
+                <div class="py-2">
+                    <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                        Datos personales
+                        <button class="boton-texto" @onclick="() => cambiarAVista(PasosCotizacion.DatosPersonales)">Modificar</button>
+                    </div>
+                    <div class="space-y-0 leading-snug">
+                        <div>@ToTitleCase(pagoPin.Usuario.Nombre) @ToTitleCase(pagoPin.Usuario.Apellido)</div>
+
+                        @if (pagoPin.Usuario.TipoDocumento == 13)
+                        {
+                            <div>PPT @pagoPin.Usuario.NumDocumento</div>
+                            <div>@pagoPin.Usuario.Correo</div>
+                            <div>@pagoPin.Usuario.Celular</div>
+                        }
+                        else
+                        {
+                            <div>@pagoPin.Usuario.TipoDocumentoDescpcion @pagoPin.Usuario.NumDocumento</div>
+                            <div>@pagoPin.Usuario.Correo</div>
+                            <div>@pagoPin.Usuario.Celular</div>
+                        }
+                    </div>
+
+                </div>
+            }
+
+            @* // Inicio código generado por GitHub Copilot *@
+            @if (MostrarDatosFacturaElectronica())
+            {
+                <div class="py-2">
+                    <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                        Datos factura electrónica
+                        <button class="boton-texto" @onclick="() => cambiarAVista(PasosCotizacion.FacturaElectronica)">Modificar</button>
+                    </div>
+                    <div class="space-y-0 leading-snug">
+                        <div>@ObtenerTipoPersonaFacturaElectronica()</div>
+                        <div>@ObtenerNombreFacturaElectronica()</div>
+                        <div>@ObtenerDocumentoFacturaElectronica()</div>
+                        <div>@pagoPin.DatosFacturacion.CorreoFacturacion</div>
+                    </div>
+                </div>
+            }
+            @* // Fin código generado por GitHub Copilot *@
+
+            @if (pagoPin.TipoRecaudoCtrl != null && pagoPin.TipoRecaudoCtrl > 0 && pagoPin.Usuario.TipoDocumento != null)
+            {
+                <div class="py-2">
+                    <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                        Medio de pago
+                        <button class="boton-texto" @onclick="() => cambiarAVista(PasosCotizacion.Pagos)">Modificar</button>
+                    </div>
+                    <div>
+                        @{
+                            var medio = pagoPin.MediosPago.FirstOrDefault(x => x.Id == pagoPin.TipoRecaudoCtrl);
+                        }
+                        <div>@medio.Nombre</div>
+                    </div>
+                </div>
+            }
+
+            @if (pagoPin.ConfiguracionCuotas.CuotaSeleccionada?.NumeroCuotas > 1 && pagoPin.Usuario.TipoDocumento != null)
+            {
+                <div class="py-2">
+                    <!-- Encabezado -->
+                    <div class="flex items-baseline justify-between gap-x-2 font-semibold">
+                        Plan de pago a @pagoPin.Cuotas cuotas
+                        <button class="boton-texto"
+                                @onclick="() => cambiarAVista(PasosCotizacion.PagoCuotas)">
+                            Modificar
+                        </button>
+                    </div>
+
+                    <!-- Pago inicial -->
+                    <div class="flex items-baseline justify-between">
+                        <span class="text-gray-800">Pago inicial:</span>
+                        <span class="tabular-nums">@pagoPin.ConfiguracionCuotas.CuotaSeleccionada.PrimeraCuota.ToString("C0")</span>
+                    </div>
+
+                    <!-- Cuotas restantes -->
+                    <div class="flex items-baseline justify-between">
+                        <span class="text-gray-800">Cuotas restantes:</span>
+                        <span>
+                            <span class="text-neutral-500">@((pagoPin?.ConfiguracionCuotas?.CuotaSeleccionada?.NumeroCuotas ?? 0) - 1) ×</span>
+                            <span class="tabular-nums">@pagoPin.ConfiguracionCuotas.CuotaSeleccionada.ValorCuota.ToString("C0")</span>
+                        </span>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="flex items-baseline justify-between">
+                        <span class="font-semibold">Total del trámite</span>
+                        <span class="font-semibold tabular-nums">@pagoPin.ConfiguracionCuotas.CuotaSeleccionada.ValorTotal.ToString("C0")</span>
+                    </div>
+                </div>
+
+            }
+
+            @if (pagoPin.ValorDiscriminadoCotizacion?.ValorTotal > 0)
+            {
+                <div class="total-resumen pt-2">
+                    <div class="tabla-resumen">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Tarifa @(pagoPin.ClienteCompra == (int)EnumTipoCliente.CRC ? "CRC" : "CEA"):</td>
+                                    <td class="num-tabla">
+                                        @if (pagoPin.ConfiguracionCuotas.CuotaSeleccionada?.NumeroCuotas > 1)
+                                        {
+                                            @(((pagoPin.ValorDiscriminadoCotizacion.Crc) / pagoPin.ConfiguracionCuotas.CuotaSeleccionada.NumeroCuotas).ToString("C0", new CultureInfo("es-CO")))
+                                        }
+                                        else
+                                        {
+                                            @pagoPin.ValorDiscriminadoCotizacion.Crc.ToString("C0", new CultureInfo("es-CO"))
+                                        }
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANSV:</td>
+                                    <td class="num-tabla">
+                                        <span class="text-neutral-500">+ </span>@pagoPin.ValorDiscriminadoCotizacion.Ansv.ToString("C0", new CultureInfo("es-CO"))
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SICOV:</td>
+                                    <td class="num-tabla">
+                                        <span class="text-neutral-500">+ </span>@pagoPin.ValorDiscriminadoCotizacion.Sicov.ToString("C0", new CultureInfo("es-CO"))
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Recaudo:</td>
+                                    <td class="num-tabla">
+                                        <span class="text-neutral-500">+ </span>@pagoPin.ValorDiscriminadoCotizacion.Banco.ToString("C0", new CultureInfo("es-CO"))
+                                    </td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                        <div class="valor-total mt-1 border-t border-neutral-500 pt-1">
+                            <p class="fila-total">
+                                <strong><span>Total a pagar:</span></strong>
+                                <span class="text-right font-extrabold tabular-nums">
+                                    @if (pagoPin.ClienteCompra == (int)EnumTipoCliente.CRC)
+                                    {
+                                        @pagoPin.ValorDiscriminadoCotizacion.ValorTotal.ToString("C0", new CultureInfo("es-CO"))
+                                    }
+                                    else if (pagoPin.Cuotas == 0)
+                                    {
+                                        @pagoPin.ValorDiscriminadoCotizacion.ValorTotal.ToString("C0", new CultureInfo("es-CO"))
+                                    }
+                                    else
+                                    {
+                                        @(pagoPin.Cuotas != null
+                                                                    ? pagoPin.CostoCuotas[(int)pagoPin.Cuotas - 1].PrimeraCuota.ToString("C0", new CultureInfo("es-CO"))
+                                                                    : pagoPin.CostoCuotas[0].PrimeraCuota.ToString("C0", new CultureInfo("es-CO")))
+                                    }
+                                </span>
+                            </p>
+                        </div>
+                        @* // Inicio código generado por GitHub Copilot *@
+                        @if (MostrarNotaRecaudo)
+                        {
+                            <p class="mt-2 text-[0.95rem] leading-[1.4] text-neutral-700">
+                                *El valor de recaudo puede cambiar según medio de pago
+                            </p>
+                        }
+                        @* // Fin código generado por GitHub Copilot *@
+                    </div>
+
+                </div>
+            }
+        }
+    </div>
+</div>

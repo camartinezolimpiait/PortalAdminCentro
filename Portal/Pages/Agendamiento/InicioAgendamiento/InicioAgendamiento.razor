@@ -1,0 +1,140 @@
+﻿@page "/configuracion/horario-agendamiento"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <h3>2. Horario disponible para citas</h3>
+        <p>
+            Configure los horarios disponibles para agendar citas. Recuerde que deben estar dentro del horario de
+            atención y que si definió un horario de almuerzo, este no estará disponible para citas.
+        </p>
+        <table class="tabla-horario tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Primera cita</th>
+                    <th>Última cita</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ConfiguracionHorarios != null && ConfiguracionHorarios.Any())
+                {
+                    @foreach (var horario in ConfiguracionHorarios.Where(x => x.IdHorarioCita != 8))
+                    {
+                        @if (@horario.IsVisible)
+                        {
+
+                            <tr>
+                                @if (!@ReadOnly)
+                                {
+                                    <td>
+                                        @if (@horario.IsActivo)
+                                        {
+                                            <input id="@horario.Dia" type="checkbox" value="@horario.IsActivo"
+                                                   @onchange="args => HabilitarDia(args, horario)" checked />
+                                        }
+                                        else
+                                        {
+                                            <input id="@horario.Dia" type="checkbox" value="@horario.IsActivo"
+                                                   @onchange="args => HabilitarDia(args, horario)" />
+                                        }
+                                        <label for="@horario.Dia">@horario.Dia</label>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <label for="@horario.Dia">@horario.Dia</label>
+                                    </td>
+                                }
+
+                                <td>
+                                    @if (horario.IsActivo)
+                                    {
+                                        <input readonly="@ReadOnly" type="time" value="@horario.ConvertirHorarioAperturaAgenda()"
+                                               @onchange="args => ActualizarHoraDia(args, horario, 1)" />
+                                    }
+                                </td>
+                                <td>
+                                    @if (horario.IsActivo)
+                                    {
+                                        <input readonly="@ReadOnly" type="time" value="@horario.ConvertirHorarioCierreAgenda()"
+                                               @onchange="args=>ActualizarHoraDia(args, horario, 2)" />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        @if (!@ReadOnly)
+        {
+            <fieldset>
+                <legend>Configuración avanzada</legend> @if (@isActiveIndependiente)
+                {
+                    <input id="diferente" type="checkbox" @onchange="args=>HorarioDiferente(args)" checked />
+                }
+                else
+                {
+                    <input id="diferente" type="checkbox" @onchange="args=>HorarioDiferente(args)" />
+                }
+                <label for="diferente">Horario diferente para cada dia hábil</label>
+            </fieldset>
+        }
+
+
+        <h3>Parámetros de citas</h3>
+        <p>
+            Defina el intervalo de las citas y la agenda disponible a futuro. Se ofrecerán citas cada cierto
+            tiempo desde la hora de la primera cita hasta la última cita. Habrá citas disponibles a futuro
+            según el
+            número de días que configure.
+        </p>
+        <EditForm Model="@ParametrizacionHorario">
+            <table class="tabla-responsive">
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tr>
+                    @*<td> <input type="number" @bind-value="ParametrizacionHorario.Intervalo" min="5"
+                    max="60"></td>*@
+                    <td>
+                        Intervalo de citas (minutos)
+                    </td>
+                    <td>
+                        <select disabled="@ReadOnly" name="intervalo" id="intervalo" @bind="ParametrizacionHorario.Intervalo">
+                            @foreach (var intervalo in _listIntervalos)
+                            {
+                                <option value=@intervalo>@intervalo</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Agenda disponible (días)</td>
+
+                    <td>
+                        <input readonly="@ReadOnly" type="number" @bind-value="ParametrizacionHorario.DisponibilidadAgendaDias" min="0" />
+                    </td>
+                </tr>
+            </table>
+        </EditForm>
+
+        @if (applicationShared.CreateNewConfiguration)
+        {
+            <button class="boton-secundario" @onclick="Regregar">Atrás</button>
+            <button class="boton-primario" @onclick="GuardarConfiguracionhorarios">Guardar y continuar</button>
+        }
+
+    </ContentTemplate>
+</SpinLoader>

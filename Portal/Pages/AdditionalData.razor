@@ -1,0 +1,44 @@
+﻿@page "/Additional"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+
+<div class="formulario-2 ">
+    <h3>Datos personales adicionales</h3>
+    <form>
+        <div class="field">
+            <label class="texto-label col-form-label">Departamento de nacimiento</label>
+            <input class="form-control" type="text" id="depNacimiento" name="depNacimiento" />
+        </div>
+        <div class="field">
+            <label class="texto-label">Ciudad de nacimiento</label>
+            <input type="text" id="ciuNacimiento" name="ciuNacimiento" />
+        </div>
+        <div class="field">
+            <label class="texto-label">Estado civil</label>       
+            <select name="estCivil" id="estCivil">
+                <option selected value="S">Soltero</option>
+                <option value="U">Union libre</option>
+                <option value="C">Casado</option>
+                <option value="S">Separado</option>
+                <option value="V">Viudo</option>
+            </select>
+        </div>
+        <div class="field">
+            <label class="texto-label">Departamento de expedicion del documento</label>
+            <input type="text" id="depExpDocumento" name="depExpDocumento" />
+        </div>
+        <div class="field">
+            <label class="texto-label">Ciudad de expedicion del documento</label>
+            <input type="text" id="ciuExpDocumento" name="ciuExpDocumento" />
+        </div>
+        <div>        
+            <button type="button" class="boton-primario" @onclick="@Siguiente">Siguiente</button>
+        </div>
+    </form>
+</div>
+@code {
+    void Siguiente ()
+    {
+        UriHelper.NavigateTo ("Residence");
+    }
+}

@@ -1,0 +1,96 @@
+﻿@page "/SuplData"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+@using Newtonsoft.Json;
+@using Microsoft.JSInterop
+@inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+
+
+<div class="formulario-2 ">
+    <h2>Datos Complementarios</h2>
+    <div class="tabs-content">
+        <div>
+            <div class="formulario-2">
+                <table>
+                    <tr>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Primer Apellido</label>
+                            <input type="text" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.PrimerApellido" inputmode="latin" id="PrimerApellido" name="PrimerApellido" />
+                        </td>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Segundo Apellido</label>
+                            <input type="text" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.SegundoApellido" inputmode="latin" id="SegundoApellido" name="SegundoApellido" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Primer Nombre</label>
+                            <input type="text" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.PrimerNombre" inputmode="latin" id="PrimerNombre" name="PrimerNombre" />
+                        </td>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Segundo Nombre</label>
+                            <input type="text" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.SegundoNombre" inputmode="latin" id="SegundoNombre" name="SegundoNombre" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:550px">
+                            <label for='fecha-nacimiento'>Fecha Nacimiento</label>
+                            <input type='date' id='fecha-nacimiento' name='fecha-nacimiento' @bind-value="@fechaNacimiento" placeholder=''>
+                        </td>
+                        <td style="width:550px">
+                            <label for='fecha-expedicion'>Fecha Expedición</label>
+                            <input type='date' id='fecha-expedicion' name='fecha-expedicion' @bind-value="@fechaExpedicion" placeholder=''>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Teléfono Celular</label>
+                            <input type="tel" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.Celular" inputmode="numeric" pattern="[0-9]" id="TelefonoCelular" name="TelefonoCelular" />
+                        </td>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Teléfono Fijo</label>
+                            <input type="tel" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.Telefono" inputmode="numeric" pattern="[0-9]" id="TelefonoFijo" name="TelefonoFijo" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Dirección Residencia</label>
+                            <input type="text" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.Direccion" inputmode="latin" id="Direccion" name="Direccion" />
+                        </td>
+                        <td style="width:550px">
+                            <label class="texto-label col-form-label">Correo Electrónico</label>
+                            <input type='email' id='email' name='email' @bind-value="@menuservice.entradaEnrolamiento.CorreoElectronico">
+                        </td>
+                    </tr>
+                </table>
+
+
+                <button type="button" class="boton-primario" @onclick="@Siguiente">Siguiente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    DateTime? fechaNacimiento = null;
+    DateTime? fechaExpedicion = null;
+    private ApplicationSevice menuservice = new ApplicationSevice();
+
+    private async void Siguiente()
+    {
+        menuservice.entradaEnrolamiento.FechaNacimiento = fechaNacimiento.ToString();
+        menuservice.entradaEnrolamiento.FechaExpedicion = fechaExpedicion.ToString();
+        UriHelper.NavigateTo("SuplData2");
+    }
+
+
+}

@@ -1,0 +1,107 @@
+﻿@using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda
+@using portalAdministrativoSISEC.Enum
+
+@foreach (var intervalo in CitasIntervaloListado)
+{
+	@if (!intervalo.EsHoraAlmuerzo)
+	{
+		<li class="time">@intervalo.NombreIntervalo</li>
+
+		foreach (var dia in intervalo.DiasIntervalo)
+		{
+			<li class="appointment">
+				@foreach (var cita in dia.Cita)
+				{
+					@if (cita.TipoCita == TipoCita.Disponible)
+					{
+						<button class="appointment-available" @onclick="(e)=>NewAppoiment(e, cita.FechaAgenda,
+                                                                        (short)cita.HoraInicioAgenda,
+                                                                        intervalo.NombreIntervalo,
+                                                                        cita.IdHorarioAtencion)">
+							<svg class="feather">
+								<use xlink:href="assets/feather-sprite.svg#plus"></use>
+							</svg>
+						</button>
+					}
+					else if (cita.TipoCita == TipoCita.BloqueadoPorConfiguracion)
+					{
+						<button class="appointment-unavailable" disabled>
+							<svg class="feather">
+								<use xlink:href="assets/feather-sprite.svg#slash"></use>
+							</svg>
+						</button>
+					}
+					else if (cita.TipoCita == TipoCita.BloqueadoPorRecepcion)
+					{
+						<button class="appointment-locked" disabled>
+							<svg class="feather">
+								<use xlink:href="assets/feather-sprite.svg#lock"></use>
+							</svg>
+						</button>
+					}
+					else if (cita.TipoCita == TipoCita.CupoLleno)
+					{ }
+					else//ocupado con opcion de agregar
+					{
+						<button class="appointment-@(cita.TipoCitaAgenda == TipoCitaAgenda.Enrolamiento? (cita.AgendaOtroCliente)? "orange" : "green": "blue") tooltip" @onclick="(e)=>NewAppoiment(e, cita.IdAgenda, intervalo.NombreIntervalo)">
+							<svg class="feather">
+								<use xlink:href="assets/feather-sprite.svg#user"></use>
+							</svg>
+							<span class="tooltiptext">@intervalo.NombreIntervalo - @cita.NombreUsuario</span>
+						</button>
+					}
+				}
+			</li>
+		}
+	}
+	else
+	{
+		<li class="lunchtime @(((ScheduleColumns)CitasIntervaloListado[0].DiasIntervalo.Count + 1).ToString().ToLower())">Almuerzo</li>
+	}
+
+}
+
+@code {
+	[Parameter]
+	public List<CitasIntervalo> CitasIntervaloListado { get; set; }
+
+	[Parameter]
+	public EventCallback<OptionAppoiment> NewAppoimentCallback { get; set; }
+
+	[Parameter]
+	public DateTime StartDate { get; set; }
+
+	protected async Task NewAppoiment(MouseEventArgs e, DateTime scheduleDay, short scheduleTime, string timeString, long IdHorarioAtencion)
+	{
+		await NewAppoimentCallback.InvokeAsync(new OptionAppoiment
+			{
+				ScheduleDay = scheduleDay,
+				ScheduleTime = scheduleTime,
+				TimeString = timeString,
+				IdHorarioAtencion = IdHorarioAtencion,
+				ScheduleForm = ScheduleForms.NewSchedule,
+				ScheduleStartDate = StartDate,
+				ToolButtonOptions = new ToolButtonOptions
+				{
+					AgendaMode = AgendaMode.Schedule,
+					ShowBlockSchedule = false
+				}
+			});
+	}
+
+	protected async Task NewAppoiment(MouseEventArgs e, long idAgenda, string timeString)
+	{
+		await NewAppoimentCallback.InvokeAsync(new OptionAppoiment
+			{
+				TimeString = timeString,
+				IdAgenda = idAgenda,
+				ScheduleForm = ScheduleForms.ScheduleDetail,
+				ScheduleStartDate = StartDate,
+				ToolButtonOptions = new ToolButtonOptions
+				{
+					AgendaMode = AgendaMode.Schedule,
+					ShowBlockSchedule = false
+				}
+			});
+	}
+}

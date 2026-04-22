@@ -1,0 +1,129 @@
+﻿@page "/comprapincda"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin.CDA
+@using portalAdministrativoSISEC.Pages.CompraPinCDA
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.CategoriasCDA
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.ComfirmacionCompraCDA
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.ResumenCDA
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.TramiteCDA
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.DatosBasicosCDA
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.BlogCDA; 
+
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        @if (pasosCompraPin == 0)
+        {
+            <div>
+                <header class="encabezado">
+                    <div class="wrapper margen_general">
+                        <div>
+                            <p class="cda">@getCentroResponse.Nombre</p>
+                            <p class="direccion">@getCentroResponse.Direccion</p>
+                        </div>
+                        <p class="clase_centro">Centro de Diagnóstico Automotor</p>
+                    </div>
+                </header>
+                <div class="wrapper margen_general">
+                    <div class="columnas">
+                        <ul class="lista_comunicados">
+                            <Blog></Blog>
+                        </ul>
+                        <div>
+                            <div class="menus">
+                                <div class="acciones">
+                                    <h3>Pagos</h3>
+                                    <a class="boton-primario" @onclick="()=> GetIsCliked(1)">Comprar PIN</a>
+                                   @*<h3>Otras Operaciones</h3>
+                                    <a>Devolución de Dinero</a> *@
+                                </div>
+                            </div>
+                            <div class="menus" style="margin-top:10px;">
+
+                                <div class="acciones-down">
+                                    <h3 class="colorletras">Canales de atención</h3>
+                                    <a class="linksmenusecundario">WhatsApp</a><br />
+                                    <a class="linksmenusecundario">Soporte SISEC CDA</a><br />
+                                    <a class="linksmenusecundario">Servicio al cliente SISEC</a><br />
+                                    <a class="linksmenusecundario">Linea de atencion única</a><br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (pasosCompraPin > 0)
+        {
+            <div>
+                <header class="encabezadodos">
+                    <div class="wrapper margen_general">
+                        <p class="linkdos"><a @onclick="()=> GetIsCliked(0)">Regresar</a></p>
+                        <p class="titulodos">Compra de PIN</p>
+                    </div>
+                </header>
+                <div class="row margen_general">
+                    <div class="column">
+                        @if (pasosCompraPin == 1)
+                        {
+                            <!-- Seleeccion de vehiculo-->
+                            <div>
+
+                                <CategoriasCDA PagoPinCda="pagoPinCda" OnFormValidChanged="HandleFormValidChanged" PagoPinCdaChanged="PinHasChanged" CostoHasChanged="CostoHasChanged" />
+                                @if (pagoPinCda.IsLoadingTemp == false)
+                                {
+                                    <a class="boton-primario" @onclick="()=> GetIsCliked(0)">Atrás</a>
+                                }
+                                @if (isFormValid)
+                                {
+                                    <a class="boton-primario" style="margin-left:5px;" @onclick="()=> GetIsCliked(2)">Siguiente</a>
+                                    PasosVisitados.Add(2);
+                                }
+                            </div>
+                        }
+                        @if (pasosCompraPin == 2)
+                        {
+                            <!-- Datos Personales-->
+                            <div>
+                                <DatosPersonalesCDA PagoPinCda="pagoPinCda" OnFormValidChanged="HandleFormValidChanged" PagoPinChanged="PinHasChanged" />
+                                <a class="boton-primario" @onclick="()=> GetIsCliked(1)">Atrás</a>
+                                @if (isFormValid)
+                                {
+                                    <a class="boton-primario" style="margin-left:5px;" @onclick="()=> OnSiguienteClicked()">Siguiente</a>
+                                    PasosVisitados.Add(3);
+                                }
+                            </div>
+                        }
+                        @if (pasosCompraPin == 13)
+                        {
+                            <!-- Categorias-->
+                            <div>
+                                <ConfirmacionCompraCDA PagoPin="pagoPinCda" PasosCompraPin="pasosCompraPin" PagoPinChanged="PinHasChanged"
+                                                       VolverDatosPersonales="VolverDatosPersonales" PasosCompraPinChanged="PasosCompraPinChanged" />
+                                <!--<<a class="boton-primario" @onclick="()=> GetIsCliked(2)">Atrás</a>-->
+                            </div>
+                        }
+                    </div>
+                    @if (pasosCompraPin != 13)
+                    {
+                        <!-- Resumen AQUI-->
+                        <div>
+                            <ResumenCDA PagoPinCda="pagoPinCda" PasosCompraPin="pasosCompraPin" PasosVisitados="PasosVisitados" OnNavegarResumen="NavegarResumen" />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        <section>
+            @Body
+        </section>
+    </ContentTemplate>
+</SpinLoader>

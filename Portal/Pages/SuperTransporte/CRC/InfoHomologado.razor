@@ -1,0 +1,58 @@
+﻿@page "/supertransporte/centro/informacion-homologado"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Información Homologado</h3>
+
+<EditForm Model=@_infoHomologado OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label for="num_contrato">Nº de contrato suscrito entre el SICOV y el establecimiento de comercio</label>
+    <ValidationMessage For="() => _infoHomologado.num_contrato" />
+    <InputText id="num_contrato" @bind-Value="_infoHomologado.num_contrato" />
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha del contrato
+        </legend>
+            <ValidationMessage For="() => _infoHomologado.dia_contrato" />
+            <ValidationMessage For="() => _infoHomologado.mes_contrato" />
+            <ValidationMessage For="() => _infoHomologado.anio_contrato" />
+        <div class="fecha-flex">
+            <div>
+                <label for="dia_contrato">Día</label>
+                <InputNumber id="dia_contrato" @bind-Value="_infoHomologado.dia_contrato" />
+            </div>
+            <div>
+                <label for="mes_contrato">Mes</label>
+                <InputNumber id="mes_contrato" @bind-Value="_infoHomologado.mes_contrato" />
+            </div>
+            <div>
+                <label for="anio_contrato">Año</label>
+                <InputNumber id="anio_contrato" @bind-Value="_infoHomologado.anio_contrato" />
+            </div>
+        </div>
+    </fieldset>
+
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_infoHomologado.nombre_adjunto_contrato</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileContrato">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <label>Adjuntar contrato</label>
+    <ValidationMessage For="@(() => _infoHomologado.contrato)" />
+    <InputFile class="file-input w-full p-0" id="contrato" OnChange="HandleArchivoSeleccionado" />
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>
+

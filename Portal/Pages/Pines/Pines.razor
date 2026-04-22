@@ -1,0 +1,26 @@
+﻿@page "/pines/{estado?}"
+@using portalAdministrativoSISEC.Pages.Pines
+@using portalAdministrativoSISEC.Pages.Pines.Activos
+@using portalAdministrativoSISEC.Pages.Pines.Devoluciones;
+@inject NavigationManager NavManager
+
+@layout SingleLayout
+
+<Activos estado="@Estado"></Activos>
+
+
+@code {
+    [Parameter] public string? Estado { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Si no viene estado en la URL → usar "Activos"
+        if (string.IsNullOrWhiteSpace(Estado))
+        {
+            Estado = "Activos";
+        }
+
+        // Cambia la URL sin refrescar la página
+        NavManager.NavigateTo($"/pines/{Estado}", replace: true);
+    }
+}

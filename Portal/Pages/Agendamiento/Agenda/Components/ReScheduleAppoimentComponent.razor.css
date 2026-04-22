@@ -1,0 +1,37 @@
+﻿.appointment-available {
+    background-color: var(--color-azul-100);
+    border-color: var(--color-azul-200) !important;
+    color: transparent;
+}
+
+    .appointment-available:hover {
+        color: var(--color-azul-400);
+    }
+
+.appointment-unavailable {
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.appointment-locked {
+    background-color: #f3c19d !important;
+    border: none;
+    color: transparent;
+    transition: color 300ms ease-in;
+}
+
+    .appointment-locked:active {
+        color: var(--color-rojo-500) !important;
+        transition: color 10ms ease-out;
+    }
+
+.appointment-full {
+    border: none;
+    color: transparent;
+    transition: color 300ms ease-in;
+}
+
+    .appointment-full:active {
+        color: gray !important;
+        transition: color 10ms ease-out;
+    }

@@ -1,0 +1,135 @@
+﻿@inject NavigationManager NavManager
+@using System.Globalization;
+@if (resumen)
+{
+<h3>Resumen</h3>
+<div class="resumen-box">
+    <div class="header">
+        <span class="valor-total-texto">Valor total</span>
+        <span class="valor-total-valor">@ValorTotal.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+    </div>
+
+    <div class="line"></div> <!-- Línea separadora -->
+
+    <div class="info-row">
+        <span class="info-left">N° de Cuotas</span>
+        <span class="info-right">@CuotasPagadas de @InfoPin.Entidad.CuotasPactadas</span>
+    </div>
+
+        <div class="info-row">
+            <span class="info-left">Abonos realizados</span>
+            <span class="info-right">@abonosRealizados.ToString("C", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+        </div>
+
+    <div class="info-row">
+        <span class="info-left">Saldo pendiente</span>
+        <span class="info-right">@SaldoPendiente.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+    </div>
+        <div class="nota">
+            <strong>Nota:</strong> El costo de la transacción no está incluido en cada pago o abono.
+        </div>
+ </div>
+  <div class="boton-container">
+        @if (saldoPendiente && PinEnrolado)
+        {
+            <button @onclick="OnPayOrCreditClicked" class="pay-button">Pagar o abonar</button>
+        }
+    </div>
+
+    <dialog id="procesandoCompra" class="modal-cuotas">
+        <h2>Procesando</h2>
+        <p>Estamos cargando la información de pago esto tardará unos segundos</p>
+        <SpinLoader IsLoading="IsLoadingDataResumen">
+            <LoadingTemplate>
+                <div style="height:100%; display:flex; align-items:center; justify-content:center;">
+                    <br />
+                    <Circle mar Center="true" Color="var(--color-azul-600)"></Circle>
+                </div>
+            </LoadingTemplate>
+            <ContentTemplate>
+
+            </ContentTemplate>
+        </SpinLoader>
+    </dialog>
+}
+else
+{
+    <h3>Resumen de pago</h3>
+
+    <div class="resumen-box-segundo">
+        <div class="info-row-segundo">
+            <span class="info-left-segundo">Valor a pagar</span>
+            <span class="info-right-segundo">@EnvioValor.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+        </div>
+
+        <div class="info-row-segundo">
+            <span class="info-left-segundo">Valor transacción</span>
+            <span class="info-right-segundo">@ValorRecaudo.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+        </div>
+
+        <div class="header-segundo">
+            <span class="valor-total-texto-segundo">Valor total a pagar</span>
+            <span class="valor-total-valor-segundo">@TotalPagar.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+        </div>
+        <div class="info-row-segundo saldo-restante">
+            <span class="info-left-segundo-saldo">Saldo restante de la deuda</span>
+            <span class="info-right-segundo-saldo">@SaldoRestante.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
+        </div>  
+    </div>
+    <div class="boton-container">
+
+        <button class="boton-secundario" @onclick="Volver">Atrás</button>
+
+    @if (EnvioValor >= ValorMinimo)
+    {
+
+            <button @onclick="RealiarPago" class="pay-button-segundo">Continuar</button>
+        }
+
+        
+    </div>
+
+
+    <dialog id="procesandoCompra" class="modal-cuotas">
+        <h2>Procesando</h2>
+        <p>Estamos procesando tu pago esto tardará unos segundos</p>
+
+        <SpinLoader IsLoading="IsLoadingDataResumen">
+            <LoadingTemplate>
+                <div style="height:100%; display:flex; align-items:center; justify-content:center;">
+                    <br />
+                    <Circle mar Center="true" Color="var(--color-azul-600)"></Circle>
+                </div>
+            </LoadingTemplate>
+            <ContentTemplate>
+
+            </ContentTemplate>
+        </SpinLoader>
+    </dialog>
+}
+
+
+
+
+
+
+@code {
+
+}
+
+<script>
+    window.dialogFunctions = {
+        showDialog: function (dialogId) {
+            var dialog = document.getElementById(dialogId);
+            if (dialog) {
+                dialog.showModal();
+            }
+        },
+        closeDialog: function (dialogId) {
+            var dialog = document.getElementById(dialogId);
+            if (dialog) {
+                dialog.close();
+            }
+        }
+    };
+</script>

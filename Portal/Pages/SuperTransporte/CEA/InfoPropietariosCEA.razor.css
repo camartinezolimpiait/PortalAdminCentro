@@ -1,0 +1,23 @@
+﻿.propietario {
+    background: var(--color-gris-50);
+    border: 1px solid var(--color-gris-200);
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.titulo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.nombre {
+    font-size: var(--text-lg);
+    font-weight: 500;
+}
+
+.contacto {
+    font-size: 14px;
+}

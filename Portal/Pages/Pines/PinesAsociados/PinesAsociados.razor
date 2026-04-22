@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.QuickGrid.Infrastructure
+@using portalAdministrativoSISEC.Pages.Common
+
+@if (Opened)
+{
+	<div class="overlay" @onclose="OnClose">
+		<div class="dialog">
+			<div class="dialog-header">
+				<div>
+					<h3>Pin Padre: @pinValue</h3>
+				</div>
+
+				<div @onclick="CloseDialog">
+					<div class="close">
+						<i class="bi bi-x-lg"> X </i>
+					</div>
+				</div>
+			</div>
+
+			<div class="dialog-body">
+				<SpinLoader IsLoading="isLoading">
+					<LoadingTemplate>
+						<div style="height:100%;display:flex">
+							<br />
+							<Circle Center="true" Color="var(--color-azul-600)"></Circle>
+						</div>
+					</LoadingTemplate>
+					<ContentTemplate>
+						@if (Listado.Count > 0){
+							<DynamicQuickGrid Data="Data" DataQueryable="DataQueryable" Columns="columnas" Paginas="PruebaPaginas" Pagination="Pagination" PaginaChanged="paginaChanged" View="Asociados" ShowPager="false"></DynamicQuickGrid>
+						}
+					</ContentTemplate>
+				</SpinLoader>
+			</div>
+
+			<div class="dialog-footer">
+			</div>
+		</div>
+	</div>
+}
+

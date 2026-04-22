@@ -1,0 +1,60 @@
+﻿@page "/configuracion/configuracion-reglas"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <h3>4. Reglas para crear o modificar citas</h3>
+
+        <p>
+            Por último, defina las reglas para los ciudadanos que agenden a través de milicencia.co.
+            Esta configuración no afectará la gestión manual desde ese portal.
+        </p>
+
+        <label>
+            <b>Tiempo mínimo para agendar</b>
+        </label>
+        <p>
+            Especifica con cuánta antelación puede agendar un ciudadano. Por ejemplo, si coloca
+            7 días, el usuario que entra hoy verá citas disponibles a partir de la próxima semana.
+        </p>
+        <div class="input_unidad">
+            <input readonly="@ReadOnly" type="number" @bind="TiempoMinAgenda" />
+            <select disabled="@ReadOnly" id="inputTipoTiempoAgenda" name="TipoTiempoAgenda" @bind="TipoTiempoAgenda">
+                @foreach (var valor in Enum.GetValues(typeof(portalAdministrativoSISEC.Enum.TipoTiempo)))
+                {
+                    <option value="@valor">@valor</option>
+                }
+            </select>
+        </div>
+        <label>
+            <b>Tiempo mínimo para reprogramar o cancelar</b>
+        </label>
+        <p>
+            Especifica el tiempo mínimo para que el ciudadano pueda reprogramar o cancelar su cita
+            desde milicencia.co. La resolución 6246 de 2016 de la supertransporte especifica que debe ser mínimo
+            de 24 horas.
+        </p>
+        <div class="input_unidad">
+            <input readonly="@ReadOnly" type="number" @bind="TiempoMinCancelar">
+            <select disabled="@ReadOnly" id="inputTipoTiempoCancelar" name="TipoTiempoCancelar" @bind="TipoTiempoCancelar">
+                @foreach (var valor in Enum.GetValues(typeof(portalAdministrativoSISEC.Enum.TipoTiempo)))
+                {
+                    <option value="@valor">@valor</option>
+                }
+            </select>
+        </div>
+        @if (applicationShared.CreateNewConfiguration)
+        {
+            <button class="boton-secundario" @onclick="Atras">Atrás</button>
+            <button class="boton-primario" @onclick="GuardarConfiguracionReglas">Finalizar configuración</button>
+        }
+
+    </ContentTemplate>
+</SpinLoader>

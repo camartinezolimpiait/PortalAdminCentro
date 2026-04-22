@@ -1,0 +1,135 @@
+﻿@* Inicio código generado por GitHub Copilot *@
+@namespace portalAdministrativoSISEC.Pages.Facturacion.Common
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using portalAdministrativoSISEC.Entidades.Facturacion
+
+<style>
+    .quickgrid[theme=default] > thead > tr > th{
+        background-color: #FFFFFF !important;
+        color: #111827 !important;
+        padding-left: 1px !important;
+    }
+</style>
+
+<dialog id="@ModalId" class="modal modal-bottom sm:modal-middle">
+    <main class="modal-box !max-w-none !w-[60vw] !min-w-[400px] max-h-[60vh] overflow-auto bg-gray-100">
+        @* Encabezado del modal *@
+        <section class="flex items-center justify-between mb-0 pb-3 top-0 z-10">
+            <h4 class="text-lg font-bold m-0">Historial</h4>
+            <button type="button" 
+                    class="btn btn-sm btn-circle btn-ghost" 
+                    @onclick="CerrarModal"
+                    aria-label="Cerrar modal">
+                ✕
+            </button>
+        </section>
+
+        @* Contenido del modal *@
+        @* Inicio refactorización/optimización por GitHub Copilot *@
+        @if (IsLoading)
+        {
+            <section class="w-full flex justify-center items-center p-8">
+                <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+            </section>
+        }
+        else if (!_isOpen)
+        {
+            @* Modal cerrado o en proceso de cierre: no renderizar contenido *@
+        }
+        else if (DetalleFacturacion == null)
+        {
+            <section class="w-full p-4">
+                <div class="alert alert-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span>No se pudo cargar la información del historial.</span>
+                </div>
+            </section>
+        }
+        else
+        @* Fin refactorización/optimización por GitHub Copilot *@
+        {
+            <section class="w-full bg-white p-3 rounded-md border border-neutral-300 mb-3">
+                <div class="flex justify-between gap-3">
+                    <div class="flex gap-2 text-sm">
+                        <span class="text-neutral-600">PIN:</span>
+                        <span class="font-medium">@DetalleFacturacion.ResumenPeticion?.Pin</span>
+                    </div>
+                    <div class="flex gap-2 text-sm">
+                        <span class="text-neutral-600">Número de factura:</span>
+                        <span class="font-medium">
+                            @(string.IsNullOrWhiteSpace(DetalleFacturacion.ResumenPeticion?.NumeroFactura) ? "--" : DetalleFacturacion.ResumenPeticion.NumeroFactura)
+                        </span>
+                    </div>
+                </div>
+            </section>
+            
+            @* Tabla de historial con QuickGrid *@
+            @if (DetalleFacturacion.HistorialEstados != null && DetalleFacturacion.HistorialEstados.Any())
+            {
+                <section class="w-full bg-neutral-50 rounded-md border border-neutral-200">
+                    
+                    <div class="w-full overflow-x-auto">
+                        <QuickGrid Items="@DetalleFacturacion.HistorialEstados.AsQueryable().OrderByDescending(h => h.FechaRegistroEstado)" class="table table-sm table-fixed">
+                            
+                            @* Columna Fecha/Hora *@
+                            <PropertyColumn Title="Fecha / Hora" Property="@(h => h.FechaRegistroEstado)" Format="dd/MM/yyyy HH:mm" Align="Align.Left" Class="w-1/4" />
+
+                            @* Columna Estado *@
+                            <TemplateColumn Title="Estado" Align="Align.Left" Class="w-1/4">
+                                <div class="py-2">
+                                    <span class="badge @GetEstadoBadgeClass(context.EstadoAsociado) whitespace-nowrap flex-shrink-0">
+                                        @MapearEstadoAPestana(@context.EstadoAsociado)
+                                    </span>
+                                </div>
+                            </TemplateColumn>
+
+                            @* Columna Evento/Tipo *@
+                            <TemplateColumn Title="Evento / Tipo" Align="Align.Left" Class="w-1/4">
+                                <div class="py-2 break-words">
+                                    @if (!string.IsNullOrWhiteSpace(context.TipoEvento))
+                                    {
+                                        <span>@context.TipoEvento</span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </div>
+                            </TemplateColumn>
+
+                            @* Columna Descripción *@
+                            <TemplateColumn Title="Descripción" Align="Align.Left" Class="w-1/4">
+                                <div class="py-2 break-words">
+                                    @if (!string.IsNullOrWhiteSpace(context.DescripcionError))
+                                    {
+                                        <span>@context.DescripcionError</span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </div>
+                            </TemplateColumn>
+
+                        </QuickGrid>
+                    </div>
+                </section>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>No hay historial de estados disponible.</span>
+                </div>
+            }
+        }
+
+    </main>
+    
+</dialog>
+
+@* Fin código generado por GitHub Copilot *@

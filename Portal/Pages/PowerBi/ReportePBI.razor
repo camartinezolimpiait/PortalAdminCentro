@@ -1,0 +1,16 @@
+﻿@page "/reportes"
+@using portalAdministrativoSISEC.Entidades.PowerBi;
+@layout PowerBILayout
+
+@if (String.IsNullOrEmpty(errorMessage) && embedModule is null)
+{
+    <label>Obteniendo Reporte...</label>
+    <br />
+}
+else if (!String.IsNullOrEmpty(errorMessage))
+{
+    <label>No se pudo obtener el reporte:</label>
+    <p>@errorMessage</p>
+}
+
+<div class="embed-report" id="reportPBI"></div>

@@ -1,0 +1,97 @@
+﻿@page "/compradepin/datosBasicos"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Pages.CompraPin
+@inject NavigationManager NavManager
+
+<EditForm EditContext="@editContext" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <div>
+        <h3>Sexo y fecha de nacimiento</h3>
+        <p>
+            El costo del curso de conducción se calcula a partir de la edad y sexo como aparecen en el
+            documento de identidad
+        </p>
+    </div>
+    <fieldset class="mb-4 border-none p-0">
+        <legend class="text-lg font-bold text-azul-900">Sexo</legend>
+
+        <div class="space-y-0.5">
+            <InputRadioGroup @bind-Value="DatosBasicosModel.Sexo">
+                @foreach (var sexo in Enum.GetValues<EnumSexo>())
+                {
+                    <div>
+                        <label class="flex items-center">
+                            <InputRadio Value="@((int)sexo)" />
+                            @sexo
+                        </label>
+                    </div>
+                }
+            </InputRadioGroup>
+        </div>
+        <ValidationMessage For="@(() => DatosBasicosModel.Sexo)" />
+    </fieldset>
+
+
+    <fieldset class="mb-4 border-none p-0">
+        <legend class="text-pa-azul-900 mb-2 text-lg font-bold">Fecha de nacimiento</legend>
+        <ValidationMessage For="@(() => DatosBasicosModel.Dia)" />
+        <ValidationMessage For="@(() => DatosBasicosModel.Mes)" />
+        <ValidationMessage For="@(() => DatosBasicosModel.Anio)" />
+        <div class="flex gap-x-2">
+            <div>
+                <label for="day" class="mb-1 block font-medium">Día</label>
+                <InputNumber TValue="int?"
+                             maxlength="2"
+                             type="text"
+                             pattern="[0-9]*"
+                             inputmode="numeric"
+                             name="day"
+                             id="day"
+                             autocomplete="bday-day"
+                             class="hide-spin-button w-16 rounded border px-2 py-1"
+                             placeholder="dd"
+                             @bind-Value="DatosBasicosModel.Dia"
+                             @bind-Value:after="HandleValid" />
+            </div>
+            <div>
+                <label for="month" class="mb-1 block font-medium">Mes</label>
+                <InputNumber TValue="int?"
+                             maxlength="2"
+                             type="text"
+                             pattern="[0-9]*"
+                             inputmode="numeric"
+                             name="month"
+                             id="month"
+                             autocomplete="bday-month"
+                             class="hide-spin-button w-16 rounded border px-2 py-1"
+                             placeholder="mm"
+                             @bind-Value="DatosBasicosModel.Mes"
+                             @bind-Value:after="HandleValid" />
+            </div>
+            <div>
+                <label for="year" class="mb-1 block font-medium">Año</label>
+                <InputNumber maxlength="4" TValue="int?"
+                             type="text"
+                             pattern="[0-9]*"
+                             inputmode="numeric"
+                             name="year"
+                             id="year"
+                             autocomplete="bday-year"
+                             class="hide-spin-button w-20 rounded border px-2 py-1"
+                             placeholder="aaaa"
+                             @bind-Value="DatosBasicosModel.Anio"
+                             @bind-Value:after="HandleValid" />
+            </div>
+        </div>
+    </fieldset>
+    <div class="mt-3 flex items-center space-x-3">
+        <button type="submit" class="boton-primario">
+            Siguiente
+        </button>
+    </div>
+
+
+</EditForm>

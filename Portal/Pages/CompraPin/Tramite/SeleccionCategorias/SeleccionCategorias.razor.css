@@ -1,0 +1,3 @@
+﻿.grid_categoria {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 104px));
+}

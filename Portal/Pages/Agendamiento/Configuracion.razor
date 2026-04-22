@@ -1,0 +1,28 @@
+﻿@page "/configuracion/"
+@inherits LayoutComponentBase
+@layout TwoPaneLayout
+@using portalAdministrativoSISEC.Pages.Agendamiento
+@inject NavigationManager NavManager
+
+<NavSubMenuPrincipal></NavSubMenuPrincipal>
+
+<section>
+    @Body
+</section>
+
+@code {
+    // Inicio refactorización/optimización por GitHub Copilot
+    protected override void OnInitialized()
+    {
+        // Obtener la URI actual
+        var currentUri = new Uri(NavManager.Uri);
+        var currentPath = currentUri.AbsolutePath.TrimEnd('/');
+
+        // Solo redirigir si la ruta es exactamente "/configuracion" (con o sin slash final)
+        if (currentPath.Equals("/configuracion", StringComparison.OrdinalIgnoreCase))
+        {
+            NavManager.NavigateTo("/configuracion/PerfilMilicencia", false);
+        }
+    }
+    // Fin refactorización/optimización por GitHub Copilot
+}

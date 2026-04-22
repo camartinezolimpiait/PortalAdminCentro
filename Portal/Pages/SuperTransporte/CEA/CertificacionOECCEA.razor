@@ -1,0 +1,170 @@
+﻿@page "/supertransporte/centro-cea/certificacion-oec"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Certificación OEC</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo I</h4>
+        <p>7. Contar con Certificado de conformidad de Servicio con el cumplimiento de lo dispuesto en el Título II de la Resolución 1135 de 2020 y la Resolución 3245 de 2009 expedida por Ministerio de Transporte, o aquella que la modifique, adicione o sustituya, a través de una certificación de servicios otorgada por un Organismo de Evaluador de la Conformidad - OEC acreditado bajo la norma ISO/IEC 17065 o la norma que la modifique, adicione o sustituya, que incluya en su alcance de acreditación la certificación de los servicios de capacitación o enseñanza.</p>
+    </div>
+</details>
+
+<EditForm Model=@_certificacionOEC OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label for="num_certificado">Nº de certificado</label>
+    <div class="explicacion">
+        Expedido por el respectivo organismo certificador de producto
+    </div>
+    <ValidationMessage For="() => _certificacionOEC.num_certificado" />
+    <InputText id="num_certificado" @bind-Value="_certificacionOEC.num_certificado" />
+
+    <label for="estado_acreditacion">Estado de la Acreditación</label>
+    <ValidationMessage For="() => _certificacionOEC.estado_acreditacion" />
+    <InputText id="estado_acreditacion" @bind-Value="_certificacionOEC.estado_acreditacion" />
+
+    <div class="dos_columnas">
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de la vigilancia
+                </legend>
+                <ValidationMessage For="() => _certificacionOEC.dia_vigilancia" />
+                <ValidationMessage For="() => _certificacionOEC.mes_vigilancia" />
+                <ValidationMessage For="() => _certificacionOEC.anio_vigilancia" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_vigilancia">Día</label>
+                        <InputNumber id="dia_vigilancia" @bind-Value="_certificacionOEC.dia_vigilancia" />
+                    </div>
+                    <div>
+                        <label for="mes_vigilancia">Mes</label>
+                        <InputNumber id="mes_vigilancia" @bind-Value="_certificacionOEC.mes_vigilancia" />
+                    </div>
+                    <div>
+                        <label for="anio_vigilancia">Año</label>
+                        <InputNumber id="anio_vigilancia" @bind-Value="_certificacionOEC.anio_vigilancia" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de seguimiento
+                </legend>
+                <ValidationMessage For="() => _certificacionOEC.dia_seguimiento" />
+                <ValidationMessage For="() => _certificacionOEC.mes_seguimiento" />
+                <ValidationMessage For="() => _certificacionOEC.anio_seguimiento" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_seguimiento">Día</label>
+                        <InputNumber id="dia_seguimiento" @bind-Value="_certificacionOEC.dia_seguimiento" />
+                    </div>
+                    <div>
+                        <label for="mes_seguimiento">Mes</label>
+                        <InputNumber id="mes_seguimiento" @bind-Value="_certificacionOEC.mes_seguimiento" />
+                    </div>
+                    <div>
+                        <label for="anio_seguimiento">Año</label>
+                        <InputNumber id="anio_seguimiento" @bind-Value="_certificacionOEC.anio_seguimiento" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de vencimiento
+                </legend>
+                <ValidationMessage For="() => _certificacionOEC.dia_vencimiento" />
+                <ValidationMessage For="() => _certificacionOEC.mes_vencimiento" />
+                <ValidationMessage For="() => _certificacionOEC.anio_vencimiento" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_vencimiento">Día</label>
+                        <InputNumber id="dia_vencimiento" @bind-Value="_certificacionOEC.dia_vencimiento" />
+                    </div>
+                    <div>
+                        <label for="mes_vencimiento">Mes</label>
+                        <InputNumber id="mes_vencimiento" @bind-Value="_certificacionOEC.mes_vencimiento" />
+                    </div>
+                    <div>
+                        <label for="anio_vencimiento">Año</label>
+                        <InputNumber id="anio_vencimiento" @bind-Value="_certificacionOEC.anio_vencimiento" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de renovación
+                </legend>
+                <ValidationMessage For="() => _certificacionOEC.dia_renovacion" />
+                <ValidationMessage For="() => _certificacionOEC.mes_renovacion" />
+                <ValidationMessage For="() => _certificacionOEC.anio_renovacion" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_renovacion">Día</label>
+                        <InputNumber id="dia_renovacion" @bind-Value="_certificacionOEC.dia_renovacion" />
+                    </div>
+                    <div>
+                        <label for="mes_renovacion">Mes</label>
+                        <InputNumber id="mes_renovacion" @bind-Value="_certificacionOEC.mes_renovacion" />
+                    </div>
+                    <div>
+                        <label for="anio_renovacion">Año</label>
+                        <InputNumber id="anio_renovacion" @bind-Value="_certificacionOEC.anio_renovacion" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <label for="empresa_que_expide">Empresa que expide la certificación</label>
+    <ValidationMessage For="() => _certificacionOEC.empresa_que_expide" />
+    <InputSelect id="empresa_que_expide" @bind-Value="_certificacionOEC.empresa_que_expide">
+        <option value="">-</option>
+        @foreach (var item in _selectEmpresa)
+        {
+            <option value="@item.id">@item.nombre</option>
+        }
+    </InputSelect>
+
+    <label for="esquema">Esquema de certificación</label>
+    <ValidationMessage For="() => _certificacionOEC.esquema" />
+    <InputSelect id="esquema" @bind-Value="_certificacionOEC.esquema">
+        <option value="">-</option>
+        @foreach (var item in _selectEsquema)
+        {
+            <option value="@item.id">@item.nombre</option>
+        }
+    </InputSelect>
+        
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_certificacionOEC.nombre_adjunto_certificado_acreditacion</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileCertificado">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <ValidationMessage For="@(() => _certificacionOEC.certificado_acreditacion)" />
+    <label>Certificado de acreditación</label>
+    <InputFile class="file-input w-full p-0" id="certificado_acreditacion" OnChange="HandleArchivoSeleccionado" />
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>
+

@@ -1,0 +1,244 @@
+﻿@page "/configuracion/dataContact"
+@inject HttpClient Http
+@using Microsoft.Extensions.Configuration
+@using portalAdministrativoSISEC.Util.Helpers
+
+@inject IConfiguration Configuration
+
+@inherits LayoutComponentBase
+@layout Pages.Agendamiento.Configuracion
+
+<h3>Actualización de datos centro @menuservice.Plataforma</h3>
+
+<div class="px-4">
+    <div class="row gx-5">
+        <!--<div class="col-3 col-xl-auto">-->
+        @*<div class="p-5">
+                <img src="..." class="rounded float-start" alt="Logo Centro">
+            </div>*@
+        <!--</div>-->
+        @if (string.IsNullOrEmpty(data.Nombre))
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <div class="col">
+                <EditForm Model="@data" OnValidSubmit="UpdateData">
+                    <DataAnnotationsValidator />
+
+                    <div class="">
+                        <label for="phone" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="name" placeholder="Sisec Centro" maxlength="50" @bind-value="data.Nombre" />
+                    </div>
+                    <div class="">
+                        <label for="phone" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="phone" placeholder="1 633 3333" maxlength="7" @bind-value="data.Fijo" />
+                    </div>
+                    <div class="">
+                        <label for="cellphone" class="form-label">Celular</label>
+                        <input type="text" class="form-control" id="cellphone" placeholder="313 633 3333" maxlength="10" @bind-value="data.Fijo">
+                    </div>
+                    <div class="">
+                        <label for="email" class="form-label">Correo electrónico</label>
+                        <input type="email" class="form-control" id="email" placeholder="contacto@micentro.com.co" maxlength="100" @bind-value="data.Email">
+                    </div>
+                    <div class="">
+                        <label for="website" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="website" placeholder="Calle 83 # 50" maxlength="150" @bind-value="data.Direccion">
+                    </div>
+
+                    @if (!showLoader)
+                    {
+                        <button class="boton-secundario" type="button" @onclick="ClearData">Cancelar</button>
+                        <button class="boton-primario" type="submit">Actualizar datos</button>
+                    }
+
+                    @if (showLoader)
+                    {
+                        <button class="boton-secundario" type="button" @onclick="ClearData">Cancelar</button>
+                        <button class="boton-primario" type="submit" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                    }
+
+                </EditForm>
+                <br />
+
+                <div class="alert alert-@typeAlert alert-dismissible fade show" role="alert">
+                    <span>@message</span>
+                    @*<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>*@
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+
+    Data.DataContact data = new Data.DataContact();
+
+    //public int idCentro { get; set; } = 1023; //CRC
+    public int idCentro { get; set; } = 2; //CEA
+    [Inject]
+    public IApiService _apiService { get; set; }
+
+    public string message = "";
+    public string typeAlert = "";
+    public bool showLoader = false;
+    private ApplicationSevice menuservice = new ApplicationSevice();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    protected async Task GetData()
+    {
+        GetCentroRequest request = new GetCentroRequest
+            {
+                ID = idCentro,
+                Plataforma = menuservice.Plataforma
+            };
+
+        ApiResponse<GetCentroResponse> response = await _apiService.CallApiAsync<GetCentroResponse>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "Centro/ConsultarCentroxId",
+            method: HttpMethod.Post,
+            content: request,
+            "SisecAdmin"
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            var centroResponse = response.Content;
+
+            if (centroResponse.codigoRespuesta == 1)
+            {
+                BuildData(centroResponse);
+            }
+            else
+            {
+                message = centroResponse.RespuestaTexto;
+                typeAlert = "danger";
+            }
+        }
+        else
+        {
+            message = response.HttpResponse.ReasonPhrase;
+            typeAlert = "danger";
+        }
+    }
+
+
+    protected async Task UpdateData()
+    {
+        showLoader = true;
+
+        data.Modified = DateTime.Now;
+
+        ApiResponse<CentroResponse> response = await _apiService.CallApiAsync<CentroResponse>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "Centro/ActualizarDatosCentro",
+            method: HttpMethod.Post,
+            content: data,
+            "SisecAdmin"
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            var centroResponse = response.Content;
+
+            message = centroResponse.RespuestaTexto;
+            typeAlert = "success";
+        }
+        else
+        {
+            message = response.HttpResponse.ReasonPhrase;
+            typeAlert = "danger";
+        }
+
+        showLoader = false;
+    }
+
+
+    protected void ClearData()
+    {
+        message = "";
+        typeAlert = "";
+        GetData();
+    }
+
+    private void BuildData(GetCentroResponse centroResponse)
+    {
+        try
+        {
+            data.IdCentro = centroResponse.Respuesta.IdCentro;
+            data.Nombre = centroResponse.Respuesta.Nombre;
+            data.CodigoUso = centroResponse.Respuesta.CodigoUso;
+            data.IdComercio = centroResponse.Respuesta.IdComercio;
+            data.IdDepartamento = centroResponse.Respuesta.IdDepartamento;
+            data.IdMunicipio = centroResponse.Respuesta.IdMunicipio;
+            data.IdZona = centroResponse.Respuesta.IdZona;
+            data.Direccion = centroResponse.Respuesta.Direccion;
+            data.Email = centroResponse.Respuesta.Email;
+            data.Fijo = centroResponse.Respuesta.Fijo;
+            data.Movil = centroResponse.Respuesta.Movil;
+            data.Latitud = centroResponse.Respuesta.Latitud;
+            data.Longitud = centroResponse.Respuesta.Longitud;
+            data.Concurrencia = centroResponse.Respuesta.Concurrencia;
+            data.PatrimonioAutonomo = centroResponse.Respuesta.PatrimonioAutonomo;
+            data.ActivoRUNT = centroResponse.Respuesta.ActivoRUNT;
+            data.Activo = centroResponse.Respuesta.Activo;
+            data.Created = centroResponse.Respuesta.Created;
+            data.CreatedBy = centroResponse.Respuesta.CreatedBy;
+            data.Modified = centroResponse.Respuesta.Modified;
+            data.ModifiedBy = centroResponse.Respuesta.ModifiedBy;
+            data.RowVersion = centroResponse.Respuesta.RowVersion;
+            data.ApplicationUser = centroResponse.Respuesta.ApplicationUser;
+            data.MatriculaMercantil = centroResponse.Respuesta.MatriculaMercantil;
+            data.Resolucion = centroResponse.Respuesta.Resolucion;
+            data.NumeroRegistro = centroResponse.Respuesta.NumeroRegistro;
+            data.CapacidadMaxima = centroResponse.Respuesta.CapacidadMaxima;
+            data.ConvenioBanco = centroResponse.Respuesta.ConvenioBanco;
+            data.ValorSugerido = centroResponse.Respuesta.ValorSugerido;
+            data.ValorComision = centroResponse.Respuesta.ValorComision;
+            data.PorcentajeIva = centroResponse.Respuesta.PorcentajeIva;
+            data.IPAutorizada = centroResponse.Respuesta.IPAutorizada;
+            data.Recaudo = centroResponse.Respuesta.Recaudo;
+            data.PermitirACH = centroResponse.Respuesta.PermitirACH;
+            data.Cupo = centroResponse.Respuesta.Cupo;
+            data.ValorMinPago = centroResponse.Respuesta.ValorMinPago;
+            data.ValorMaxPago = centroResponse.Respuesta.ValorMaxPago;
+            data.CodigoRUNT = centroResponse.Respuesta.CodigoRUNT;
+            data.ActivarCV = centroResponse.Respuesta.ActivarCV;
+            data.ActivoFacturacion = centroResponse.Respuesta.ActivoFacturacion;
+            data.ParamScoreHuella = centroResponse.Respuesta.ParamScoreHuella;
+            data.ValidaCotejoHuellas = centroResponse.Respuesta.ValidaCotejoHuellas;
+            data.SaveHuellas = centroResponse.Respuesta.SaveHuellas;
+            data.AntFraude = centroResponse.Respuesta.AntFraude;
+            data.OCR = centroResponse.Respuesta.OCR;
+            data.POActivo = centroResponse.Respuesta.POActivo;
+            data.Version = centroResponse.Respuesta.Version;
+            data.ValorCD = centroResponse.Respuesta.ValorCD;
+            data.ValidaLockCentro = centroResponse.Respuesta.ValidaLockCentro;
+            data.OnDispositivos = centroResponse.Respuesta.OnDispositivos;
+            data.AlertaValMan = centroResponse.Respuesta.AlertaValMan;
+            data.OnValManual = centroResponse.Respuesta.OnValManual;
+            data.AcreditadoOnac = centroResponse.Respuesta.AcreditadoOnac;
+            data.plataforma = menuservice.Plataforma;
+            menuservice.CentroUsuario = centroResponse.Respuesta.IdCentro;
+            menuservice.CodigoRUNTCentro = centroResponse.Respuesta.CodigoRUNT;
+        }
+        catch
+        {
+            menuservice.CentroUsuario = centroResponse.Respuesta.IdCentro;
+            menuservice.CodigoRUNTCentro = centroResponse.Respuesta.CodigoRUNT;
+        }
+        StateHasChanged();
+
+    }
+
+}

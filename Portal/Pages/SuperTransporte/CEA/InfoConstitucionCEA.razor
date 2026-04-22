@@ -1,0 +1,126 @@
+﻿@page "/supertransporte/centro-cea/informacion-constitucion"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Información de Constitución</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo I</h4>
+        <p>2. La sociedad propietaria o propietario(s) del Centro de Enseñanza Automovilística debe estar legalmente constituida y en su objeto social debe encontrarse la realización de actividades como Centro de Enseñanza Automovilística y acreditar registro del establecimiento comercial. Si se trata de un establecimiento de carácter público acreditará la representación legal de la respectiva entidad de acuerdo a las normas de la administración pública.</p>
+    </div>
+</details>
+
+<EditForm Model=@_constitucionDto OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label for="num_matricula_mercantil">Nº matrícula mercantil</label>
+    <ValidationMessage For="() => _constitucionDto.num_matricula_mercantil" />
+    <InputText id="num_matricula_mercantil" @bind-Value="_constitucionDto.num_matricula_mercantil" />
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha Nº mercantil
+        </legend>
+        <ValidationMessage For="() => _constitucionDto.diaMatricula" />
+        <ValidationMessage For="() => _constitucionDto.mesMatricula" />
+        <ValidationMessage For="() => _constitucionDto.anioMatricula" />
+        <div class="fecha-flex">
+            <div>
+                <label for="dia">Día</label>
+                <InputNumber id="dia" @bind-Value="_constitucionDto.diaMatricula" />
+            </div>
+            <div>
+                <label for="mes">Mes</label>
+                <InputNumber id="mes" @bind-Value="_constitucionDto.mesMatricula" />
+            </div>
+            <div>
+                <label for="anio">Año:</label>
+                <InputNumber id="anio" @bind-Value="_constitucionDto.anioMatricula" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha de la última renovación de la matrícula mercantil
+        </legend>
+        <ValidationMessage For="() => _constitucionDto.diaRenovacion" />
+        <ValidationMessage For="() => _constitucionDto.mesRenovacion" />
+        <ValidationMessage For="() => _constitucionDto.anioRenovacion" />
+        <div class="fecha-flex">
+            <div>
+                <label for="dia_fecha_expedicion">Día</label>
+                <InputNumber id="dia_renovacion" @bind-Value="_constitucionDto.diaRenovacion" />
+            </div>
+            <div>
+                <label for="mes_fecha_expedicion">Mes</label>
+                <InputNumber id="mes_renovacion" @bind-Value="_constitucionDto.mesRenovacion" />
+            </div>
+            <div>
+                <label for="anio_fecha_expedicion">Año:</label>
+                <InputNumber id="anio_renovacion" @bind-Value="_constitucionDto.anioRenovacion" />
+            </div>
+        </div>
+    </fieldset>
+
+    <label for="estado_matricula">Estado de la matrícula mercantil</label>
+    <ValidationMessage For="() => _constitucionDto.estado_matricula" />
+    <InputSelect id="estado_matricula" @bind-Value="_constitucionDto.estado_matricula">
+          <option value="">-</option>
+          @foreach (var item in _select)
+          {
+               <option value="@item.id">@item.nombre</option>
+          }
+    </InputSelect>
+
+    <label>Acto de creación del establecimiento de carácter público</label>
+    <ValidationMessage For="() => _constitucionDto.acto_de_creacion" />
+    <InputText id="acto_de_creacion" @bind-Value="_constitucionDto.acto_de_creacion" />
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha de creación del establecimiento de carácter público
+        </legend>
+        <ValidationMessage For="() => _constitucionDto.diaActoCreacion" />
+        <ValidationMessage For="() => _constitucionDto.mesActoCreacion" />
+        <ValidationMessage For="() => _constitucionDto.anioActoCreacion" />
+        <div class="fecha-flex">
+            <div>
+                <label for="diaActoCreacion">Día</label>
+                <InputNumber id="diaActoCreacion" @bind-Value="_constitucionDto.diaActoCreacion" />
+            </div>
+            <div>
+                <label for="mesActoCreacion">Mes</label>
+                <InputNumber id="mesActoCreacion" @bind-Value="_constitucionDto.mesActoCreacion" />
+            </div>
+            <div>
+                <label for="anioActoCreacion">Año:</label>
+                <InputNumber id="anioActoCreacion" @bind-Value="_constitucionDto.anioActoCreacion" />
+            </div>
+        </div>
+    </fieldset>
+
+    <label>Acto administrativo</label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_constitucionDto.nombre_adjunto_acto_administrativo</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileActoAdministrativo">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="explicacion">Adjuntar el acto administrativo de creación del establecimiento de carácter público (Si aplica)</div>
+    <ValidationMessage For="@(() => _constitucionDto.acto_administrativo)" />
+    <InputFile class="file-input w-full p-0" id="acto_administrativo" name="files" OnChange="HandleArchivoActoAdministrativo" />
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

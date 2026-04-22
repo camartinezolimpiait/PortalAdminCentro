@@ -1,0 +1,81 @@
+﻿@page "/supertransporte/centro/informacion-constitucion"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+
+<h3>Información de Constitución</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo III</h4>
+        <p>2. La sociedad propietaria del Centro de Reconocimiento de Conductores deberá  estar legalmente constituida y en su objeto social deberá encontrarse la realización de actividades como Centro de Reconocimiento de Conductores, para efectos de expedir certificados de aptitud física, mental y de coordinación motriz para conducir y acreditar su respectivo establecimiento comercial.</p>
+    </div>
+</details>
+
+<EditForm Model=@_constitucionDto OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <label for="num_matricula_mercantil">Nº matrícula mercantil</label>
+    <ValidationMessage For="() => _constitucionDto.num_matricula_mercantil" />
+    <InputText id="num_matricula_mercantil" @bind-Value="_constitucionDto.num_matricula_mercantil" />
+
+    <label for="estado_matricula">Estado de la matrícula mercantil</label>
+    <ValidationMessage For="() => _constitucionDto.estado_matricula" />
+    <InputSelect id="estado_matricula" @bind-Value="_constitucionDto.estado_matricula">
+        <option value="">-</option>
+        @foreach (var item in _select)
+        {
+            <option value="@item.id">@item.nombre</option>
+        }
+    </InputSelect>
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha Nº mercantil
+        </legend>
+        <ValidationMessage For="() => _constitucionDto.diaMatricula" />
+        <ValidationMessage For="() => _constitucionDto.mesMatricula" />
+        <ValidationMessage For="() => _constitucionDto.anioMatricula" />
+        <div class="fecha-flex">
+            <div>
+                <label for="dia">Día</label>
+                <InputNumber id="dia" @bind-Value="_constitucionDto.diaMatricula" />
+            </div>
+            <div>
+                <label for="mes">Mes</label>
+                <InputNumber id="mes" @bind-Value="_constitucionDto.mesMatricula" />
+            </div>
+            <div>
+                <label for="anio">Año:</label>
+                <InputNumber id="anio" @bind-Value="_constitucionDto.anioMatricula" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="fecha">
+        <legend>
+            Fecha de la última renovación de la matrícula mercantil
+        </legend>
+        <ValidationMessage For="() => _constitucionDto.diaRenovacion" />
+        <ValidationMessage For="() => _constitucionDto.mesRenovacion" />
+        <ValidationMessage For="() => _constitucionDto.anioRenovacion" />
+        <div class="fecha-flex">
+            <div>
+                <label for="dia_fecha_expedicion">Día</label>
+                <InputNumber id="dia_renovacion" @bind-Value="_constitucionDto.diaRenovacion" />
+            </div>
+            <div>
+                <label for="mes_fecha_expedicion">Mes</label>
+                <InputNumber id="mes_renovacion" @bind-Value="_constitucionDto.mesRenovacion" />
+            </div>
+            <div>
+                <label for="anio_fecha_expedicion">Año:</label>
+                <InputNumber id="anio_renovacion" @bind-Value="_constitucionDto.anioRenovacion" />
+            </div>
+        </div>
+    </fieldset>
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>
+
+

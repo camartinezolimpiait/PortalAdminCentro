@@ -1,0 +1,23 @@
+﻿@page "/Reject"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+
+<div class="formulario-2">
+    <div class="row">
+        <svg class="feather" style="width: 48px; height: 48px; stroke-width: 3px;">
+            <use xlink:href="assets/feather-sprite.svg#x-circle"></use>
+        </svg>
+        <div class="col-10">
+            <h1 class="mensajeFail">{RazonRechazo}</h1>
+            <p>{ExplicacionRechazo}</p>
+            <button type="button" class="boton-secundario" @onclick="@Siguiente">Volver al inicio</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    void Siguiente()
+    {
+        UriHelper.NavigateTo("Enrollment");
+    }
+}

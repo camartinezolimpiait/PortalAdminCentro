@@ -1,0 +1,59 @@
+﻿@using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda
+@using portalAdministrativoSISEC.Enum
+
+@foreach (var intervalo in CitasIntervaloListado)
+{
+    @if (!intervalo.EsHoraAlmuerzo)
+    {
+        <li class="time">@intervalo.NombreIntervalo</li>
+
+        foreach (var dia in intervalo.DiasIntervalo)
+        {
+            <li class="appointment">
+                @foreach (var cita in dia.Cita)
+                {
+                    @if (cita.TipoCita == TipoCita.Disponible)
+                    {
+                        <button class="appointment-available" @onclick="(e)=>NewAppoiment(e, cita.FechaAgenda,
+                                                                        (short)cita.HoraInicioAgenda,
+                                                                        intervalo.NombreIntervalo,
+                                                                        cita.IdHorarioAtencion)">
+                            <svg class="feather">
+                                <use xlink:href="assets/feather-sprite.svg#arrow-right"></use>
+                            </svg>
+                        </button>
+                    }
+                    else if (cita.TipoCita == TipoCita.BloqueadoPorConfiguracion)
+                    {
+                        <button class="appointment-unavailable" disabled>
+                            <svg class="feather">
+                                <use xlink:href="assets/feather-sprite.svg#slash"></use>
+                            </svg>
+                        </button>
+                    }
+                    else if (cita.TipoCita == TipoCita.BloqueadoPorRecepcion)
+                    {
+                        <button class="appointment-locked" disabled>
+                            <svg class="feather">
+                                <use xlink:href="assets/feather-sprite.svg#lock"></use>
+                            </svg>
+                        </button>
+                    }
+                    else if (cita.TipoCita == TipoCita.CupoLleno)
+                    {
+                        <button class="appointment-full" disabled>
+                            <svg class="feather">
+                                <use xlink:href="assets/feather-sprite.svg#slash"></use>
+                            </svg>
+                        </button>
+                    }
+                }
+            </li>
+        }
+    }
+    else
+    {
+        <li class="lunchtime @(((ScheduleColumns)CitasIntervaloListado[0].DiasIntervalo.Count + 1).ToString().ToLower())">Almuerzo</li>
+    }
+
+}

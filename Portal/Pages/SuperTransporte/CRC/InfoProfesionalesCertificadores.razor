@@ -1,0 +1,131 @@
+﻿@page "/supertransporte/centro/profesional-certificadores"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Información de los profesionales certificadores</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo III</h4>
+        <p>3. Cargar en el sistema del Registro Único Nacional de Tránsito RUNT la relación de nombres y apellidos completos, clase y numero documento de identidad y número de tarjeta profesional del (los) certificador(es) que en nombre del establecimiento de comercio registrado, los cuales deben contar con inscripción vigente en el Registro Único Nacional del Talento Humano en Salud-RETHUS</p>
+    </div>
+</details>
+
+<p>¿Con cuántos profesionales certicadores de las evaluaciones física, mental y coordinación motriz cuenta esta sede?</p>
+<EditForm Model=@_infoProfesionalesCertificadoresDto OnValidSubmit=@GuardarInformacion>
+    <DataAnnotationsValidator />
+
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Profesión</th>
+                <th class="num">Cantidad</th>
+                <th class="num">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (_lista_profesionales != null)
+            {
+                @foreach (var profesionesListada in _lista_profesionales)
+                {
+                    <tr>
+                        <td>@_selectProfesiones.Find(f => f.id == @profesionesListada.profesion).nombre</td>
+                        <td class="num">@profesionesListada.cantidad</td>
+                        <td class="num"><button type="button" class="btn btn-sm" @onclick="() => ButtonOnClickQuitar(profesionesListada)">Quitar</button></td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total</td>
+                <td class="num">
+                    @if (@_lista_profesionales == null)
+                    {
+                        <span>0</span>
+                    }
+                    else
+                    {
+                        <span>@_lista_profesionales.Select(s => s.cantidad).Sum()</span>
+                    }
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+
+
+    <EditForm Context="ProfesionalesContext" Model=@_profesionales OnValidSubmit=@addProfesional>
+        <DataAnnotationsValidator />
+
+        <fieldset>
+            <legend>
+                Agregar profesionales certificadores
+            </legend>
+            <ValidationMessage For="() => _profesionales.profesion" />
+            <ValidationMessage For="() => _profesionales.cantidad" />
+            <div class="flex_agregar">
+                <div>
+                    <label for="profesion">Profesión</label>
+                    <InputSelect id="profesion" @bind-Value="_profesionales.profesion">
+                        <option value="">-</option>
+                        @foreach (var item in _selectProfesiones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="cantidad">Cantidad</label>
+                    <InputNumber id="cantidad" @bind-Value="_profesionales.cantidad" />
+                </div>
+                <div>
+                    <button type="submit" class="boton-secundario">Añadir</button>
+                </div>
+            </div>
+        </fieldset>
+
+    </EditForm>
+
+    <label>PDF que acredita el cargue ante el RUNT</label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_infoProfesionalesCertificadoresDto.nombre_adjunto_acredita_cargue</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileAcreditaCargue">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <ValidationMessage For="@(() => _infoProfesionalesCertificadoresDto.acredita_cargue)" />
+    <InputFile class="file-input w-full p-0" id="acredita_cargue" name="files" OnChange="HandleArchivoAcreditaCargueSeleccionado" />
+
+    <label>PDF del registro ante el RUNT</label>
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Archivo adjunto</th>
+                <th class="num"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_infoProfesionalesCertificadoresDto.nombre_adjunto_registro_runt</td>
+                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileRegistroRunt">Descargar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <ValidationMessage For="@(() => _infoProfesionalesCertificadoresDto.registro_runt)" />
+    <InputFile class="file-input w-full p-0" id="registro_runt" name="files" OnChange="HandleArchivoRegistroRuntSeleccionado" />
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

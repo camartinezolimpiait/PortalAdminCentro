@@ -1,0 +1,59 @@
+﻿@page "/compradepincda/tramite"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+<div>
+<h3>Tipo de trámite</h3>
+
+<h4>Curso de conducción</h4>
+<p>Para tramitar la licencia de conducción ante un Organismo de Tránsito</p>
+ <div name="RadioTramites">
+				
+@for(int i = 0; i < ListadoTramites.Count; i++)
+{
+			if (!ListadoTramites[i].Instructor)
+			{
+				<div>
+					<input id="@ListadoTramites[i].Id" type="radio" name="tramite" value="@ListadoTramites[i].Id" checked="@ListadoTramites[i].Selected" @onchange="RadioSelection" />
+					<label for="@ListadoTramites[i].Id">@ListadoTramites[i].Nombre</label>
+				</div>
+			}
+			
+}
+
+@if (PagoPinCda.EdadVehiculo > 18)
+{
+	<h4>Curso para formación de instructores</h4>
+	<p>Para tramitar la certificación de instructor en conducción</p>
+
+	<details class="detalles curso_instructor">
+		<summary> Trámites de instructor</summary>
+		<div class="contenido">
+			@for (int i = 0; i < ListadoTramites.Count; i++)
+			{
+				if (ListadoTramites[i].Instructor)
+				{
+					<div>
+						<input id="@ListadoTramites[i].Id" type="radio" name="tramite" checked="@ListadoTramites[i].Selected" value="@ListadoTramites[i].Id" @onchange="RadioSelection" />
+						<label for="@ListadoTramites[i].Id">@ListadoTramites[i].Nombre</label>
+					</div>
+				}
+			}
+		</div>
+	</details>
+}
+
+	</div>
+</div>
+</ContentTemplate>
+</SpinLoader>

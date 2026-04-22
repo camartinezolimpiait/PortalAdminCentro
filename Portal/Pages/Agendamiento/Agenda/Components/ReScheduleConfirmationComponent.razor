@@ -1,0 +1,51 @@
+﻿@using portalAdministrativoSISEC.Enum
+<h5 class="agenda-details-title">Reprogramar cita</h5>
+
+@if (!Confirmation)
+{
+	if (AgendaDto != null)
+	{
+		<div class="agenda-details-body">
+			<b>Haga clic sobre un horario disponible para reprogramar esta cita.</b>
+			<div class="schedule-detail">
+				<label>@string.Concat(AgendaDto?.DatosPersonaDTO.Nombres, " ", AgendaDto?.DatosPersonaDTO.Apellidos)</label>
+				@if (!isArmas)
+				{
+					<label>@string.Concat(AgendaDto?.TramiteDto.Nombre, " ", AgendaDto.Categoria)</label>
+				}
+			</div>
+			<div class="schedule-detail">
+				<label>Fecha original: @StringDate(AgendaDto.FechaAgenda)</label>
+			</div>
+		</div>
+
+		<div class="agenda-details-buttons">
+			<button class="boton-secundario" @onclick="CancelReScheduleClick">Cancelar</button>
+		</div>
+
+	}
+}
+else
+{
+	<div class="agenda-details-body">
+		@if (!isArmas)
+		{
+			<p>
+				La nueva fecha para la cita de @string.Concat(AgendaDto?.DatosPersonaDTO.Nombres, " ", AgendaDto?.DatosPersonaDTO.Apellidos)
+				(@string.Concat(AgendaDto?.TramiteDto.Nombre, " ", AgendaDto.Categoria)) será el @StringDate(OptionAppoiment.ScheduleDay.Value)
+			</p>
+		}
+		else
+		{
+			<p>
+				La nueva fecha para la cita de @string.Concat(AgendaDto?.DatosPersonaDTO.Nombres, " ", AgendaDto?.DatosPersonaDTO.Apellidos)
+				será el @StringDate(OptionAppoiment.ScheduleDay.Value)
+			</p>
+		}
+
+	</div>
+	<div class="agenda-details-buttons">
+		<button class="boton-primario" @onclick="ConfirmReScheduleClick">Confirmar</button>
+		<button type="button" class="boton-secundario" @onclick="CancelFormReScheduleClick">Cancelar</button>
+	</div>
+}

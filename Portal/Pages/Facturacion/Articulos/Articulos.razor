@@ -1,0 +1,227 @@
+﻿@page "/configuracion/configurarFacturacion/articulos"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Entidades.Facturacion
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.Agendamiento;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@EditContext" id="ConfigurarFacturacion">
+            <DataAnnotationsValidator />
+
+            <h4>Códigos de artículos</h4>
+            <p class="paragraph">
+                Registre los códigos de artículos como los configuró en el portal de su proveedor
+            </p>
+
+            <div class="flex-container">
+                <div class="flex-item">
+                    <InputCheckbox class="mb-0" id="ArticuloDiferente" maxlength="12" autocomplete="given-name" @bind-Value="ConfigurarArticulosModel.AplicaConfiguracionEspecifica" />
+                    <label for="ArticuloDiferente">Registrar cada categoría como un artículo diferente</label>
+                    <ValidationMessage For="@(() => ConfigurarArticulosModel.AplicaConfiguracionEspecifica)" />
+                </div>
+            </div>
+
+            @if (ConfigurarArticulosModel.AplicaConfiguracionEspecifica && Negocio == "CEA" )
+            {
+                <div class="flex-container">
+                    <div class="flex-item w-fit">
+
+                        <div class="overflow-x-auto">
+                            <table class="table-auto min-w-full border border-gray-300">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="w-80 px-6 py-1 text-left font-semibold border-r border-gray-300">Artículo</th>
+
+                                        @foreach (string categoria in ValidarColumnasTablaCategorias())
+                                        {
+                                            <th class="px-4 py-1 font-semibold">@categoria</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Fila 1 -->
+                                    <tr class="bg-white">
+                                        <td class="px-6 border-r border-gray-300">Curso de conducción</td>
+                                        <td class="pl-2 pr-1 py-1"> @if (CategoriasCEAconduccion.Any(x => x.NombreCategoria.Contains("A1"))) { <input type="number" id="CursoConduccionA1" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionA1" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionA1", e))" class="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-number-spin-box]:appearance-none border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                    <td class="px-1 py-1"> @if (CategoriasCEAconduccion.Any(x=> x.NombreCategoria.Contains("A2"))) { <input type="text" id="CursoConduccionA2" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionA2" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionA2", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1"> @if (CategoriasCEAconduccion.Any(x=> x.NombreCategoria.Contains("B1"))) { <input type="text" id="CursoConduccionB1" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionB1" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionB1", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1"> @if (CategoriasCEAconduccion.Any(x => x.NombreCategoria.Contains("B2"))) { <input type="text" id="CursoConduccionB2" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionB2" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionB2", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1"> @if (CategoriasCEAconduccion.Any(x => x.NombreCategoria.Contains("B3"))){ <input type="text" id="CursoConduccionB3" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionB3" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionB3", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1"> @if (CategoriasCEAconduccion.Any(x => x.NombreCategoria.Contains("C1"))){ <input type="text" id="CursoConduccionC1" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionC1" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionC1", e))" class="border bor der-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1"> @if (CategoriasCEAconduccion.Any(x => x.NombreCategoria.Contains("C2"))){ <input type="text" id="CursoConduccionC2" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionC2" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionC2", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1"> @if (CategoriasCEAconduccion.Any(x=> x.NombreCategoria.Contains("C3"))) { <input type="text" id="CursoConduccionC3" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionC3" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionC3", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                         <td class="pl-1 pr-2 py-1">@if (CategoriasCEAconduccion.Any(x=> x.NombreCategoria.Contains("RC1"))) { <input type="text" id="CursoConduccionRC1" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionRC1" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionRC1", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                    </tr>
+
+                                    <!-- Fila 2 -->
+                                    <tr class="bg-white">
+                                        <td class="px-6 border-r border-gray-300">Curso de instructor en conducción</td>
+                                        <td class="pl-2 pr-1 py-1">@if (CategoriasCEAInstructor.Any(x => x.NombreCategoria.Contains("IA1"))) { <input type="text" id="CursoConduccionIA1" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionIA1" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionIA1", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1">@if (CategoriasCEAInstructor.Any(x => x.NombreCategoria.Contains("IA2"))) { <input type="text" id="CursoConduccionIA2" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionIA2" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionIA2", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1">@if (CategoriasCEAInstructor.Any(x => x.NombreCategoria.Contains("IB1"))) { <input type="text" id="CursoConduccionIB1" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionIB1" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionIB1", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1">@if (CategoriasCEAInstructor.Any(x => x.NombreCategoria.Contains("IB2"))) { <input type="text" id="CursoConduccionIB2" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionIB2" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionIB2", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1">@if (CategoriasCEAInstructor.Any(x => x.NombreCategoria.Contains("IB3"))) { <input type="text" id="CursoConduccionIB3" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionIB3" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionIB3", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1">@if (CategoriasCEAInstructor.Any(x => x.NombreCategoria.Contains("IC1"))) { <input type="text" id="CursoConduccionIC1" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionIC1" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionIC1", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1">@if (CategoriasCEAInstructor.Any(x => x.NombreCategoria.Contains("IC2"))) { <input type="text" id="CursoConduccionIC2" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionIC2" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionIC2", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="px-1 py-1">@if (CategoriasCEAInstructor.Any(x => x.NombreCategoria.Contains("IC3"))) { <input type="text" id="CursoConduccionIC3" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionIC3" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionIC3", e))" class="border border-gray-300 rounded px-2 py-1 w-16" /> } </td>
+                                        <td class="pl-1 pr-2 py-1"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            }
+            
+            @if (ConfigurarArticulosModel.AplicaConfiguracionEspecifica && Negocio == "CRC")
+            {
+                <div class="flex-container">
+                    <div class="flex-item w-fit">
+
+                        <div class="overflow-x-auto">
+                            <table class="table-auto min-w-full border border-gray-300">
+                                <thead class="bg-gray-200">
+                                    <tr>
+                                        <th class="w-80 px-6 py-1 text-left font-semibold border-r border-gray-300">Artículo</th>
+                                        <th class="w-45 px-6 py-1 text-center font-semibold border-r border-gray-300">Sencillo</th>
+                                        <th class="w-45 px-6 py-1 text-center font-semibold">Combo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-white">
+                                        <td class="px-6 py-2 border-r border-gray-300">Examen médico</td>
+                                        <td class="pl-2 pr-1 py-1 border-r border-gray-300 text-center">
+                                            <input type="text" id="ExamenMedicoSencillo" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.ExamenMedicoSencillo" @onchange="@((ChangeEventArgs e) => HandleInputChange("ExamenMedicoSencillo", e))" class="w-40 border border-gray-300 rounded px-2 py-1 w-20 text-center" />
+                                        </td>
+                                        <td class="pl-2 pr-1 py-1 text-center">
+                                            <input type="text" id="ExamenMedicoCombo" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.ExamenMedicoCombo" @onchange="@((ChangeEventArgs e) => HandleInputChange("ExamenMedicoCombo", e))" class="w-40 border border-gray-300 rounded px-2 py-1 w-20 text-center" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            }
+
+            <div class="flex-container">
+                <div class="flex-item w-fit">
+                    
+                    <div class="overflow-x-auto">
+                        <table class="table-auto min-w-full border border-gray-300">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="w-80 px-6 py-1 text-left font-semibold border-r border-gray-300">Artículo</th>
+                                    <th class="w-45 px-6 py-1 text-left font-semibold ">Código</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!ConfigurarArticulosModel.AplicaConfiguracionEspecifica && Negocio == "CEA")
+                                {
+                                    <tr class="bg-white">
+                                        <td class="px-6 border-r border-gray-300">Curso de conducción</td>
+                                        <td class="pl-2 pr-1 pt-2 pb-1">
+                                            <input type="text" id="CursoConduccion" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccion" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccion", e))" class="w-40 border border-gray-300 rounded px-2 py-1 w-20" />
+                                        </td>
+                                    </tr>
+                                    <tr class="bg-white">
+                                        <td class="px-6 border-r border-gray-300">Curso de instructor en conducción</td>
+                                        <td class="pl-2 pr-1 py-1">
+                                            <input type="text" id="CursoConduccionInstructor" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.CursoConduccionInstructor" @onchange="@((ChangeEventArgs e) => HandleInputChange("CursoConduccionInstructor", e))" class="w-40 border border-gray-300 rounded px-2 py-1 w-20" />
+                                        </td>
+                                    </tr>
+                                }
+                                else if (!ConfigurarArticulosModel.AplicaConfiguracionEspecifica && Negocio == "CRC")
+                                { 
+                                    <tr class="bg-white">
+                                        <td class="px-6 border-r border-gray-300">Examen médico</td>
+                                        <td class="pl-2 pr-1 pt-2 pb-1">
+                                            <input type="text" id="ExamenMedico" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.ExamenMedico" @onchange="@((ChangeEventArgs e) => HandleInputChange("ExamenMedico", e))" class="w-40 border border-gray-300 rounded px-2 py-1 w-20" />
+                                        </td>
+                                    </tr>
+                                }
+
+                                <tr class="bg-white">
+                                    <td class="px-6 border-r border-gray-300">Tarifa ANSV</td>
+                                    <td class="pl-2 pr-1 py-1">
+                                        <input type="text" id="TarifaAnsv" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.TarifaAnsv" @onchange="@((ChangeEventArgs e) => HandleInputChange("TarifaAnsv", e))" class="w-40 border border-gray-300 rounded px-2 py-1 w-20" />
+                                    </td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="px-6 border-r border-gray-300">Tarifa del SICOV</td>
+                                    <td class="pl-2 pr-1 py-1">
+                                        <input type="text" id="TarifaSicov" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.TarifaSicov" @onchange="@((ChangeEventArgs e) => HandleInputChange("TarifaSicov", e))" class="w-40 border border-gray-300 rounded px-2 py-1 w-20" />
+                                    </td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <td class="px-6 border-r border-gray-300">Tarifa del aliado de recaudo</td>
+                                    <td class="pl-2 pr-1 pt-1 pb-2">
+                                        <input type="text" id="TarifaAliado" @bind-value:event="oninput" @bind-value="ConfigurarArticulosModel.TarifaAliado" @onchange="@((ChangeEventArgs e) => HandleInputChange("TarifaAliado", e))" class="w-40 border border-gray-300 rounded px-2 py-1 w-20" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.TarifaAnsv)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.TarifaSicov)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.TarifaAliado)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccion)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionA1)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionA2)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionB1)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionB2)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionB3)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionC1)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionC2)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionC3)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionRC1)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionInstructor)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionIA1)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionIA2)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionIB1)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionIB2)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionIB3)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionIC1)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionIC2)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.CursoConduccionIC3)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.ExamenMedico)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.ExamenMedicoSencillo)" />
+            <ValidationMessage For="@(() => ConfigurarArticulosModel.ExamenMedicoCombo)" />
+
+            <div class="div-btn">
+                <a class="btn-guardar boton-primario" @onclick="() => GuardarDatos()">Guardar configuración</a>
+            </div>
+        </EditForm>
+    </ContentTemplate>
+</SpinLoader>

@@ -1,0 +1,122 @@
+﻿@page "/configuracion/configurarParametrizacion"
+@inherits LayoutComponentBase
+@layout Configuracion
+@using portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
+@using portalAdministrativoSISEC.Pages.Agendamiento.InicioAgendamiento
+@using portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionCupos
+@using portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionReglas
+
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        @if (ConfiguracionHorarios != null && ConfiguracionHorarios.Any())
+        {
+
+            if (!ApplicationShared.CreateNewConfiguration)
+            {
+                <h3>Configuración inicial de agendamiento</h3>
+            }
+            @if (ApplicationShared.IsAgendaFutura)
+            {
+                <div class="switch-field">
+                    <input type="radio" name="schedule" id="actual"
+                           value="1" checked="checked"
+                           @onchange="ConfigurationOnChange" />
+                    <label for="actual">
+                        Parametrización actual
+                    </label>
+                    <input type="radio" name="schedule" id="futuro"
+                           value="2" @onchange="ConfigurationOnChange" />
+                    <label for="futuro">
+                        Parametrización futura
+                    </label>
+                </div>
+            }
+            <div>
+                <h4>1. Política de agendamiento</h4>
+
+                <PoliticaAgendamiento ConfiguracionHorarios="ConfiguracionHorarios"
+                                      ParametrizacionHorario="ParametrizacionHorario">
+                </PoliticaAgendamiento>
+            </div>
+
+            @if (ParametrizacionHorario.IdPoliticaAgendamiento != (short)portalAdministrativoSISEC.Enum.PoliticaAgendamiento.SoloAtencionOrdenLlegada)
+            {
+                <details>
+                    <summary>Horario de citas</summary>
+                    <InicioAgendamiento ConfiguracionHorarios="ConfiguracionHorarios"
+                                        ReadOnly="ReadOnly"
+                                        ExistFutureAppointment="ExistFutureAppointment"
+                                        AgendaFutura="ApplicationShared.IsAgendaFutura"
+                                        ParametrizacionHorario="ParametrizacionHorario">
+                    </InicioAgendamiento>
+                </details>
+
+                <details>
+                    <summary>Configuración de cupos</summary>
+                    <ConfiguraCupos ReadOnly="ReadOnly"
+                                    ExistFutureAppointment="ExistFutureAppointment"
+                                    AgendaFutura="ApplicationShared.IsAgendaFutura"
+                                    ParametrizacionHorario="ParametrizacionHorario"
+                                    ConfiguracionHorarios="ConfiguracionHorarios"></ConfiguraCupos>
+                </details>
+
+                <details>
+                    <summary>Configuración de reglas</summary>
+                    <ConfiguraReglas ReadOnly="ReadOnly"
+                                     ExistFutureAppointment="ExistFutureAppointment"
+                                     AgendaFutura="ApplicationShared.IsAgendaFutura"
+                                     ParametrizacionHorario="ParametrizacionHorario"
+                                     ConfiguracionHorarios="ConfiguracionHorarios"></ConfiguraReglas>
+                </details>
+            }
+            @if (!IsActual && !ApplicationShared.IsAgendaFutura)
+            {
+                <div>
+                    <button type="button" class="boton-primario" @onclick="Navigate">Nueva Configuración</button>
+
+                </div>
+            }
+
+            @if (IsActual)
+            {
+                <p>
+                    <b>
+                        Esta configuración será válida a partir del día Lunes @FechaParametrizacion.
+                    </b>
+                </p>
+                @if (ExistFutureAppointment)
+                {
+                    <p>
+                        Debido a que existe citas ya programadas para esa nueva parametrización , no es posible editar, si desea editar ,
+                        debe cancelar las citas agendadas mayor a la fecha @FechaParametrizacion
+                        o en su defecto esperar hasta ese mismo dia, para crear una nueva parametrización.
+                    </p>
+                }
+                else
+                {
+                    <div>
+                        <button type="button" class="boton-primario" @onclick="Navigate">Editar Configuración</button>
+
+                    </div>
+                }
+
+            }
+        }
+        else
+        {
+            <button type="button" class="boton-primario" @onclick="NavigateSchedule">Configurar Horario</button>
+        }
+
+
+    </ContentTemplate>
+</SpinLoader>
+
+@code {
+}

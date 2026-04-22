@@ -1,0 +1,99 @@
+﻿@page "/Enrollment"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+@using Newtonsoft.Json;
+@using Microsoft.JSInterop
+@inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Http
+@using portalAdministrativoSISEC.Util.Helpers
+@inject IHttpContextAccessor httpContextAccessor
+
+
+
+<h2>Empezar nuevo enrolamiento</h2>
+
+<p>Seleccione el tipo de documento del aspirante o instructor que será enrolado</p>
+
+@functions {
+    int EditionCode = 1;
+}
+
+<div class="formulario-2">
+    <label for='tipoDocumento' class="texto-label col-form-label">Tipo Documento</label>
+    <EditForm Model="@tipoDocumentoDTO">
+        <InputSelect name="tipoDocumento" id="tipoDocumento" class="form-group" @bind-Value="@tipoDocumentoDTO.Id">
+            <option value="" selected>Seleccione...</option>
+            @foreach (var itemTipoDoc in TipoDocumentoGral)
+            {
+                <option value="@itemTipoDoc.Id">@itemTipoDoc.descripcion</option>
+            }
+        </InputSelect>
+
+    </EditForm>
+    <label class="texto-label col-form-label">Número de documento</label>
+    <input type="text" style="margin-right:10px" @bind-value="@entradaEnrolamiento.NumeroDocumento" inputmode="numeric" pattern="[0-9]" id="numDoc" name="numDoc" />
+    <button type="button" class="boton-primario" @onclick="@Siguiente"> Siguiente</button>
+
+</div>
+
+@code {
+    List<TipoDocumentoDTO> TipoDocumentoGral = new List<TipoDocumentoDTO>();
+    TipoDocumentoDTO tipoDocumentoDTO = new TipoDocumentoDTO();
+    EntradaEnrolamiento entradaEnrolamiento = new EntradaEnrolamiento();
+    private ApplicationSevice menuservice = new ApplicationSevice();
+    [Inject]
+    public IApiService _apiService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        menuservice.entradaEnrolamiento = null;
+        menuservice.base64Firma = null;
+        menuservice.keyFirma = null;
+        menuservice.respuestaEnrolarPersona = null;
+        menuservice.TipoDocumentoId = null;
+        TipoDocumentoGral = await OntenerTiposDocumento();
+    }
+
+
+    void Siguiente()
+    {
+        menuservice.entradaEnrolamiento = entradaEnrolamiento;
+
+        menuservice.TipoAfisId = Convert.ToInt16(@Configuration["AppSettings:CodigoAfis"]);
+        menuservice.TipoDocumentoId = tipoDocumentoDTO.Id;
+        menuservice.entradaEnrolamiento.NumeroDocumento = entradaEnrolamiento.NumeroDocumento;
+        UriHelper.NavigateTo("BarCode");
+        //UriHelper.NavigateTo("Finger");
+    }
+
+    protected async Task<List<TipoDocumentoDTO>> OntenerTiposDocumento()
+    {
+        List<TipoDocumentoDTO> tipoDocumentoDTO = new List<TipoDocumentoDTO>();
+
+        ApiResponse<List<TipoDocumentoDTO>> response = await _apiService.CallApiAsync<List<TipoDocumentoDTO>>(
+            baseAddress: @Configuration["AppSettings:uriSisecParametization"],
+            apiEndpoint: "TipoDocumento/ObtenerTipoDocumentoTodosAsync",
+            method: HttpMethod.Get,
+            content: null
+        );
+
+        if (response != null && response.HttpResponse != null && response.HttpResponse.IsSuccessStatusCode)
+        {
+            int cliente = menuservice.ClienteId;
+            tipoDocumentoDTO = response.Content
+                .Where(y => y.ClienteId == cliente)
+                .OrderBy(x => x.descripcion)
+                .ToList();
+        }
+
+        return tipoDocumentoDTO;
+    }
+
+
+}

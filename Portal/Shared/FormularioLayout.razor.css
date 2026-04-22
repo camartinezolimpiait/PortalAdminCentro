@@ -1,0 +1,28 @@
+﻿.retornar {
+    background-color: var(--color-gris-100);
+    border-bottom: 1px solid var(--color-gris-300);
+    padding: 0.75rem 3rem;
+    font-weight: 500;
+}
+
+::deep .dos_columnas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+    ::deep .dos_columnas input,
+    ::deep .dos_columnas select,
+    ::deep .dos_columnas fieldset {
+        margin-bottom: 0;
+    }
+
+    ::deep .dos_columnas > .span_2 {
+        grid-column: span 2;
+    }
+
+        ::deep .dos_columnas > .span_2 input,
+        ::deep .dos_columnas > .span_2 select {
+            max-width: unset;
+        }

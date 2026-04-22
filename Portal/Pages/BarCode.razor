@@ -1,0 +1,265 @@
+﻿@page "/BarCode"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+@using Newtonsoft.Json;
+@using Microsoft.JSInterop
+@inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+
+
+<div class="formulario-2 ">
+    <h2>Lectura del código de barras</h2>
+    <div class="row">
+        <div class="formulario">
+            <img src="img/cedula_normal.png" />
+            @*<p class="explicacion">Acerque el documento al lector</p>*@
+            @*<p class="mensajeBarCode">No es posible escanear el código de la cédula.</p>*@
+
+        </div>
+        <div>
+            <p class="formulario-2">
+                Si no es posible escanear el código por daño físico u otro motivo, ingrese el número de documento manualmente para continuar.
+            </p>
+            <div class="formulario-2">
+                <label class="texto-label col-form-label">Nombre Completo</label>
+                <input type="text" style="margin-right:10px" @bind-value="@entradaEnrolamiento.NombreCompleto" inputmode="latin" id="nombreCompleto" name="nombreCompleto" />
+                <button type="button" class="boton-primario" @onclick="@ValidarIdentificacion">Escanear Cédula</button>
+
+                @if (respuestaValidacionBarCode.Validado)
+                {
+                    <button type="button" class="boton-primario" @onclick="@Siguiente">Siguiente</button>
+                }
+                else
+                {
+                    @if (showModalValida)
+                    {
+                        <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <h4>Restablecer contraseña</h4>
+                                        <p>@respuestaValidacionBarCode.DescripcionValidacion</p>
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        @*<button type="button" class="btn" @onclick="@(() => showModal = !showModal)">Cancelar</button>*@
+                                        <button type="button" class="btn btn-primary" @onclick=@(() => closeValida())>Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@if (showModal)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <h4>Restablecer contraseña</h4>
+                    <p>Por favor inserte la cédula en el escaner para realizar la validacion de identidad</p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    @*<button type="button" class="btn" @onclick="@(() => showModal = !showModal)">Cancelar</button>*@
+                    <button type="button" class="btn btn-primary" @onclick=@(() => close())>Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string apiName = null;
+    bool showModal = true;
+    bool showModalValida = false;
+    private string message = null;
+    private string typeAlert = null;
+    private ApplicationSevice menuservice = new ApplicationSevice();
+
+    EntradaEnrolamiento entradaEnrolamiento = new EntradaEnrolamiento();
+    RespuestaValidacionBarCode respuestaValidacionBarCode = new RespuestaValidacionBarCode();
+
+
+    private async void Siguiente()
+    {
+        Http = new HttpClient();
+        apiName = "RegistrarPersonaProceso";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+        entradaEnrolamiento.NumeroDocumento = menuservice.entradaEnrolamiento.NumeroDocumento;
+        entradaEnrolamiento.ClienteId = menuservice.ClienteId;
+        entradaEnrolamiento.IdCentro = menuservice.CentroUsuario;
+        entradaEnrolamiento.Sincronizar = false;
+        entradaEnrolamiento.TipoAfisId = menuservice.TipoAfisId;
+        entradaEnrolamiento.TipoDocumentoId = menuservice.TipoDocumentoId;
+        entradaEnrolamiento.EstadoProcesoId = 1;
+        entradaEnrolamiento.MaquinaId = await obtenerMac();
+        entradaEnrolamiento.procesoNuevo = true;
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(entradaEnrolamiento), System.Text.Encoding.UTF8, "application/json");
+        var response = await Http.PostAsync(apiName, stringContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            RespuestaEnrolarPersona resetPasswordResponse = JsonConvert.DeserializeObject<RespuestaEnrolarPersona>(content);
+            if (resetPasswordResponse.codigoError != "0")
+            {
+                message = resetPasswordResponse.DescripcionError;
+                typeAlert = "success";
+            }
+            else
+            {
+                message = resetPasswordResponse.DescripcionError;
+                typeAlert = "danger";
+            }
+        }
+        else
+        {
+            message = response.ReasonPhrase;
+            typeAlert = "danger";
+        }
+        //showLoader = false;
+        menuservice.entradaEnrolamiento = entradaEnrolamiento;
+        UriHelper.NavigateTo("SuplData");
+
+    }
+
+    private void close()
+    {
+        showModal = false;
+        StateHasChanged();
+    }
+
+    private void closeValida()
+    {
+        showModalValida = false;
+        StateHasChanged();
+    }
+    protected async Task<string> obtenerMac()
+    {
+        string strMacMaquina = string.Empty;
+        Http = new HttpClient();
+        var apiName = "/ObtenerMac";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+        var response = await Http.GetAsync(apiName);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            strMacMaquina = JsonConvert.DeserializeObject<string>(content);
+        }
+        return strMacMaquina;
+    }
+
+    private async void ValidarIdentificacion()
+    {
+        EntradaBarCode entradaBarCode = new EntradaBarCode();
+        entradaBarCode.KeyImagen = await ObtenerImagenBrother();
+        entradaBarCode.numeroDocumentoReg = menuservice.entradaEnrolamiento.NumeroDocumento;
+
+        Http = new HttpClient();
+        apiName = "ValidarBarCode";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+
+        var stringContent = new StringContent(JsonConvert.SerializeObject(entradaBarCode), System.Text.Encoding.UTF8, "application/json");
+        var response = await Http.PostAsync(apiName, stringContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            respuestaValidacionBarCode = JsonConvert.DeserializeObject<RespuestaValidacionBarCode>(content);
+            if (!respuestaValidacionBarCode.Validado)
+            {
+                typeAlert = "Danger";
+                message = respuestaValidacionBarCode.DescripcionValidacion;
+                showModalValida = true;
+                showModal = false;
+            }
+            else
+            {
+                entradaEnrolamiento.NumeroDocumento = respuestaValidacionBarCode.Identificacion;
+                entradaEnrolamiento.PrimerApellido = respuestaValidacionBarCode.PrimerApellido;
+                entradaEnrolamiento.PrimerNombre = respuestaValidacionBarCode.PrimerNombre;
+                entradaEnrolamiento.SegundoApellido = respuestaValidacionBarCode.SegundoApellido;
+                entradaEnrolamiento.SegundoNombre = respuestaValidacionBarCode.SegundoNombre;
+                entradaEnrolamiento.NombreCompleto = respuestaValidacionBarCode.PrimerNombre + " " + respuestaValidacionBarCode.SegundoNombre + " " + respuestaValidacionBarCode.PrimerApellido + " " + respuestaValidacionBarCode.SegundoApellido;
+            }
+            StateHasChanged();
+        }
+        else
+        {
+            respuestaValidacionBarCode.Validado = true;
+            StateHasChanged();
+        }
+    }
+    //private async Task<RespuestaValidacionBarCode> escanear()
+    //{
+    //    RespuestaValidacionBarCode respuestaValidacionBarCode = new RespuestaValidacionBarCode();
+    //    EntradaBarCode entradaBarCode = new EntradaBarCode();
+    //    entradaBarCode.KeyImagen = await ObtenerImagenBrother();
+    //    Http = new HttpClient();
+    //    var apiName = "/GetDatosBarcode";
+    //    Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+    //    var stringContent = new StringContent(JsonConvert.SerializeObject(entradaBarCode), System.Text.Encoding.UTF8, "application/json");
+    //    var response = await Http.PostAsync(apiName, stringContent);
+
+    //    if (response.IsSuccessStatusCode)
+    //    {
+    //        var content = await response.Content.ReadAsStringAsync();
+    //        respuestaValidacionBarCode = JsonConvert.DeserializeObject<RespuestaValidacionBarCode>(content);
+    //        entradaEnrolamiento.NumeroDocumento = respuestaValidacionBarCode.Identificacion;
+    //        entradaEnrolamiento.PrimerApellido = respuestaValidacionBarCode.PrimerApellido;
+    //        entradaEnrolamiento.PrimerNombre = respuestaValidacionBarCode.PrimerNombre;
+    //        entradaEnrolamiento.SegundoApellido = respuestaValidacionBarCode.SegundoApellido;
+    //        entradaEnrolamiento.SegundoNombre = respuestaValidacionBarCode.SegundoNombre;
+    //        entradaEnrolamiento.NombreCompleto = respuestaValidacionBarCode.PrimerNombre + " " + respuestaValidacionBarCode.SegundoNombre + " " + respuestaValidacionBarCode.PrimerApellido + " " + respuestaValidacionBarCode.SegundoApellido;
+    //    }
+    //    return respuestaValidacionBarCode;
+    //}
+
+    private async Task<string> ObtenerImagenBrother()
+    {
+        string keyImagen = string.Empty;
+        string[] strIdHuella;
+        Http = new HttpClient();
+        var apiName = "/CapturarImagenBrother";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+        var response = await Http.GetAsync(apiName);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            strIdHuella = content.Split('|');
+            if (!strIdHuella[0].Contains("Error"))
+            {
+                keyImagen = strIdHuella[1];
+            }
+
+        }
+        return keyImagen;
+    }
+
+
+
+}

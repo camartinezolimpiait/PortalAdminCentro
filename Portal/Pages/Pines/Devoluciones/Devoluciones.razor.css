@@ -1,0 +1,108 @@
+﻿
+
+@media (max-width: 600px) {
+    .tabla-responsive,
+    .tabla-responsive caption,
+    .tabla-responsive tbody,
+    .tabla-responsive tr,
+    .tabla-responsive td {
+        display: block;
+        text-align: left;
+    }
+
+        .tabla-responsive thead,
+        .tabla-responsive th {
+            display: none;
+            visibility: hidden;
+        }
+
+        .tabla-responsive td[data-title]:before {
+            content: attr(data-title) ": ";
+            display: inline-block;
+            white-space: pre;
+            font-weight: 500;
+        }
+
+        .tabla-responsive td.titulo {
+            color: white;
+            background-color: var(--color-azul-500);
+        }
+
+        .tabla-responsive tr.even {
+            background-color: white;
+        }
+
+    .tabla-admin {
+        font-family: proxima-nova-condensed, sans-serif;
+        border-collapse: collapse;
+        text-align: left;
+        width: 100%;
+        margin: 0;
+    }
+
+        .tabla-admin .numero {
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+            white-space: nowrap;
+            width: 1px;
+        }
+
+        .tabla-admin th,
+        .tabla-admin td {
+            padding: 5px 10px;
+            vertical-align: top;
+        }
+
+        .tabla-admin th {
+            font-weight: 600;
+            border-bottom: 1px solid var(--color-gris-300);
+        }
+
+        .tabla-admin tbody > tr:nth-child(odd) {
+            background-color: var(--color-gris-100);
+        }
+}
+
+@media (max-width: 600px) and (max-width: 600px) {
+    .tabla-admin .numero {
+        text-align: left;
+        white-space: normal;
+    }
+
+    .tabla-admin,
+    .tabla-admin caption,
+    .tabla-admin tbody,
+    .tabla-admin tr,
+    .tabla-admin td {
+        display: block;
+        text-align: left;
+    }
+
+        .tabla-admin tr {
+            margin-bottom: 1rem;
+            background-color: var(--color-gris-100);
+            border: 1px solid var(--color-gris-300);
+            border-radius: 0.42em;
+        }
+
+        .tabla-admin thead,
+        .tabla-admin th {
+            display: none;
+            visibility: hidden;
+        }
+
+        .tabla-admin td[data-title]:before {
+            content: attr(data-title) ": ";
+            display: inline-block;
+            white-space: pre;
+            font-weight: 600;
+        }
+
+        .tabla-admin td[data-title="Nombre"] {
+            font-weight: 600;
+        }
+
+        .tabla-admin tr.even {
+            background-color: white;
+        }
+}

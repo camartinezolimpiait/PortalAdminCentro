@@ -1,0 +1,10 @@
+﻿@page "/ConsultarFacturacion/{estado?}"
+@using portalAdministrativoSISEC.Pages.Facturacion.EstadosConsultarFacturacion
+@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+@using portalAdministrativoSISEC.Pages.Facturacion.Estado
+
+@layout SingleLayout
+
+<EstadosConsultarFacturacion estado="@Estado"></EstadosConsultarFacturacion>

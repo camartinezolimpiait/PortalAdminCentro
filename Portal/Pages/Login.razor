@@ -1,0 +1,104 @@
+﻿@layout LoginLayout
+@page "/Login/{recoverPassword:bool}/"
+@page "/"
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="flex flex-col w-xs">
+    <h1 class="logotipo-titulo">Portal <br> Administrativo</h1>
+
+    @if (!recoverPassword)
+    {
+        <div class="formulario-marco">
+            <EditForm Model="@dataUser" OnValidSubmit="OnSubmitLogin">
+                <DataAnnotationsValidator />
+
+                <label for='usuario'>Nombre de usuario</label>
+                <input type='text' id='usuario' name='usuario' @bind-value="@dataUser.userName" class="mb-1" required>
+                <label for='password'>Contraseña</label>
+                <input type='password' id='password' name='password' @bind-value="@dataUser.passWord" class="mb-1" required>
+                <label for='tipocentro'>Tipo de negocio</label>
+                <InputSelect name="tipocentro" id="tipocentro" @bind-Value="@dataUser.plataforma" class="mb-3" required>
+                    <option value="" selected>Seleccione</option>
+                    @foreach (var cliente in clienteDtoGral)
+                    {
+                        <option value="@cliente.Nombre">@cliente.Nombre</option>
+                    }
+                </InputSelect>
+
+                @if (!showLoader)
+                {
+                    <button class="boton-primario" type='submit'>Iniciar sesión</button>
+                }
+
+                <BtnLoader showLoader="showLoader"></BtnLoader>
+
+                <AlertMessage message="@message" typeAlert="@typeAlert"></AlertMessage>
+
+                @if (isRecaptchaActive)
+                {
+                    <p class="recaptchaMobile">
+                        Este sitio está protegido por reCAPTCHA y se aplican la <a href="https://policies.google.com/privacy">política de privacidad</a> y
+                    <a href="https://policies.google.com/terms">términos del servicio</a> de Google.
+                </p>
+                }
+            </EditForm>
+        </div>
+    }
+    @if (recoverPassword)
+    {
+        <div class="formulario-marco">
+            <label for='usuario'>Nombre de usuario</label>
+            <input type='text' id='usuario' name='usuario' @bind-value="@dataUser.userName" required>
+            <label for='tipocentro'>Tipo de negocio</label>
+            <select name="tipocentro" id="tipocentro" @bind="@dataUser.plataforma" required>
+                <option value="" selected>Seleccione</option>
+                @foreach (var cliente in clienteDtoGral)
+                {
+                    <option value="@cliente.Nombre">@cliente.Nombre</option>
+                }
+            </select>
+
+            @if (!showLoader)
+            {
+                <input class="boton-primario" type='button' @onclick="OnSubmitRecoverPass" value='Recuperar Contraseña'>
+            }
+
+            <BtnLoader showLoader="showLoader"></BtnLoader>
+
+            <AlertMessage message="@message" typeAlert="@typeAlert"></AlertMessage>
+
+            @*</EditForm>*@
+        </div>
+        <div class="formulario-marco-2"><a href="/Login/false">Iniciar Sesión</a> </div>
+    }
+</div>
+
+@if (showModal)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <h4>Restablecer contraseña</h4>
+                    <p>Hemos enviado una contraseña temporal al correo electrónico: @emailRecoverPass</p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    @*<button type="button" class="btn" @onclick="@(() => showModal = !showModal)">Cancelar</button>*@
+                    <button type="button" class="boton-primario" @onclick=@(() => ChangeMethod("/"))>Siguiente</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+@code
+{
+
+
+}

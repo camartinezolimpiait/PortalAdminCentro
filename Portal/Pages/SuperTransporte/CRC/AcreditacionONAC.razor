@@ -1,0 +1,297 @@
+﻿@page "/supertransporte/centro/acreditacion-onac"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout;
+@inject IJSRuntime jsRuntime
+
+<h3>Información acreditación ONAC</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo III</h4>
+        <p>
+            6. Contar con certificado de acreditación vigente emitido por el Organismo Nacional de Acreditación de Colombia ONAC con alcance a la certificación de aptitud física, mental y de coordinación motriz para conducir, bajo el cumplimiento de la reglamentación dispuesta por el Ministerio de Transporte para el efecto, así como en los criterios específicos de acreditación establecidos en el esquema correspondiente del Organismo Nacional de  Acreditación de Colombia ONAC.
+        </p>
+    </div>
+</details>
+
+<EditForm Model=@_vigilado OnValidSubmit=@AddAcreditacionVigilado>
+    <DataAnnotationsValidator />
+
+    @if (@_vigilado.acreditacion_onac != null)
+    {
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Campo</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Código</td>
+                    <td>@_vigilado.acreditacion_onac.codigo</td>
+                </tr>
+                <tr>
+                    <td>Estado</td>
+                    <td>@_vigilado.acreditacion_onac.estado</td>
+                </tr>
+                <tr>
+                    <td>Fecha Publicación</td>
+                    <td>@_vigilado.acreditacion_onac.fecha_publicacion</td>
+                </tr>
+                <tr>
+                    <td>Fecha Vencimiento</td>
+                    <td>@_vigilado.acreditacion_onac.fecha_vencimiento</td>
+                </tr>
+                <tr>
+                    <td>Fecha Actualización</td>
+                    <td>@_vigilado.acreditacion_onac.fecha_ultima_actualizacion</td>
+                </tr>
+                <tr>
+                    <td>Fecha Renovación</td>
+                    <td>@_vigilado.acreditacion_onac.fecha_renovacion</td>
+                </tr>
+                <tr>
+                    <td>Norma Acreditada</td>
+                    <td>@_selectNorma.Find(f => f.id == @_vigilado.acreditacion_onac.norma_acreditada)?.nombre</td>
+                </tr>
+                <tr>
+                    <td>Certificado ONAC</td>
+                    <td>
+                        @if (!String.IsNullOrEmpty(@_vigilado.acreditacion_onac?.certificado_onac?.data?.attributes?.name))
+                        {
+                            <svg class="feather">
+                                <use xlink:href="assets/feather-sprite.svg#check-square"></use>
+                            </svg>
+                        }
+                        else
+                        {
+                            <svg class="feather">
+                                <use xlink:href="assets/feather-sprite.svg#square"></use>
+                            </svg>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+
+    <p>
+        Esta acreditación de la ONAC acredita al organismo con razón social <strong>@_vigilado.razon_social</strong>, de <strong>NIT @_vigilado.NIT</strong>, y cubre a los siguientes CRC:
+    </p>
+
+    <table class="tabla-responsive">
+        <thead>
+            <tr>
+                <th>Nombre del CRC</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (@_vigilado.crcs != null)
+            {
+                @foreach (var crc in _vigilado.crcs.data)
+                {
+                    <tr>
+                        <td>@crc.attributes.nombre</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <fieldset class="pregunta_sn">
+        <legend>
+            ¿Desea modificar la información de acreditación?
+        </legend>
+        <div class="explicacion">
+            Esta información es compartida con los CRC anteriores. Al modificarla, los cambios se reflejarán en los formularios de cada uno de ellos.
+        </div>
+        <div>
+            <input id="modificaracreditacion" type="checkbox" @bind-value="_cambiarAcreditacion" />
+            <label for="modificaracreditacion">Modificar acreditación</label>
+        </div>
+    </fieldset>
+
+    @if (_cambiarAcreditacion)
+    {
+        <EditForm Context="AcreditacionVigilado" Model="_acreditacionVigiladoForm" OnValidSubmit="@((EditContext context) => AddAcreditacionVigilado(context))">
+            <DataAnnotationsValidator />
+
+            <fieldset class="ancho">
+                <legend>
+                    Actualización datos acreditación
+                </legend>
+                <div>
+                    <label for="codigo">
+                        Código de la acreditación
+                        expedido por el respectivo organismo acreditador:
+                    </label>
+                    <ValidationMessage For="() => _acreditacionVigiladoForm.codigo" />
+                    <InputText id="codigo" @bind-Value="_acreditacionVigiladoForm.codigo" />
+                </div>
+
+                <div>
+                    <label for="estado">
+                        Estado de la acreditación:
+                    </label>
+                    <ValidationMessage For="() => _acreditacionVigiladoForm.estado" />
+                    <InputText id="estado" @bind-Value="_acreditacionVigiladoForm.estado" />
+                </div>
+
+                <div class="dos_columnas">
+                    <div>
+                        <fieldset class="fecha">
+                            <legend>
+                                Fecha de publicación del otrogamiento
+                            </legend>
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.dia_publicacion" />
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.mes_publicacion" />
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.anio_publicacion" />
+                            <div class="fecha-flex">
+                                <div>
+                                    <label for="dia_inscripcion">Día</label>
+                                    <InputNumber id="dia_publicacion" @bind-Value="_acreditacionVigiladoForm.dia_publicacion" />
+                                </div>
+                                <div>
+                                    <label for="mes_publicacion">Mes</label>
+                                    <InputNumber id="mes_publicacion" @bind-Value="_acreditacionVigiladoForm.mes_publicacion" />
+                                </div>
+                                <div>
+                                    <label for="anio_publicacion">Año</label>
+                                    <InputNumber id="anio_publicacion" @bind-Value="_acreditacionVigiladoForm.anio_publicacion" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div>
+                        <fieldset class="fecha">
+                            <legend>
+                                Fecha de vencimiento de la acreditación
+                            </legend>
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.dia_vencimiento" />
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.mes_vencimiento" />
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.anio_vencimiento" />
+                            <div class="fecha-flex">
+                                <div>
+                                    <label for="dia_vencimiento">Día</label>
+                                    <InputNumber id="dia_vencimiento" @bind-Value="_acreditacionVigiladoForm.dia_vencimiento" />
+                                </div>
+                                <div>
+                                    <label for="mes_vencimiento">Mes</label>
+                                    <InputNumber id="mes_vencimiento" @bind-Value="_acreditacionVigiladoForm.mes_vencimiento" />
+                                </div>
+                                <div>
+                                    <label for="anio_vencimiento">Año</label>
+                                    <InputNumber id="anio_vencimiento" @bind-Value="_acreditacionVigiladoForm.anio_vencimiento" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div>
+                        <fieldset class="fecha">
+                            <legend>
+                                Fecha de publicación de la última actualización
+                            </legend>
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.dia_ultima_actualizacion" />
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.mes_ultima_actualizacion" />
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.anio_ultima_actualizacion" />
+                            <div class="fecha-flex">
+                                <div>
+                                    <label for="dia_ultima_actualizacion">Día</label>
+                                    <InputNumber id="dia_ultima_actualizacion" @bind-Value="_acreditacionVigiladoForm.dia_ultima_actualizacion" />
+                                </div>
+                                <div>
+                                    <label for="mes_ultima_autoevaluacion">Mes</label>
+                                    <InputNumber id="mes_ultima_autoevaluacion" @bind-Value="_acreditacionVigiladoForm.mes_ultima_actualizacion" />
+                                </div>
+                                <div>
+                                    <label for="anio_ultima_actualizacion">Año</label>
+                                    <InputNumber id="anio_ultima_actualizacion" @bind-Value="_acreditacionVigiladoForm.anio_ultima_actualizacion" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div>
+                        <fieldset class="fecha">
+                            <legend>
+                                Fecha de renovación
+                            </legend>
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.dia_renovacion" />
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.mes_renovacion" />
+                            <ValidationMessage For="() => _acreditacionVigiladoForm.anio_renovacion" />
+                            <div class="fecha-flex">
+                                <div>
+                                    <label for="dia_renovacion">Día</label>
+                                    <InputNumber id="dia_renovacion" @bind-Value="_acreditacionVigiladoForm.dia_renovacion" />
+                                </div>
+                                <div>
+                                    <label for="mes_renovacion">Mes</label>
+                                    <InputNumber id="mes_renovacion" @bind-Value="_acreditacionVigiladoForm.mes_renovacion" />
+                                </div>
+                                <div>
+                                    <label for="anio_renovacion">Año</label>
+                                    <InputNumber id="anio_renovacion" @bind-Value="_acreditacionVigiladoForm.anio_renovacion" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="norma_acreditada">Norma acreditada:</label>
+                    <ValidationMessage For="() => _acreditacionVigiladoForm.norma_acreditada" />
+                    <InputSelect id="norma_acreditada" @bind-Value="_acreditacionVigiladoForm.norma_acreditada">
+                        <option value="">-</option>
+                        @foreach (var item in _selectNorma)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label>Adjuntar el certificado de acreditación:</label>
+
+                    <table class="tabla-responsive">
+                        <thead>
+                            <tr>
+                                <th>Archivo adjunto</th>
+                                <th class="num"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@_acreditacionVigiladoForm.nombre_adjunto_certificado_onac</td>
+                                <td class="num"><button type="button" class="btn btn-sm" @onclick="DownloadFileCertificadoOnac">Descargar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <InputFile class="file-input w-full p-0" id="certificado_onac" OnChange="HandleCertificadoONAC" />
+
+                    <BtnLoaderSuper loader="_loader" leyenda="Guardar Acreditación"></BtnLoaderSuper>
+                </div>
+            </fieldset>
+        </EditForm>
+    }
+    <EditForm Context="AcreditacionCentro" Model=@_acreditacionCentro OnValidSubmit="((EditContext context)=> AddAcreditacionCentro(context))">
+        <DataAnnotationsValidator />
+        <fieldset class="ancho">
+            <legend>
+                Actualización estado acreditación centro
+            </legend>
+            <div class="explicacion">
+                Este campo es para el estado de acreditación individual de este CRC para el cual está llenando el formulario
+            </div>
+            <div>
+                <label for="estado_acreditacion_onac">Estado Acreditación Centro:</label>
+                
+                <div class="validation-message">@error</div>
+                <ValidationMessage For="() => _acreditacionCentro" />
+                               
+                <InputText id="estado_acreditacion_onac" @bind-Value="_acreditacionCentro" />
+                <BtnLoaderSuper loader="_loader" leyenda="Actualizar Estado"></BtnLoaderSuper>
+            </div>
+        </fieldset>
+    </EditForm>
+
+</EditForm>

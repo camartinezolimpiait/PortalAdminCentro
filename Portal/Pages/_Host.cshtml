@@ -1,0 +1,174 @@
+﻿@page "/"
+@namespace portalAdministrativoSISEC.Pages
+@inject Data.ApplicationSevice menuservice
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal Administrativo SISEC</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="https://use.typekit.net/iua0dbj.css" />
+    <link rel="stylesheet" href="css/estilo.css" type="text/css" />
+    <link rel="stylesheet" href="css/inputs.css" type="text/css" />
+    <link href="portalAdministrativoSISEC.styles.css" rel="stylesheet">
+    <link href="~/css/Tramite/cabecera.css" rel="stylesheet" />
+    <link href="~/css/Tramite/general.css" rel="stylesheet" />
+    <link href="~/css/Tramite/pasos.css" rel="stylesheet" />
+    <link href="~/css/Tramite/seleccion.css" rel="stylesheet" />
+    <link href="~/css/spinkit/spinkit.min.css" rel="stylesheet" />
+    <link href="~/css/toast/toast.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <script src="_framework/blazor.webassembly.js"></script>
+    <style type="text/css">
+        /*Ocultamos el recaptcha de acuerdo con https://developers.google.com/recaptcha/docs/faq*/
+        .grecaptcha-badge {
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <app>
+        <component type="typeof(App)" render-mode="Server" />
+    </app>
+
+    <environment include="Development">
+        <div class="entorno">
+            Entorno: Desarrollo
+        </div>
+    </environment>
+
+
+
+    <!-- Implementacion de captura de errores de javascript con JsErrorLogger Logs de auditoria-->
+    @* <script>
+        window.onerror = function (message, source, lineno, colno, error) {
+            // Llamar a un método .NET para registrar el error
+            DotNet.invokeMethodAsync('TuProyecto', 'LogJsError', message, source, lineno, error?.stack)
+                .catch(err => console.error('No se pudo registrar el error de JS:', err));
+            return false;
+        };
+    </script>  *@
+
+    <script type='text/javascript'>
+        // ✅ Definir en window explícitamente y verificar grecaptcha
+        window.runCaptcha = function (actionName) {
+            return new Promise((resolve, reject) => {
+                // ✅ Verificar si grecaptcha está disponible
+                if (typeof grecaptcha === 'undefined') {
+                    resolve(null); // Retorna null en lugar de error
+                    return;
+                }
+
+                try {
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute('6Ldh-yUhAAAAAJ_Bc4FseTL8osPdpXxVAAUiI_p1', { action: actionName })
+                            .then(function (token) {
+                                resolve(token);
+                            })
+                            .catch(function (error) {
+                                reject(error);
+                            });
+                    });
+                } catch (error) {
+                    resolve(null); // Resolver con null para no romper la app
+                }
+            });
+        };
+    </script>
+
+    @if (menuservice.ShowCaptcha || !menuservice.Autenticado)
+    {
+        <script type='text/javascript' src='https://www.google.com/recaptcha/api.js?render=6Ldh-yUhAAAAAJ_Bc4FseTL8osPdpXxVAAUiI_p1'></script>
+    }
+
+
+    <script src="_framework/blazor.server.js"></script>
+    <script src="~/js/modalExportacion.js"></script>
+    <script src="~/js/dialog.js"></script>
+    <script src="~/js/downloadHelper.js"></script>
+    <script type="text/javascript">
+        function clearRadios(groupName) {
+            var r = document.getElementsByName(groupName);
+            for (var i = 0; i < r.length; i++) {
+                r[i].checked = false;
+            }
+        }
+
+        window.copiarAlPortapapeles = (texto) => {
+            if (navigator.clipboard && document.hasFocus()) {
+                navigator.clipboard.writeText(texto);
+            } else {
+                const input = document.createElement('input');
+                input.value = texto;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+            }
+        };
+    </script>
+    <script>
+        window.saveAsFile = function (fileName, byteBase64) {
+            var byteCharacters = atob(byteBase64);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            var blob = new Blob([byteArray], { type: "application/octet-stream" });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        // Método generado por GitHub Copilot
+        function showModalById(id) {
+            const dlg = document.getElementById(id);
+            if (dlg && dlg.showModal) dlg.showModal();
+        }
+        // Fin código generado por GitHub Copilot
+    </script>
+    <script>
+        window.abrirEnNuevaPestana = function (url) {
+            window.open(url, '_blank');
+        }
+    </script>
+    <script>
+        // Inicio código generado por GitHub Copilot
+        // Método generado por GitHub Copilot
+        function BlazorDownloadFile(fileName, contentType, byteArray) {
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = URL.createObjectURL(new Blob([new Uint8Array(byteArray)], { type: contentType }));
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        // Fin código generado por GitHub Copilot
+
+        // Método generado por GitHub Copilot
+        function showModalById(id) {
+            const dlg = document.getElementById(id);
+            if (dlg && dlg.showModal) dlg.showModal();
+        }
+        // Fin código generado por GitHub Copilot
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/powerbi-client/2.22.4/powerbi.min.js" integrity="sha512-ZMmyGjAz4cSAlJZVBrJnpcoWv2KVhPpH6H738XBYnPHY66xUC7QgmZNqBymp2WSAL3hZmdpFpVRkoB3mgET6jQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+﻿@if (showLoader)
+{
+    <button class="boton-primario" type="button" disabled>
+        <span class="loading loading-spinner"></span>
+    </button>
+}
+
+@code {
+    [Parameter] public bool showLoader { get; set; }
+}

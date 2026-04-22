@@ -1,0 +1,57 @@
+name: $(Build.DefinitionName)_$(Date:yyyyMMdd).$(Rev:r)
+
+trigger:
+  branches:
+    include:
+      - prod
+  paths:
+    include:
+      - Portal/
+    exclude:
+      - DevOps/
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - checkout: self
+    persistCredentials: true
+
+  # Node y dependencias
+  - task: NodeTool@0
+    displayName: "Use Node.js 18.x (LTS)"
+    inputs:
+      versionSpec: '18.x'
+
+  - script: npm ci
+    displayName: "Instalar dependencias (npm ci)"
+    workingDirectory: 'Portal'  # AJUSTA si tu package.json está en otra carpeta
+
+  - script: npm run build:css
+    displayName: "Compilar CSS"
+    workingDirectory: 'Portal'
+
+  # Actualizar paquete desactualizado (puedes moverlo a tu flujo normal)
+  - script: npm i baseline-browser-mapping@latest -D
+    displayName: "Actualizar baseline-browser-mapping"
+    workingDirectory: 'Portal'
+    continueOnError: true  # Si prefieres no romper el build por esto
+
+  # Build .NET
+
+  - task: DotNetCoreCLI@2
+    displayName: build and publish Portal Admin Centro
+    inputs:
+      command: publish 
+      publishWebProjects: false
+      projects: Portal/portalAdministrativoSISEC.csproj
+      arguments:  '--configuration Release -o $(Build.ArtifactStagingDirectory)/PortalAdminCentro'
+      zipAfterPublish: True
+      modifyOutputPath : True
+  
+  - task: PublishBuildArtifacts@1
+    displayName: publish artifact Portal Admin Centro
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'PortalAdminCentro'
+      publishLocation: 'Container'

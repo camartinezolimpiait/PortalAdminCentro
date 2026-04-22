@@ -1,0 +1,149 @@
+﻿@page "/compradepincda/categoriasCDA"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin.CDA;
+@using portalAdministrativoSISEC.Pages.CompraPinCDA;
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.CategoriasCDA;
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.DatosBasicosCDA;
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite;
+@using portalAdministrativoSISEC.Pages.CompraPinCDA.Models
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@editContext" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <div>
+                <h3>Tipo de vehículo y antigüedad</h3>
+                <p>El costo de la revisión depende del tipo del vehículo y la antigüedad</p>
+
+                <h4>Tipo de vehículo</h4>
+
+                <fieldset class="radio_tipo">
+                    @foreach (var vehiculo in tipoVehiculos)
+                    {
+                        <div>
+                            <input id="@vehiculo.Id"
+                                   type="radio"
+                                   name="TipoVehiculos"
+                                   value="@vehiculo.Id"
+                                   checked="@(datosBasicosModel.seleccionTipoVehiculo == vehiculo.Id)"
+                                   @onblur="@(() => OnBlur("tipoVehiculo"))"
+                                   @onchange="RadioSelectCategoria"
+                                  />
+                            <label for="@vehiculo.Id">@vehiculo.Nombre</label>
+                        </div>
+                    }
+                    @if (isFieldTouched("tipoVehiculo"))
+                    {
+                        <ValidationMessage For="@(() => datosBasicosModel.seleccionTipoVehiculo)"></ValidationMessage>
+                        @if (isValidCheckBox == false && isTouched == true)
+                        {
+                            <label class="validation-message">El campo tipo de vehiculo es  obligatorio.</label>
+                        }
+                    }
+             
+                </fieldset>
+                <h4>Placa</h4>
+                <fieldset class="input-placa">
+                    <div>
+                        @if (PagoPinCda != null && !string.IsNullOrEmpty(PagoPinCda.TipoVehiculo) && (PagoPinCda.TipoVehiculo.Trim() == "Motocarros" || PagoPinCda.TipoVehiculo.Trim() == "Motocicletas"))
+                        {
+                            <input maxlength="6"
+                            type="text"
+                            name="placa"
+                            id="placa"
+                            autocomplete="categoria-name"
+                            pattern="^[A-Za-z]{3}\d{2}[A-Za-z]{1}$"
+                                   @bind-value:event="oninput" @bind-value="datosBasicosMoto.nombrePlacaMoto" @onblur="@(() => OnBlur("nombrePlacaMoto"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("nombrePlacaMoto", e))" />
+                        }
+                        else
+                        {
+                            <input maxlength="6"
+                                   type="text"
+                                   name="placa"
+                                   id="placa"
+                                   autocomplete="categoria-name"
+                                   pattern="[A-Za-z]{3,3}\d{3,3}"
+                                   @bind-value:event="oninput" @bind-value="datosBasicosModel.nombrePlaca" @onblur="@(() => OnBlur("nombrePlaca"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("nombrePlaca", e))" />
+                        }
+                       
+                    </div>
+                    @if (isFieldTouched("nombrePlacaMoto") || isFieldTouched("nombrePlaca") || isFieldTouched("tipoVehiculo"))
+                    {
+
+                        @if (PagoPinCda != null && !string.IsNullOrEmpty(PagoPinCda.TipoVehiculo) && (PagoPinCda.TipoVehiculo.Trim() == "Motocarros" || PagoPinCda.TipoVehiculo.Trim() == "Motocicletas"))
+                        {
+                            <ValidationMessage For="@(() => datosBasicosMoto.nombrePlacaMoto)" />
+                            @if (datosBasicosMoto.nombrePlacaMoto == null || datosBasicosMoto.nombrePlacaMoto == "")
+                            {
+                                <div class="validation-message">El campo placa es obligatoria.</div>
+                            }
+                            else if (datosBasicosMoto.nombrePlacaMoto != null && placaValidaMoto == false)
+                            {
+                                <div class="validation-message">El formato de la placa no es válido.</div>
+                            }
+
+                        }
+                        else
+                        {
+                            <ValidationMessage For="@(() => datosBasicosModel.nombrePlaca)" />
+                        }
+                    }
+
+
+                </fieldset>
+
+                <h4>Fecha de matrícula inicial:</h4>
+                <fieldset class="fecha fecha-flex">
+                    <div>
+                        <label for="day">Dia</label>
+
+                        <input maxlength="2"
+                               type="text"
+                               pattern="[0-9]*"
+                               inputmode="numeric"
+                               name="day"
+                               id="day"
+                               autocomplete="bday-day"
+                               @bind-value="datosBasicosModel.Dia" @bind-value:event="oninput" @onblur="@(() => OnBlur("Dia"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("Dia", e))" />
+                    </div>
+                    <div>
+                        <label for="month">Mes</label>
+                        <input maxlength="2"
+                               type="text"
+                               pattern="[0-9]*"
+                               inputmode="numeric"
+                               name="month"
+                               id="month"
+                               autocomplete="bday-month"
+                               @bind-value="datosBasicosModel.Mes" @bind-value:event="oninput" @onblur="@(() => OnBlur("Mes"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("Mes", e))" />
+                    </div>
+                    <div>
+                        <label for="year">Año</label>
+                        <input maxlength="4"
+                               type="text"
+                               pattern="[0-9]*"
+                               inputmode="numeric"
+                               name="year"
+                               id="year"
+                               autocomplete="bday-year"
+                               @bind-value="datosBasicosModel.Anio" @bind-value:event="oninput" @onblur="@(() => OnBlur("Anio"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("Anio", e))" />
+                    </div>
+                </fieldset>
+                @if (isFieldTouched("Anio") || isFieldTouched("Mes") || isFieldTouched("Dia"))
+                {
+                    <ValidationMessage For="@(() => datosBasicosModel.Anio)" />
+                    <ValidationMessage For="@(() => datosBasicosModel.Dia)" />
+                    <ValidationMessage For="@(() => datosBasicosModel.Mes)" />
+                
+                }
+            </div>
+        </EditForm>
+    </ContentTemplate>
+</SpinLoader>

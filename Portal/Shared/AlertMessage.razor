@@ -1,0 +1,21 @@
+﻿@if (!string.IsNullOrEmpty(typeAlert))
+{
+    <div class="alert alert-@typeAlert alert-dismissible fade show" role="alert">
+        <span>@message</span>
+        @*<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>*@
+    </div>
+}
+@code{
+
+    [Parameter] public string message { get; set; }
+    [Parameter] public string typeAlert { get; set; } = "";
+    private string alerttextclass { get; set; }
+
+    protected override void OnInitialized()
+    {
+       
+    }
+
+   
+}
+

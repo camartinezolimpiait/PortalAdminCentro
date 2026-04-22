@@ -1,0 +1,119 @@
+@page "/supertransporte/pqrsf"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.PQRSF;
+@layout SingleLayout;
+
+<div class="columnas">
+    <div class="encabezado">
+        <h1>PQRSF</h1>
+        <p>
+            Desde Servicio al cliente de Olimpia IT, se realiza la atención de todas las manifestaciones de inconformidad, incertidumbre, desacuerdo u otra expresión,
+            realizadas por una persona u organización, con el fin de ser atendida en los términos legales o pactados, garantizando la imparcialidad y pronta respuesta.
+        </p>
+    </div>
+    <div class="explicacion">
+        <h2>Petición</h2>
+        <p>
+            Requerimiento de cualquier tipo de información sobre trámites, procesos, procedimientos, tarifas, documentos y/o cualquier tipo de consulta general de o
+            los productos o servicios que la organización ofrece.
+        </p>
+        <h2>Queja</h2>
+        <p>
+            Expresión de insatisfacción, presentada por un peticionario a la organización una persona u organización a Olimpia IT, con respecto a sus productos y/o
+            servicios.
+        </p>
+        <h2>Reclamo</h2>
+        <p>Al igual que la queja, es una expresión de insatisfacción, presentada a Olimpia IT la organización con respecto a sus productos y/o servicios.</p>
+        <h2>Solicitudes</h2>
+        <p>Toda petición relacionada con la terminación o modificación del vínculo comercial o del contrato o cambios contractuales.</p>
+        <h2>Sugerencia</h2>
+        <p>Acción adelantada por una persona u organización cuando desea manifestar una oportunidad de mejora a Olimpia IT respecto al servicio prestado.</p>
+        <h2>Felicitaciones</h2>
+        <p>Manifestación de agradecimiento, satisfacción hacia los productos, servicios, prestados los diferentes clientes o suscriptores.</p>
+    </div>
+    <div class="contenedor_formulario">
+
+        <EditForm Model=@_informacionBasica OnSubmit=@GenerarInformacion>
+            <DataAnnotationsValidator />
+            <h2>Formulario PQRSF</h2>
+            <div class="dos_columnas">
+                <div>
+                    <label for="tipo_id">Tipo identificación</label>
+                    <select id="documentType" @bind="_informacionBasica.tipo_id" required>
+                        <option value=""></option>
+                        @if (TiposDeDocumento is not null)
+                        {
+                            foreach (var tipoDocumento in TiposDeDocumento)
+                            {
+                                <option value="@tipoDocumento.Id">@tipoDocumento.descripcion</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label for="num_id">Nº identificación</label>
+                    <ValidationMessage For="() => _informacionBasica.num_id" />
+                    <InputText id="num_id" @bind-Value="_informacionBasica.num_id" />
+                </div>
+                <div>
+                    <label for="primer_nombre">Primer nombre</label>
+                    <ValidationMessage For="() => _informacionBasica.primer_nombre" />
+                    <InputText id="primer_nombre" @bind-Value="_informacionBasica.primer_nombre" />
+                </div>
+                <div>
+                    <label for="segundo_nombre">Segundo nombre</label>
+                    <ValidationMessage For="() => _informacionBasica.segundo_nombre" />
+                    <InputText id="segundo_nombre" @bind-Value="_informacionBasica.segundo_nombre" />
+                </div>
+                <div>
+                    <label for="primer_apellido">Primer apellido</label>
+                    <ValidationMessage For="() => _informacionBasica.primer_apellido" />
+                    <InputText id="primer_apellido" @bind-Value="_informacionBasica.primer_apellido" />
+                </div>
+                <div>
+                    <label for="segundo_apellido">Segundo apellido</label>
+                    <ValidationMessage For="() => _informacionBasica.segundo_apellido" />
+                    <InputText id="segundo_apellido" @bind-Value="_informacionBasica.segundo_apellido" />
+                </div>
+
+                <div>
+                    <label for="email">Correo electrónico</label>
+                    <ValidationMessage For="() => _informacionBasica.email" />
+                    <InputText id="email" @bind-Value="_informacionBasica.email" />
+                </div>
+                <div>
+                    <label for="telefono">Teléfono</label>
+                    <ValidationMessage For="() => _informacionBasica.telefono" />
+                    <InputText id="telefono" @bind-Value="_informacionBasica.telefono" />
+                </div>
+                <div class="span_2">
+                    <label for="tipo_solicitud">Tipo de solicitud</label>
+                    <select id="tipo_solicitud" @bind="_informacionBasica.tipo_solicitud" required>
+                        <option value=""></option>
+                        @if (TiposDeDocumento is not null)
+                        {
+                            foreach (var solicitud in TipoSolicitud)
+                            {
+                                <option value="@solicitud">@solicitud</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="span_2">
+                    <label for="detalle_solicitud">Detalle de la solicitud</label>
+                    <ValidationMessage For="() => _informacionBasica.detalle_solicitud" />
+                    <InputTextArea id="detalle_solicitud" rows="5" @bind-Value="_informacionBasica.detalle_solicitud" />
+                </div>
+                <button class="boton-primario span_2" type="submit">Enviar</button>
+            </div>
+
+            <div class="notas">
+                <small>
+                    Al diligenciar sus datos personales en este formulario, usted acepta <a href="https://www.olimpiait.com/proteccion-de-datos.html" target="_blank" rel="noopener noreferrer">la Política de tratamiento de datos personales de Olimpia IT</a>, y su información será tratada con fines de atender su PQRSF.
+                </small>
+                <small>
+                    Tenga en cuenta que las peticiones, quejas, reclamos y sugerencias relacionadas al formulario de requerimientos de habilitación serán respondidas dentro de los cinco (5) días hábiles posteriores a la fecha de radicación.
+                </small>
+            </div>
+        </EditForm>
+    </div>
+</div>

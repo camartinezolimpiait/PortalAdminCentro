@@ -1,0 +1,504 @@
+﻿@page "/supertransporte/centro/infraestructura"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
+@layout FormularioLayout
+
+<h3>Información de la infraestructura</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo III</h4>
+        <p>
+            7. Acreditar el cumplimiento de las condiciones de infraestructura exigidos en la Resolución 3100 de 2019 del Ministerio de Salud y Protección Social, o
+            de la norma que la modifique, adicione o sustituya.
+        </p>
+    </div>
+</details>
+
+<EditForm Model="@_infoInfraestructuraDto" OnValidSubmit="@GuardarInformacion">
+    <DataAnnotationsValidator />
+
+    <fieldset class="ancho">
+        <legend>Oficina administrativa</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacio de oficina administrativa?</div>
+        <ValidationMessage For="() => _infoInfraestructuraDto.oficina_admin" />
+        <ValidationMessage For="() => _infoInfraestructuraDto.ubicacion_oficina" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="oficina_admin" @bind-Value="_infoInfraestructuraDto.oficina_admin" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 1)" />
+                <label for="oficina_admin">Sí cuenta</label>
+            </div>
+            @if (_infoInfraestructuraDto.oficina_admin)
+            {
+                <div >
+                    <div class="validation-message">@error_ubicacion_oficina</div>
+                    <label for="ubicacion_oficina">Ubicación</label>
+                    <InputSelect id="ubicacion_oficina" @bind-Value="_infoInfraestructuraDto.ubicacion_oficina" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 1)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="ancho">
+        <legend>Servicios de aseo</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacios de servicios de aseo?</div>
+        <ValidationMessage For="() => _infoInfraestructuraDto.servicios_aseo" />
+        <ValidationMessage For="() => _infoInfraestructuraDto.ubicacion_aseo" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="servicios_aseo" @bind-Value="_infoInfraestructuraDto.servicios_aseo" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 2)" />
+                <label for="servicios_aseo">Sí cuenta</label>
+            </div>
+            @if (_infoInfraestructuraDto.servicios_aseo)
+            {
+                <div >
+                    <div class="validation-message">@error_ubicacion_aseo</div>
+                    <label for="ubicacion_aseo">Ubicación</label>
+                    <InputSelect id="ubicacion_aseo" @bind-Value="_infoInfraestructuraDto.ubicacion_aseo" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 2)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="ancho">
+        <legend>Recepción</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacio de recepción?</div>
+        <ValidationMessage For="() => _infoInfraestructuraDto.recepcion" />
+        <ValidationMessage For="() => _infoInfraestructuraDto.ubicacion_recepcion" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="recepcion" @bind-Value="_infoInfraestructuraDto.recepcion" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 3)" />
+                <label for="recepcion">Sí cuenta</label>
+            </div>
+            @if (_infoInfraestructuraDto.recepcion)
+            { 
+                <div >
+                    <div class="validation-message" >@error_ubicacion_recepcion</div>
+                    <label for="ubicacion_recepcion">Ubicación</label>
+                    <InputSelect id="ubicacion_recepcion" @bind-Value="_infoInfraestructuraDto.ubicacion_recepcion" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 3)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="ancho">
+        <legend>Unidades sanitarias</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacio de unidades sanitarias?</div>
+        <ValidationMessage For="() => _infoInfraestructuraDto.unidades_sanitarias" />
+        <ValidationMessage For="() => _infoInfraestructuraDto.ubicaciones_und_sanitarias" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="unidades_sanitarias" @bind-Value="_infoInfraestructuraDto.unidades_sanitarias" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 4)" />
+                <label for="unidades_sanitarias">Sí cuenta</label>
+            </div>
+            @if (_infoInfraestructuraDto.unidades_sanitarias)
+            {
+                <div >
+                    <div class="validation-message">@error_ubicaciones_und_sanitarias</div>
+                    <label for="ubicaciones_und_sanitarias">Ubicación</label>
+                    <InputSelect id="ubicaciones_und_sanitarias" @bind-Value="_infoInfraestructuraDto.ubicaciones_und_sanitarias" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 4)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <fieldset class="ancho">
+        <legend>Sala de espera</legend>
+        <div class="explicacion">¿El establecimiento de comercio cuenta con espacio de sala de espera?</div>
+        <ValidationMessage For="() => _infoInfraestructuraDto.sala_de_espera" />
+        <ValidationMessage For="() => _infoInfraestructuraDto.ubicacion_sala_de_espera" />
+        <div class="flex_oficinas">
+            <div >
+                <InputCheckbox id="sala_de_espera" @bind-Value="_infoInfraestructuraDto.sala_de_espera" @oninput="(ChangeEventArgs e) => ActivarSeleccion(e, 5)"/>
+                <label for="sala_de_espera">Sí cuenta</label>
+            </div>
+            @if (_infoInfraestructuraDto.sala_de_espera)
+            {
+                <div >
+                    <div class="validation-message">@error_ubicacion_sala_de_espera</div>
+                    <label for="ubicacion_sala_de_espera">Ubicación</label>
+                    <InputSelect id="ubicacion_sala_de_espera" @bind-Value="_infoInfraestructuraDto.ubicacion_sala_de_espera" @oninput="(ChangeEventArgs e) => CambioSeleccion(e, 5)">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+            }
+        </div>
+    </fieldset>
+
+    <h4>Consultorios de optometría</h4>
+    <EditForm Context="ConsultorioContext" Model="@_consultorios_opto" OnValidSubmit="@((EditContext context) => addConsultorio(context, _consultorios_opto, 1))">
+        <DataAnnotationsValidator />
+
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Ubicación</th>
+                    <th class="num">Largo (m)</th>
+                    <th class="num">Ancho (m)</th>
+                    <th class="num">Area (m²)</th>
+                    <th class="num">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_listConsultorios_opto != null)
+                {@foreach (var consultorio in _listConsultorios_opto)
+                    {
+                        <tr>
+                            <td>@_selectUbicaciones.Find(f => f.id == consultorio.ubicacion).nombre</td>
+                            <td class="num">@consultorio.largo</td>
+                            <td class="num">@consultorio.ancho</td>
+                            <td class="num">@consultorio.area</td>
+                            <td class="num"><button type="button" class="btn btn-sm" @onclick="() => ButtonOnClickQuitar(consultorio, 1)">Quitar</button></td>
+                        </tr>
+                    }}
+            </tbody>
+        </table>
+
+        <fieldset class="ancho">
+            <legend>
+                Agregar consultorio de optometría
+            </legend>
+            <ValidationMessage For="() => _consultorios_opto.ubicacion" />
+            <ValidationMessage For="() => _consultorios_opto.largo" />
+            <ValidationMessage For="() => _consultorios_opto.ancho" />
+            <ValidationMessage For="() => _consultorios_opto.area" />
+            <div class="flex_agregar">
+                <div>
+                    <label for="ubicacion">Ubicación</label>
+                    <InputSelect id="ubicacion" @bind-Value="_consultorios_opto.ubicacion">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="largo">Largo (m)</label>
+                    <InputNumber id="largo" @bind-Value="_consultorios_opto.largo" />
+                </div>
+                <div>
+                    <label for="ancho">Ancho (m)</label>
+                    <InputNumber id="ancho" @bind-Value="_consultorios_opto.ancho" />
+                </div>
+                <div>
+                    <label for="area">Área (m²)</label>
+                    <InputNumber id="area" @bind-Value="_consultorios_opto.area" />
+                </div>
+                <div>
+                    <button type="submit" class="boton-secundario">Añadir</button>
+                </div>
+            </div>
+        </fieldset>
+    </EditForm>
+
+    <h4>Consultorios de psicología</h4>
+
+    <EditForm Context="ConsultorioPsicoContext"
+              Model="@_consultorios_psico"
+              OnValidSubmit="@((EditContext context) => addConsultorio(context, _consultorios_psico, 2))">
+        <DataAnnotationsValidator />
+
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Ubicación</th>
+                    <th class="num">Largo (m)</th>
+                    <th class="num">Ancho (m)</th>
+                    <th class="num">Area (m²)</th>
+                    <th class="num">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_listConsultorios_psico != null)
+                {@foreach (var consultorio in _listConsultorios_psico)
+                    {
+                        <tr>
+                            <td>@_selectUbicaciones.Find(f => f.id == consultorio.ubicacion).nombre</td>
+                            <td class="num">@consultorio.largo</td>
+                            <td class="num">@consultorio.ancho</td>
+                            <td class="num">@consultorio.area</td>
+                            <td class="num"><button type="button" class="btn btn-sm" @onclick="() => ButtonOnClickQuitar(consultorio, 2)">Quitar</button></td>
+                        </tr>
+                    }}
+            </tbody>
+        </table>
+
+        <fieldset class="ancho">
+            <legend>
+                Agregar consultorio de psicología
+            </legend>
+            <ValidationMessage For="() => _consultorios_psico.ubicacion" />
+            <ValidationMessage For="() => _consultorios_psico.largo" />
+            <ValidationMessage For="() => _consultorios_psico.ancho" />
+            <ValidationMessage For="() => _consultorios_psico.area" />
+            <div class="flex_agregar">
+                <div>
+                    <label for="ubicacion">Ubicación</label>
+                    <InputSelect id="ubicacion" @bind-Value="_consultorios_psico.ubicacion">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="largo">Largo (m)</label>
+                    <InputNumber id="largo" @bind-Value="_consultorios_psico.largo" />
+                </div>
+                <div>
+                    <label for="ancho">Ancho (m)</label>
+                    <InputNumber id="ancho" @bind-Value="_consultorios_psico.ancho" />
+                </div>
+                <div>
+                    <label for="area">Área (m²)</label>
+                    <InputNumber id="area" @bind-Value="_consultorios_psico.area" />
+                </div>
+                <div>
+                    <button type="submit" class="boton-secundario">Añadir</button>
+                </div>
+            </div>
+        </fieldset>
+    </EditForm>
+
+    <h4>Consultorios de fonoaudiología</h4>
+
+    <EditForm Context="ConsultorioFonoContext"
+              Model="@_consultorios_fono"
+              OnValidSubmit="@((EditContext context) => addConsultorio(context, _consultorios_fono, 3))">
+        <DataAnnotationsValidator />
+
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Ubicación</th>
+                    <th class="num">Largo (m)</th>
+                    <th class="num">Ancho (m)</th>
+                    <th class="num">Area (m²)</th>
+                    <th class="num">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_listConsultorios_fono != null)
+                {@foreach (var consultorio in _listConsultorios_fono)
+                    {
+                        <tr>
+                            <td>@_selectUbicaciones.Find(f => f.id == consultorio.ubicacion).nombre</td>
+                            <td class="num">@consultorio.largo</td>
+                            <td class="num">@consultorio.ancho</td>
+                            <td class="num">@consultorio.area</td>
+                            <td class="num"><button type="button" class="btn btn-sm" @onclick="() => ButtonOnClickQuitar(consultorio, 3)">Quitar</button></td>
+                        </tr>
+                    }}
+            </tbody>
+        </table>
+
+        <fieldset class="ancho">
+            <legend>
+                Agregar consultorio de fonoaudiología
+            </legend>
+            <ValidationMessage For="() => _consultorios_fono.ubicacion" />
+            <ValidationMessage For="() => _consultorios_fono.largo" />
+            <ValidationMessage For="() => _consultorios_fono.ancho" />
+            <ValidationMessage For="() => _consultorios_fono.area" />
+            <div class="flex_agregar">
+                <div>
+                    <label for="ubicacion">Ubicación</label>
+                    <InputSelect id="ubicacion" @bind-Value="_consultorios_fono.ubicacion">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="largo">Largo (m)</label>
+                    <InputNumber id="largo" @bind-Value="_consultorios_fono.largo" />
+                </div>
+                <div>
+                    <label for="ancho">Ancho (m)</label>
+                    <InputNumber id="ancho" @bind-Value="_consultorios_fono.ancho" />
+                </div>
+                <div>
+                    <label for="area">Área (m²)</label>
+                    <InputNumber id="area" @bind-Value="_consultorios_fono.area" />
+                </div>
+                <div>
+                    <button type="submit" class="boton-secundario">Añadir</button>
+                </div>
+            </div>
+        </fieldset>
+    </EditForm>
+
+    <h4>Consultorios de medicina general</h4>
+
+    <EditForm Context="ConsultorioGeneContext"
+              Model="@_consultorios_gene"
+              OnValidSubmit="@((EditContext context) => addConsultorio(context, _consultorios_gene, 4))">
+        <DataAnnotationsValidator />
+
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Ubicación</th>
+                    <th class="num">Largo (m)</th>
+                    <th class="num">Ancho (m)</th>
+                    <th class="num">Area (m²)</th>
+                    <th class="num">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_listConsultorios_gene != null)
+                {@foreach (var consultorio in _listConsultorios_gene)
+                    {
+                        <tr>
+                            <td>@_selectUbicaciones.Find(f => f.id == consultorio.ubicacion).nombre</td>
+                            <td class="num">@consultorio.largo</td>
+                            <td class="num">@consultorio.ancho</td>
+                            <td class="num">@consultorio.area</td>
+                            <td class="num"><button type="button" class="btn btn-sm" @onclick="() => ButtonOnClickQuitar(consultorio, 4)">Quitar</button></td>
+                        </tr>
+                    }}
+            </tbody>
+        </table>
+
+        <fieldset class="ancho">
+            <legend>
+                Agregar consultorio de medicina general
+            </legend>
+            <ValidationMessage For="() => _consultorios_gene.ubicacion" />
+            <ValidationMessage For="() => _consultorios_gene.largo" />
+            <ValidationMessage For="() => _consultorios_gene.ancho" />
+            <ValidationMessage For="() => _consultorios_gene.area" />
+            <div class="flex_agregar">
+                <div>
+                    <label for="ubicacion">Ubicación</label>
+                    <InputSelect id="ubicacion" @bind-Value="_consultorios_gene.ubicacion">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="largo">Largo (m)</label>
+                    <InputNumber id="largo" @bind-Value="_consultorios_gene.largo" />
+                </div>
+                <div>
+                    <label for="ancho">Ancho (m)</label>
+                    <InputNumber id="ancho" @bind-Value="_consultorios_gene.ancho" />
+                </div>
+                <div>
+                    <label for="area">Área (m²)</label>
+                    <InputNumber id="area" @bind-Value="_consultorios_gene.area" />
+                </div>
+                <div>
+                    <button type="submit" class="boton-secundario">Añadir</button>
+                </div>
+            </div>
+        </fieldset>
+    </EditForm>
+
+    <h4>Consultorios de certificación</h4>
+
+    <EditForm Context="ConsultorioCertContext"
+              Model="@_consultorios_cert"
+              OnValidSubmit="@((EditContext context) => addConsultorio(context, _consultorios_cert, 5))">
+        <DataAnnotationsValidator />
+
+        <table class="tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Ubicación</th>
+                    <th class="num">Largo (m)</th>
+                    <th class="num">Ancho (m)</th>
+                    <th class="num">Area (m²)</th>
+                    <th class="num">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (_listConsultorios_cert != null)
+                {@foreach (var consultorio in _listConsultorios_cert)
+                    {
+                        <tr>
+                            <td>@_selectUbicaciones.Find(f => f.id == consultorio.ubicacion).nombre</td>
+                            <td class="num">@consultorio.largo</td>
+                            <td class="num">@consultorio.ancho</td>
+                            <td class="num">@consultorio.area</td>
+                            <td class="num"><button type="button" class="btn btn-sm" @onclick="() => ButtonOnClickQuitar(consultorio, 4)">Quitar</button></td>
+                        </tr>
+                    }}
+            </tbody>
+        </table>
+
+        <fieldset class="ancho">
+            <legend>
+                Agregar consultorio de certificación
+            </legend>
+            <ValidationMessage For="() => _consultorios_cert.ubicacion" />
+            <ValidationMessage For="() => _consultorios_cert.largo" />
+            <ValidationMessage For="() => _consultorios_cert.ancho" />
+            <ValidationMessage For="() => _consultorios_cert.area" />
+            <div class="flex_agregar">
+                <div>
+                    <label for="ubicacion">Ubicación</label>
+                    <InputSelect id="ubicacion" @bind-Value="_consultorios_cert.ubicacion">
+                        <option value="">-</option>
+                        @foreach (var item in _selectUbicaciones)
+                        {
+                            <option value="@item.id">@item.nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div>
+                    <label for="largo">Largo (m)</label>
+                    <InputNumber id="largo" @bind-Value="_consultorios_cert.largo" />
+                </div>
+                <div>
+                    <label for="ancho">Ancho (m)</label>
+                    <InputNumber id="ancho" @bind-Value="_consultorios_cert.ancho" />
+                </div>
+                <div>
+                    <label for="area">Área (m²)</label>
+                    <InputNumber id="area" @bind-Value="_consultorios_cert.area" />
+                </div>
+                <div>
+                    <button type="submit" class="boton-secundario">Añadir</button>
+                </div>
+            </div>
+        </fieldset>
+    </EditForm>
+
+    <BtnLoaderSuper loader="_loader" leyenda="Guardar"></BtnLoaderSuper>
+</EditForm>

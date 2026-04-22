@@ -1,0 +1,162 @@
+﻿@page "/supertransporte/centro-cea/instructor"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Relación de instructores</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo I</h4>
+        <p>
+            5. Relacionar en el Registro Único Nacional de Tránsito - RUNT los instructores  por categoría, indicando nombre, dirección, número de cédula, número de la  licencia de instructor, las cuales deben figurar en el Registro Único Nacional de  Tránsito- RUNT.
+        </p>
+    </div>
+</details>
+
+<table class="tabla-responsive proxima-nova-condensed">
+    <thead>
+        <tr>
+            <th>Identificación</th>
+            <th>Nombre completo</th>
+            <th>Categorías autorizadas</th>
+            <th>Nº Licencia de instructor</th>
+            <th>Copia de la licencia</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (_instructoresCeaResponseDto != null)
+        {
+            @foreach (var instructor in _instructoresCeaResponseDto)
+            {
+                var count = 0;
+                <tr>
+                    <td>@_select.Find(f => f.id == @instructor.tipo_doc)?.nombre @instructor.num_doc</td>
+                    <td>@instructor.primer_nombre @instructor.segundo_nombre @instructor.primer_apellido @instructor.segundo_apellido</td>
+                    <td>@instructor.categoriasAutorizadas</td>
+                    <td>@instructor.num_licencia_instructor</td>
+                    <td class="num"><button type="button" class="btn btn-sm" @onclick="() => DownloadFileLicenciaInstructor(instructor)">Descargar</button></td>
+                    <td><button type="button" class="btn btn-sm" @onclick="() => RemoveInstructor(instructor)">Quitar</button></td>
+                </tr>
+                count++;
+            }
+        }
+    </tbody>
+</table>
+
+<EditForm Context="InstructorContext" Model="@_instructorCeaForm" OnValidSubmit="@((EditContext context) => AddInstructorCea(context, _instructorCeaForm))">
+    <DataAnnotationsValidator />
+
+    <fieldset class="ancho">
+        <legend>Añadir instructor</legend>
+
+        <div class="dos_columnas">
+            <div>
+                <label for="tipo_doc">Tipo identificación</label>
+                <ValidationMessage For="() => _instructorCeaForm.tipo_doc" />
+                <InputSelect id="tipo_doc" @bind-Value="_instructorCeaForm.tipo_doc">
+                    <option value="">-</option>
+                    @foreach (var item in _select)
+                    {
+                        <option value="@item.id">@item.nombre</option>
+                    }
+                </InputSelect>
+            </div>
+            <div>
+
+                <label for="num_doc">Nº identificación:</label>
+                <ValidationMessage For="() => _instructorCeaForm.num_doc" />
+                <InputText id="num_doc" @bind-Value="_instructorCeaForm.num_doc" />
+            </div>
+            <div>
+                <label for="primer_nombre">Primer nombre</label>
+                <ValidationMessage For="() => _instructorCeaForm.primer_nombre" />
+                <InputText id="primer_nombre" @bind-Value="_instructorCeaForm.primer_nombre" />
+            </div>
+            <div>
+                <label for="segundo_nombre">Segundo nombre</label>
+                <ValidationMessage For="() => _instructorCeaForm.segundo_nombre" />
+                <InputText id="segundo_nombre" @bind-Value="_instructorCeaForm.segundo_nombre" />
+            </div>
+            <div>
+                <label for="primer_apellido">Primer apellido</label>
+                <ValidationMessage For="() => _instructorCeaForm.primer_apellido" />
+                <InputText id="primer_apellido" @bind-Value="_instructorCeaForm.primer_apellido" />
+            </div>
+            <div>
+                <label for="segundo_apellido">Segundo apellido</label>
+                <ValidationMessage For="() => _instructorCeaForm.segundo_apellido" />
+                <InputText id="segundo_apellido" @bind-Value="_instructorCeaForm.segundo_apellido" />
+            </div>
+            <div>
+                <label for="num_licencia_instructor">Número de la licencia de instructor</label>
+                <ValidationMessage For="() => _instructorCeaForm.num_licencia_instructor" />
+                <InputText id="num_licencia_instructor" @bind-Value="_instructorCeaForm.num_licencia_instructor" />
+            </div>
+        </div>
+        @if (CategoriasAutorizadasSeleccionadas == false && _submitClicked == true)
+        {
+            
+            <div class="validation-message">Debe seleccionar al menos una categoría.</div>
+        }
+        
+        <fieldset class="ancho">
+            <legend>
+                Categorías autorizadas
+            </legend>
+            <div class="flex_agregar">
+                <div>
+                    <input id="A1" type="checkbox" @bind-value="@_instructorCeaForm.categorias_autorizadas.A1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                    <label for="A1">A1</label>
+                </div>
+                <div>
+                    <input id="a2" type="checkbox" @bind-value="@_instructorCeaForm.categorias_autorizadas.A2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                    <label for="a2">A2</label>
+                </div>
+                <div>
+                    <input id="b1" type="checkbox" @bind-value="@_instructorCeaForm.categorias_autorizadas.B1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                    <label for="b1">B1</label>
+                </div>
+                <div>
+                    <input id="b2" type="checkbox" @bind-value="@_instructorCeaForm.categorias_autorizadas.B2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                    <label for="b2">B2</label>
+                </div>
+                <div>
+                    <input id="b3" type="checkbox" @bind-value="@_instructorCeaForm.categorias_autorizadas.B3" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                    <label for="b3">B3</label>
+                </div>
+                <div>
+                    <input id="c1" type="checkbox" @bind-value="@_instructorCeaForm.categorias_autorizadas.C1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                    <label for="c1">C1</label>
+                </div>
+                <div>
+                    <input id="c2" type="checkbox" @bind-value="@_instructorCeaForm.categorias_autorizadas.C2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                    <label for="c2">C2</label>
+                </div>
+                <div>
+                    <input id="c3" type="checkbox" @bind-value="@_instructorCeaForm.categorias_autorizadas.C3" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                    <label for="c3">C3</label>
+                </div>
+            </div>
+        </fieldset>
+
+        <label>Copia de la licencia de instructor</label>
+       <ValidationMessage For="@(() => _instructorCeaForm.licencia_instructor)" />
+        <InputFile class="file-input w-full p-0" id="licencia_instructor" OnChange="@HandleArchivoInstructor" />
+
+        <button type="submit" class="boton-secundario">Añadir instructor</button>
+    </fieldset>
+</EditForm>
+@if (_loader.IsVisible())
+{
+    <button class="boton-primario" type="button" style="height: 42px; width: 84px" disabled>
+        <Flow Center="true" Color="var(--color-azul-200)" Size="15.3px" />
+    </button>
+}
+else
+{
+    @*<input class="boton-primario" type='button' @onclick="@GuardarInformacion" value='Guardar Cambios'>*@
+}
+

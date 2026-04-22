@@ -1,0 +1,190 @@
+﻿.encabezado {
+    background: var(--color-azul-900);
+    color: white;
+    padding: var(--text-lg) 0;
+}
+
+    .encabezado p {
+        margin-block: 0;
+    }
+
+p.cda {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1;
+    margin-block-end: var(--text-root);
+}
+
+p.direccion,
+p.clase_centro {
+    font-size: var(--text-lg);
+    line-height: 1;
+}
+
+p.clase_centro {
+    color: var(--color-amarillo-100);
+    font-weight: 600;
+}
+
+.encabezado .wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--text-lg);
+}
+
+.columnas {
+    padding-top: var(--text-lg);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: var(--text-xl);
+}
+
+.menus {
+    position: sticky;
+    top: var(--text-lg);
+}
+
+.acciones {
+    padding: var(--text-lg);
+    border-radius: 1rem;
+    border: 1px solid var(--color-Gris-200, #d0c5b3);
+    background: var(--color-Gris-50, #f8f6f3);
+}
+
+.acciones-down {
+    color: white;
+    padding: var(--text-lg);
+    border-radius: 1rem;
+    border: 1px solid #211A0A;
+    background-color: #211A0A;
+}
+
+    .acciones-down h3 {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+        color: white !important;
+    }
+
+    .acciones h3 {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+    }
+
+    .acciones colorletras {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+        color: white !important;
+    }
+
+    .acciones linksmenusecundario {
+        font-size: var(--text-lg);
+        margin-block: 0 var(--text-root);
+        color: white !important;
+    }
+
+    .acciones .boton-primario {
+        margin-block: 0 var(--text-xl);
+    }
+
+.lista_comunicados {
+    list-style: none;
+    padding: 0;
+}
+
+.comunicado {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+    column-gap: var(--text-lg);
+    padding-bottom: 0.75rem;
+    margin-bottom: var(--text-xl);
+    /* border-bottom: 1px solid var(--color-gris-200); */
+    max-width: 60rem;
+}
+
+.comunicado-imagen {
+    border-radius: 0.5rem;
+    aspect-ratio: 1;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+    max-width: min(20vw, 200px);
+}
+
+/* .comunicado-texto h5, */
+.comunicado-texto h4 {
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+    .comunicado-texto h4 a,
+    .comunicado-texto h5 a {
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+        .comunicado-texto h4 a:hover,
+        .comunicado-texto h5 a:hover {
+            text-decoration: underline;
+        }
+
+        .comunicado-texto h4 a::after,
+        .comunicado-texto h5 a::after {
+            bottom: 0;
+            content: '';
+            display: block;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+.resumen_comunicado {
+    font-size: 1rem;
+    line-height: 1.3;
+    margin-bottom: 0.563rem;
+}
+
+/* .fecha_comunicado {
+		font-size: 0.875rem;
+		opacity: 0.7;
+		margin: 0;
+	} */
+.encabezadodos {
+    background: var(--color-azul-900);
+    color: white;
+    padding: var(--text-lg) 0;
+    margin-bottom: var(--text-lg);
+}
+
+    .encabezadodos p {
+        margin-block: 0;
+    }
+
+.link a {
+    color: var(--color-azul-100);
+    font-weight: 500;
+}
+
+p.titulodos {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1;
+    margin-block: 0.5rem 0;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 70%;
+    min-width: 0;
+}
+
+.column-resumen {
+    flex: 30%;
+    min-width: 0;
+}

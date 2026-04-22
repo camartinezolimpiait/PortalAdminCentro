@@ -1,0 +1,36 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+pr: none
+
+# ------------------------------------------------------------------
+#   Configurar el Desencadenador Programado
+#    - cron: '0 23 * * 5' -> Minuto 0, Hora 23 (11 PM UTC = 6 PM Bogotá), cualquier día/mes, Miercoles (3)
+#    - branches: include: - main -> Limita la ejecución solo a la rama 'main'
+schedules:
+- cron: '0 23 * * 3'
+  displayName: Ejecución Semanal (Miercoles 6 PM Bogotá)
+  branches:
+    include:
+    - main
+  always: true # Siempre se ejecuta en el horario, incluso si no hay cambios
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- checkout: self
+
+- powershell: |
+    choco install cloc -y
+    cloc "$(Build.SourcesDirectory)" `
+      --json `
+      --sum-one `
+      --out "$(Build.ArtifactStagingDirectory)\cloc-report-milicenciaportaladmincentro.json"
+  displayName: "Ejecutar CLOC con chocolatey"
+  
+- publish: '$(Build.ArtifactStagingDirectory)\cloc-report-milicenciaportaladmincentro.json'
+  artifact: cloc-report

@@ -1,0 +1,67 @@
+﻿@using portalAdministrativoSISEC.Enum
+<SpinLoader IsLoading="isLoading" Spinner="SpinnerType.Circle">
+    <LoadingTemplate>
+        <div style="background-color: white; height: 100%; display: flex; align-items: center;">
+            <Circle Center="true" Color="var(--color-azul-300)" />
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+
+        <h5 class="agenda-details-title @((isActiveForBlock && ToolButtonOptions.AgendaMode == AgendaMode.Schedule)?"blocking": "")">
+            @((isActiveForBlock && ToolButtonOptions.AgendaMode == AgendaMode.Schedule)?"Bloquear horarios":
+        (isActiveForBlock && ToolButtonOptions.AgendaMode == AgendaMode.Search)?"Buscar Persona":
+    "Herramientas")
+        </h5>
+        @if (!isActiveForBlock)
+        {
+            <div class="agenda-details-body">
+                <button type="button" class="boton-secundario" @onclick="(args) => ActionSheduleToolClick(args,true, AgendaMode.Schedule)">
+                    Bloquear horarios
+                </button>
+
+                <button type="button" class="boton-secundario" @onclick="(args) => ActionSheduleToolClick(args,true, AgendaMode.Search)">
+                    Buscar persona
+                </button>
+                <div class="helper">
+                    <svg class="feather">
+                        <use xlink:href="assets/feather-sprite.svg#help-circle"></use>
+                    </svg>
+                    <p>Haga clic en un espacio libre para crear una nueva cita. O seleccione una cita para ver detalle.</p>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            if (ToolButtonOptions.AgendaMode == AgendaMode.Schedule)
+            {
+                <div class="agenda-details-body">
+
+                    <p>
+                        <b>Haga clic sobre un horario para bloquearlo o desbloquearlo.</b>
+                    </p>
+                    <p>
+                        Al bloquear un horario, no se permitirá crear nuevas citas sobre él hasta que sea desbloqueado. Las citas
+                        actuales no serán afectadas.
+                    </p>
+                </div>
+
+                <div class="agenda-details-buttons">
+                    <button type="button" class="boton-primario" @onclick="SaveBlockShedule">Guardar cambios</button>
+                    <button type="button" class="boton-secundario" @onclick="(args) => ActionSheduleToolClick(args, false, AgendaMode.Schedule)">Cancelar</button>
+                </div>
+            }
+            else if (ToolButtonOptions.AgendaMode == AgendaMode.Search)
+            {
+                <div class="agenda-details-body">
+
+                    <p>
+                        Busque por nombre, apellido o cédula las citas agendadas a futuro.
+                    </p>
+
+                </div>
+            }
+        }
+
+    </ContentTemplate>
+</SpinLoader>

@@ -1,0 +1,274 @@
+﻿@page "/supertransporte/centro-cea/informacion-vehiculos"
+@using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
+@layout FormularioLayout
+@inject IJSRuntime jsRuntime
+
+<h3>Información de Vehículos</h3>
+
+<details class="detalles">
+    <summary>Ver normatividad</summary>
+    <div class="contenido">
+        <h4>Resolución No 1135 de 2020 Título II, Capítulo I</h4>
+        <p>
+            6. Contar como mínimo por cada tipología vehicular aprobada para dar instrucción con tres (3) vehículos automotores para las categorías A1, A2, y B1, C1; dos (2) vehículos para las categorías B2 y C2; un (1) vehículo para las categorías B3 y C3. Para el efecto debe presentar la licencia de tránsito. Los vehículos enunciados deben acreditar el cumplimiento de los requisitos establecidos por el Ministerio de Transporte.
+        </p>
+    </div>
+</details>
+
+@if (_vehiculosDtoResponse != null)
+{
+    <h4>Vehículos registrados</h4>
+    @foreach (var vehiculo in _vehiculosDtoResponse)
+    {
+        <details class="vehiculo">
+            <summary>
+                <div><strong style="text-transform:uppercase">@vehiculo.placa</strong> – @vehiculo.clase_de_vehiculo modelo @vehiculo.modelo</div>
+            </summary>
+            <div class="contenido">
+                <div><strong>Categorías Autorizadas</strong> <br /> @vehiculo.categoriasAutorizadas</div>
+                <div>
+                    <strong>Copia licencia de Tránsito</strong>
+                    <br />
+                    @if (!String.IsNullOrEmpty(@vehiculo.licencia_de_transito?.data?.attributes?.name))
+                    {
+                        @vehiculo.licencia_de_transito.data.attributes.name;
+                        <button style="margin-left: 10px" class="btn btn-sm" @onclick="() => DownloadFileLicenciaTransito(vehiculo)">Descargar</button>
+                    }
+                </div>
+                <div><strong>Nº Tarjeta Servicio</strong> <br /> @vehiculo.num_tarjeta_servicio</div>
+                <div><strong>Fecha Expedición</strong> <br /> @vehiculo.fecha_expedicion_ts</div>
+                <div><strong>Fecha Vencimiento</strong><br /> @vehiculo.fecha_vencimiento_ts</div>
+                <div>
+                    <strong>Copia Tarjeta Servicio</strong><br />
+
+                    @if (!String.IsNullOrEmpty(@vehiculo.copia_tarjeta_servicio?.data?.attributes?.name))
+                    {
+                        @vehiculo.copia_tarjeta_servicio.data.attributes.name;
+                        <button style="margin-left: 10px" class="btn btn-sm" @onclick="() => DownloadFileTarjetaServicio(vehiculo)">Descargar</button>
+                    }
+                </div>
+                <div><strong>Dirección Territorial que expide</strong><br /> @vehiculo.dt_que_expide_ts</div>
+                <div><strong>Siniestros</strong><br /> @vehiculo.detalleSiniestros</div>
+                <button class="btn btn-sm" @onclick="() => RemoveVehiculo(vehiculo)">Quitar</button>
+            </div>
+        </details>
+    }
+}
+
+<hr />
+
+<h4>Registrar un vehículo</h4>
+<EditForm Context="VehiculosContext" Model="@_vehiculosDtoForm" OnValidSubmit="@((EditContext context) => addVehiculo(context, _vehiculosDtoForm))">
+    <DataAnnotationsValidator />
+    <ValidationMessage For="@(() => _vehiculosDtoForm.placa)" />
+    <ValidationMessage For="@(() => _vehiculosDtoForm.modelo)" />
+    <div class="dos_columnas">
+        <div>
+            <label for="placa">Placa del vehículo</label>
+            <InputText id="placa" @bind-Value="_vehiculosDtoForm.placa" />
+        </div>
+        <div>
+            <label for="modelo">Modelo del vehículo</label>
+            <InputText id="modelo" @bind-Value="_vehiculosDtoForm.modelo" />
+        </div>
+    </div>
+    @if (CategoriasAutorizadasSeleccionadas == false && _submitClicked == true)
+    {
+        <div class="validation-message">Debe seleccionar al menos una categoría.</div>
+
+    }
+
+    <fieldset class="ancho">
+        <legend>
+            Categorías autorizadas
+        </legend>
+        <div class="flex_agregar">
+            <div>
+                <input id="A1" type="checkbox" @bind-value="@_vehiculosDtoForm.categorias_autorizadas.A1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="A1">A1</label>
+            </div>
+            <div>
+                <input id="a2" type="checkbox" @bind-value="@_vehiculosDtoForm.categorias_autorizadas.A2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="a2">A2</label>
+            </div>
+            <div>
+                <input id="b1" type="checkbox" @bind-value="@_vehiculosDtoForm.categorias_autorizadas.B1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="b1">B1</label>
+            </div>
+            <div>
+                <input id="b2" type="checkbox" @bind-value="@_vehiculosDtoForm.categorias_autorizadas.B2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="b2">B2</label>
+            </div>
+            <div>
+                <input id="b3" type="checkbox" @bind-value="@_vehiculosDtoForm.categorias_autorizadas.B3" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="b3">B3</label>
+            </div>
+            <div>
+                <input id="c1" type="checkbox" @bind-value="@_vehiculosDtoForm.categorias_autorizadas.C1" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="c1">C1</label>
+            </div>
+            <div>
+                <input id="c2" type="checkbox" @bind-value="@_vehiculosDtoForm.categorias_autorizadas.C2" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="c2">C2</label>
+            </div>
+            <div>
+                <input id="c3" type="checkbox" @bind-value="@_vehiculosDtoForm.categorias_autorizadas.C3" OnValueChanged="ActualizarCategoriasSeleccionadas" />
+                <label for="c3">C3</label>
+            </div>
+        </div>
+    </fieldset>
+
+    <label for="licencia_de_transito">Adjunte licencia de tránsito</label>
+    <ValidationMessage For="@(() => _vehiculosDtoForm.licencia_de_transito)" />
+    <InputFile class="file-input w-full p-0" id="licencia_de_transito" name="files" OnChange="HandleArchivoLicenciaTransito" />
+    <ValidationMessage For="@(() => _vehiculosDtoForm.clase_de_vehiculo)" />
+    <ValidationMessage For="@(() => _vehiculosDtoForm.num_tarjeta_servicio)" />
+    <div class="dos_columnas">
+        <div>
+            <label for="clase_de_vehiculo">Clase de vehículo</label>
+            <InputSelect id="clase_de_vehiculo" @bind-Value="_vehiculosDtoForm.clase_de_vehiculo">
+                <option value="">-</option>
+                @foreach (var item in _selectClaseVehiculo)
+                {
+                    <option value="@item.id">@item.nombre</option>
+                }
+            </InputSelect>
+        </div>
+        <div>
+            <label for="num_tarjeta_servicio">Nº tarjeta de servicio</label>
+            <InputNumber id="num_tarjeta_servicio" @bind-Value="_vehiculosDtoForm.num_tarjeta_servicio" />
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de expedición de la tarjeta de servicio
+                </legend>
+                <ValidationMessage For="() => _vehiculosDtoForm.dia_fecha_expedicion_ts" />
+                <ValidationMessage For="() => _vehiculosDtoForm.mes_fecha_expedicion_ts" />
+                <ValidationMessage For="() => _vehiculosDtoForm.anio_fecha_expedicion_ts" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_fecha_expedicion_ts">Día</label>
+                        <InputNumber id="dia_fecha_expedicion_ts" @bind-Value="_vehiculosDtoForm.dia_fecha_expedicion_ts" />
+                    </div>
+                    <div>
+                        <label for="Mes_fecha_expedicion_ts">Mes</label>
+                        <InputNumber id="Mes_fecha_expedicion_ts" @bind-Value="_vehiculosDtoForm.mes_fecha_expedicion_ts" />
+                    </div>
+                    <div>
+                        <label for="anio_fecha_expedicion_ts">Año</label>
+                        <InputNumber id="anio_fecha_expedicion_ts" @bind-Value="_vehiculosDtoForm.anio_fecha_expedicion_ts" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="fecha">
+                <legend>
+                    Fecha de vencimiento de la tarjeta de servicio
+                </legend>
+                <ValidationMessage For="() => _vehiculosDtoForm.dia_fecha_vencimiento_ts" />
+                <ValidationMessage For="() => _vehiculosDtoForm.mes_fecha_vencimiento_ts" />
+                <ValidationMessage For="() => _vehiculosDtoForm.anio_fecha_vencimiento_ts" />
+                <div class="fecha-flex">
+                    <div>
+                        <label for="dia_fecha_vencimiento_ts">Día</label>
+                        <InputNumber id="dia_fecha_vencimiento_ts" @bind-Value="_vehiculosDtoForm.dia_fecha_vencimiento_ts" />
+                    </div>
+                    <div>
+                        <label for="Mes_fecha_vencimiento_ts">Mes</label>
+                        <InputNumber id="Mes_fecha_vencimiento_ts" @bind-Value="_vehiculosDtoForm.mes_fecha_vencimiento_ts" />
+                    </div>
+                    <div>
+                        <label for="anio_fecha_vencimiento_ts">Año</label>
+                        <InputNumber id="anio_fecha_vencimiento_ts" @bind-Value="_vehiculosDtoForm.anio_fecha_vencimiento_ts" />
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+    <label for="copia_tarjeta_servicio">Adjunte copia de la tarjeta servicio</label>
+    <ValidationMessage For="@(() => _vehiculosDtoForm.copia_tarjeta_servicio)" />
+    <InputFile class="file-input w-full p-0" id="copia_tarjeta_servicio" name="files" OnChange="HandleArchivoTarjetaServicio" />
+
+    <label for="dt_que_expide_ts">Dirección territorial</label>
+    <ValidationMessage For="@(() => _vehiculosDtoForm.dt_que_expide_ts)" />
+    <div class="explicacion">Del Ministerio de Transporte que expidió la tarjeta de servicio</div>
+    <InputSelect id="dt_que_expide_ts" @bind-Value="_vehiculosDtoForm.dt_que_expide_ts">
+          <option value="">-</option>
+          @foreach (var item in _selectTerritoriales)
+          {
+               <option value="@item.id">@item.nombre</option>
+          }
+    </InputSelect>
+
+    <fieldset class="pregunta_sn">
+        <legend>
+            ¿El vehículo ha estado inmerso en siniestro vial?
+        </legend>
+        <div>
+            <InputCheckbox id="ha_estado_en_siniestro" @bind-Value="_vehiculosDtoForm.ha_estado_en_siniestro" />
+            <label for="ha_estado_en_siniestro">Sí ha tenido siniestros</label>
+        </div>
+    </fieldset>
+
+    @if (_vehiculosDtoForm.ha_estado_en_siniestro)
+    {
+
+        <EditForm Context="SiniestroContext" Model=@_siniestro OnValidSubmit="@((EditContext context) => AddSiniestro(context, _siniestro))">
+            <DataAnnotationsValidator />
+
+            <fieldset>
+                <legend>
+                    Reportar siniestros
+                </legend>
+                <table class="tabla-responsive">
+                    <thead>
+                        <tr>
+                            <th class="num">Nº</th>
+                            <th>¿Durante clase?</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (_siniestros != null)
+                        {
+                            @foreach (var siniestro in _siniestros)
+                            {
+                                <tr>
+                                    <td class="num">@siniestro.id_siniestro</td>
+                                    <td>@(siniestro.fue_durante_clase ? "Sí" : "No")</td>
+                                    <td><button type="button" class="btn btn-sm" @onclick="() => RemoveSiniestro(siniestro)">Quitar</button></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div class="explicacion">Haga clic en el botón para agregar los siniestros en los que ha estado el vehículo a la lista marcando cuáles han ocurrido durante clase</div>
+                <div class="flex_agregar">
+                    <div>
+                        <InputCheckbox id="fue_durante_clase" @bind-Value="_siniestro.fue_durante_clase" />
+                        <label for="fue_durante_clase">Fue durante clase</label>
+                    </div>
+                    <button class="boton-secundario" type="submit">Añadir siniestro</button>
+                </div>
+            </fieldset>
+        </EditForm>
+    }
+
+    <button type="submit" class="boton-secundario">Crear vehículo</button>
+</EditForm>
+<br />
+<hr />
+@if (_loader.IsVisible())
+{
+    <button class="boton-primario" type="button" style="height: 42px; width: 84px" disabled>
+        <Flow Center="true" Color="var(--color-azul-200)" Size="15.3px" />
+    </button>
+}
+else
+{
+    <input class="boton-primario" type='button' @onclick="@GuardarInformacion" value='Guardar Cambios'>
+}
+

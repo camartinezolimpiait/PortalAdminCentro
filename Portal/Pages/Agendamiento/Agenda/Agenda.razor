@@ -1,0 +1,187 @@
+﻿@page "/agenda"
+@inherits LayoutComponentBase
+@layout PortalLayout
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
+@using portalAdministrativoSISEC.Enum
+@using portalAdministrativoSISEC.Util
+
+<SpinLoader IsLoading="isLoading" Spinner="SpinnerType.Circle">
+    <LoadingTemplate>
+        <div style="background-color: white; height: 100%; display: flex; align-items: center;">
+            <Circle Center="true" Color="var(--color-azul-300)" />
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <main>
+
+            @if (OptionAgendaMode != null)
+            {
+                if (OptionAgendaMode.AgendaMode == AgendaMode.Search)
+                {
+                    <section class="agenda-buscador">
+                        <div class="buscador">
+                            <input id="nombre_aspirante" type="text" @bind="parametro" placeholder="Nombre del aspirante" @bind:event="oninput"
+                                   @onkeydown="@BuscarPorNombreEnter" />
+                            <button class="boton-primario py-0 flex gap-1 items-center" @onclick="BuscarPorNombre">
+                                <svg class="feather transform translate-0">
+                                    <use xlink:href="assets/feather-sprite.svg#search"></use>
+                                </svg>
+                                <span>Buscar</span>
+                            </button>
+                            <button class="boton-secundario" @onclick="ShowScheduleMode">
+                                Regresar
+                            </button>
+                        </div>
+
+                        @if (!ConsultaNombre.Any())
+                        {
+                            @if (parametro != "")
+                            {
+                                <p>Sin resultados</p>
+                            }
+                        }
+                        else
+                        {
+                            <div class="resultados-busqueda">
+                                @foreach (var cita in ConsultaNombre)
+                                {
+                                    <button type="button" class="btn btn-lg" @onclick="(e)=>ClickResultado(cita.IdAgenda, cita.HoraString())">
+                                        <span class="resultado-nombres">@cita.Nombres @cita.Apellidos</span>
+                                        <span class="font-normal">
+                                            @cita.FechaAgenda.ToResultadoBusqueda()
+                                        </span>
+                                    </button>
+                                }
+                            </div>
+                        }
+
+
+                    </section>
+                }
+                else if (OptionAgendaMode.AgendaMode == AgendaMode.Schedule)
+                {
+                    if (parametrizationAgenda is not null)
+                    {
+                        <section class="agenda-calendar">
+                            <div class="calendar-wrapper">
+
+                                <div class="controles">
+                                    <div class="controles-fechas">
+                                        <h3>@selectedWeek</h3>
+                                        @if (viewBehind)
+                                        {
+                                            <button type="button" @onclick="PreviusWeek">
+                                                <svg class="feather">
+                                                    <use xlink:href="assets/feather-sprite.svg#arrow-left"></use>
+                                                </svg>
+                                            </button>
+                                        }
+
+                                        <button type="button" @onclick="TodayWeek">
+                                            Hoy
+                                        </button>
+                                        <button type="button" @onclick="NextWeek">
+                                            <svg class="feather">
+                                                <use xlink:href="assets/feather-sprite.svg#arrow-right"></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <ul class="day-names calendar calendar-@(((ScheduleColumns)Columns).ToString().ToLower())">
+                                        <li class="day-padding"></li>
+
+                                        @foreach (var day in parametrizationAgenda.Where(x => x.IdHorarioCita !=
+                               (int)FranjaHoraria.Almuerzo))
+                                        {
+                                            <li class="day-name @((day.IdHorarioCita -1) == 0?"day-name-first": string.Empty)">
+                                                @if (IsShowForBlock)
+                                                {
+                                                    var IsAllDayBlocked = IsAllDayBlock(day.IdHorarioCita); // listDates[day.IdHorarioCita - 1]
+                                                    <input id="@day.IdHorarioCita" class="appointment-block-chechbox" type="checkbox" checked="@IsAllDayBlocked"
+                                                           @onchange="(args) => BlockEntireDay(args, day.IdHorarioCita, ref IsAllDayBlocked)" />
+
+                                                }
+                                                <label for="@day.IdHorarioCita">
+                                                    @(((FranjaHoraria)day.IdHorarioCita).ToString()) @listDays[day.IdHorarioCita - 1]
+                                                </label>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </div>
+                                <ul class="calendar calendar-@(((ScheduleColumns)Columns).ToString().ToLower())">
+
+                                    @*Creacion de los intevalos de agendas*@
+                                    @if (!IsShowForBlock)
+                                    {
+                                        if (OptionAppoiment.ScheduleForm != ScheduleForms.ReSchedule
+                                        && OptionAppoiment.ScheduleForm != ScheduleForms.ReScheduleConfirmation)
+                                        {
+                                            <AppoimentsComponent CitasIntervaloListado="listCitasIntervalos"
+                                                                 NewAppoimentCallback="AppoimentClick" StartDate="FirstDate.Value" />
+                                        }
+                                        else
+                                        {
+                                            <ReScheduleAppoimentComponent CitasIntervaloListado="listCitasIntervalos"
+                                                                          NewAppoimentCallback="AppoimentClick" OptionAppoiment="OptionAppoiment"
+                                                                          StartDate="FirstDate.Value" />
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <BlockScheduleComponent CitasIntervaloListado="listCitasIntervalos" BlockDays="DaysToBlock"
+                                                                HandlerBlock="HandlerAllBlock" HandlerDayBlock="@DayBlock"
+                                                                ActivateAllDayBlockCallbak="ActivateEnabledDay" />
+                                    }
+                                </ul>
+
+                            </div>
+                        </section>
+                    }
+                    else
+                    {
+                        <section class="agenda-empty">
+                            <p>No hay una configuración de agenda para esta semana</p>
+                        </section>
+                    }
+                }
+                <section class="agenda-details">
+                    @if (parametrizationAgenda is not null)
+                    {
+                        if (ShowAppoimentForm && !IsShowForBlock)
+                        {
+                            switch (OptionAppoiment.ScheduleForm)
+                            {
+                                case ScheduleForms.NewSchedule:
+                                    <NewAppoimentComponent OptionAppoiment="OptionAppoiment" CancelForm="CancelNewAppoiment"
+                                                           AppoimentSaved="SavedNewAppoiment" />
+                                    break;
+                                case ScheduleForms.ScheduleDetail:
+                                    <AppoimentDetailsComponent OptionAppoiment="OptionAppoiment" AgendaDTOCallback="ObtainAgendaAsync" CancelScheduleCallback="AppoimentClick" />
+                                    break;
+                                case ScheduleForms.CancelSchedule:
+                                    <CancelAppoimentComponent OptionAppoiment="OptionAppoiment" AgendaDTO="AgendaDTOObtained" CancelScheduleCallback="AppoimentClick" />
+                                    break;
+                                case ScheduleForms.ReSchedule:
+                                case ScheduleForms.ReScheduleConfirmation:
+                                    <ReScheduleConfirmationComponent OptionAppoiment="OptionAppoiment"
+                                                                     AgendaDTO="AgendaDTOObtained"
+                                                                     ReScheduleAppoimentCallback="AppoimentClick" />
+                                    break;
+                                default:
+                                    <p>Seleccione una cita para ver el detalle</p>
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            <ButtonBlockActionsComponent ButtonToolActionOnClick="ButtonBlockSelected" BlockScheduleEvent="BlockScheduleRefresh"
+                                                         ToolButtonOptions="OptionAgendaMode" />
+                        }
+                    }
+                </section>
+            }
+        </main>
+    </ContentTemplate>
+</SpinLoader>

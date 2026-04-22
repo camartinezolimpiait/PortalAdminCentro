@@ -1,0 +1,13 @@
+@layer base {
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  .separador-enrolamiento {
+    margin: 0.8rem 0;
+  }
+
+  .card-tramites label:first-child {
+    font-weight: bold;
+  }
+}

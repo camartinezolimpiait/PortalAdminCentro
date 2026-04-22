@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "nombre": "Optometra"
+    },
+    {
+      "id": "2",
+      "nombre": "Psicologo (a)"
+    },
+    {
+      "id": "3",
+      "nombre": "Fonoaudiólogo (a)"
+    },
+    {
+      "id": "4",
+      "nombre": "Médico (a) general"
+    }
+  ]
+}

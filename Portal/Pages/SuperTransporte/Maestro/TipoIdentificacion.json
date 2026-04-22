@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "nombre": "Cédula Ciudadanía"
+    },
+    {
+      "id": 2,
+      "nombre": "Número de Identificación Tributaria - NIT"
+    },
+    {
+      "id": 3,
+      "nombre": "Pasaporte            "
+    },
+    {
+      "id": 4,
+      "nombre": "Cédula de Extranjería"
+    },
+    {
+      "id": 5,
+      "nombre": "Tarjeta de Identidad "
+    },
+    {
+      "id": 6,
+      "nombre": "Registro Civil"
+    }
+  ]
+}

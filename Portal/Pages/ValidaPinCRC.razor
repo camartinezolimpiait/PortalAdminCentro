@@ -1,0 +1,121 @@
+﻿@page "/ValPinCRC"
+@layout SingleLayout
+@inject NavigationManager UriHelper
+@using Microsoft.Extensions.Configuration
+@using System.Net.Http
+@using Microsoft.AspNetCore.Components.Forms
+@using Newtonsoft.Json;
+@using Microsoft.JSInterop
+@inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+
+<div class="formulario-2 ">
+    <h2>Validación PIN Estudiante</h2>
+    <label for='tipoDocumento' class="texto-label col-form-label">Número Documento: @menuservice.entradaEnrolamiento.NumeroDocumento</label>
+
+
+    <EditForm Model="@origenPinDTO">
+
+        <label class="texto-label col-form-label">Entidad Pago</label>
+        <InputSelect name="origenPin" id="origenPin" class="form-group" @bind-Value="@origenPinDTO.IdOrigenPin">
+            <option value="" selected>Seleccione...</option>
+            @foreach (var itemPin in origenPinGral)
+            {
+                <option value="@itemPin.IdOrigenPin">@itemPin.Nombre</option>
+            }
+        </InputSelect>
+    </EditForm>
+
+
+    <label class="texto-label col-form-label">Valor del PIN</label>
+    <input type="text" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.ValorPin" inputmode="numeric" pattern="[0-9]" id="valorPin" name="valorPin" />
+    <label class="texto-label col-form-label">Número PIN</label>
+    <input type="text" style="margin-right:10px" @bind-value="@menuservice.entradaEnrolamiento.NumeroPin" inputmode="numeric" pattern="[0-9]" id="numPin" name="numPin" />
+
+    @if (respuestaValidacionValidacionPin.Respuesta)
+    {
+        <button type="button" class="boton-primario" @onclick="@Siguiente">Siguiente</button>
+    }
+    else
+    {
+        @if (showModalValida)
+        {
+            <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <h4>Validación PIN</h4>
+                            <p>@respuestaValidacionValidacionPin.RespuestaTexto</p>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            @*<button type="button" class="btn" @onclick="@(() => showModal = !showModal)">Cancelar</button>*@
+                            <button type="button" class="btn btn-primary" @onclick=@(() => closeValida())>Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    <button type="button" class="boton-primario" @onclick=@(() => ValidaPin())> Validar PIN</button>
+
+</div>
+
+@code {
+    List<OrigenPinDTO> origenPinGral = new List<OrigenPinDTO>();
+    OrigenPinDTO origenPinDTO = new OrigenPinDTO();
+    private ApplicationSevice menuservice = new ApplicationSevice();
+
+    RespGeneralModel respuestaValidacionValidacionPin = new RespGeneralModel();
+    bool showModalValida = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        origenPinGral = await obtenerOrigenesPin();
+    }
+
+
+    void Siguiente()
+    {
+        menuservice.idOrigenPin = Convert.ToInt32(origenPinDTO.IdOrigenPin);
+        UriHelper.NavigateTo("AuthData");
+    }
+
+    private void closeValida()
+    {
+        showModalValida = false;
+        StateHasChanged();
+    }
+
+    private void ValidaPin()
+    {
+        showModalValida = true;
+        respuestaValidacionValidacionPin.Respuesta = true;
+        StateHasChanged();
+    }
+
+
+    protected async Task<List<OrigenPinDTO>> obtenerOrigenesPin()
+    {
+        List<OrigenPinDTO> origenPinDTO = new List<OrigenPinDTO>();
+        Http = new HttpClient();
+        var apiName = "ObtenerPinValidaPin";
+        Http.BaseAddress = new Uri(@Configuration["AppSettings:uriSisecAgente"]);
+
+        var response = await Http.GetAsync(apiName);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            origenPinDTO = JsonConvert.DeserializeObject<List<OrigenPinDTO>>(content);
+        }
+        return origenPinDTO;
+    }
+}

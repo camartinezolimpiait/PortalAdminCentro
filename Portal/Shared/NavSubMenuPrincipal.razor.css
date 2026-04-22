@@ -1,0 +1,15 @@
+﻿.subnav {
+    padding: 1rem;
+    background: var(--color-gris-50);
+    color: var(--color-gris-900);
+    box-shadow: var(--inset);
+
+    a {
+        text-decoration: none;
+    }
+}
+
+.menu {
+    --menu-active-bg: var(--color-amarillo-200);
+	--menu-active-fg: var(--color-amarillo-900);
+}

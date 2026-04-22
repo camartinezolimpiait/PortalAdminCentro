@@ -1,0 +1,45 @@
+﻿@using portalAdministrativoSISEC.Data
+
+
+@if (menuService.menuList == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <nav id="myNav">
+        <ul class="nav-lista">            
+            @foreach (var mn in menuService.menuList)
+            {
+                <li class="nav-lista">
+                    <NavLink class="nav-link" @onclick="()=> GetIsCliked(mn)">
+                        <span class="@mn.IconoNombre" aria-hidden="true"></span>@mn.Ruta
+                    </NavLink>
+                    <ul>
+                        @foreach (var mn1 in menuService.menuList)
+                        {
+                            @if (mn.Id == mn1.Padre)
+                            {
+                                if (expandSubNav && mn.Id == clickedMenu)
+                                {
+                                    <li class="nav-item px-3">
+                                        <NavLink class="nav-link" href="@mn1.Ruta" @onclick="()=> GetIsCliked(mn1)">
+                                            <span class="@mn1.IconoNombre" aria-hidden="true"></span>@mn1.Ruta
+
+                                        </NavLink>
+                                    </li>
+                                }
+                            }
+                        }
+
+                    </ul>
+                </li>
+            }
+            @*<li class="nav-lista">
+                <NavLink class="nav-link" href="Enrollment">
+                    Enrolamiento
+                </NavLink>               
+            </li>*@
+        </ul>
+    </nav>
+}

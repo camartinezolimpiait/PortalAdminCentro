@@ -1,0 +1,197 @@
+﻿@page "/configuracion/horario-atencion"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+
+        <h3>Horario de atención</h3>
+        <p>
+            Este horario podrá ser visto por los ciudadanos en MiLicencia.co
+            y también es la base para el módulo de agendamiento.
+        </p>
+        @if (agendaFutura)
+        {
+            <div class="switch-field">
+                <input type="radio" name="schedule" id="actual"
+                       value="1" checked="checked"
+                       @onchange="ConfigurationOnChange" />
+                <label for="actual" style="cursor:pointer;">
+                    Horario actual
+                </label>
+
+                <input type="radio" name="schedule" id="futuro"
+                       value="2"
+                       @onchange="ConfigurationOnChange" />
+                <label for="futuro" style="cursor:pointer;">
+                    Horario futuro
+                </label>
+            </div>
+
+        }
+
+        <table class="tabla-horario tabla-responsive">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Hora de apertura</th>
+                    <th>Hora de cierre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (configuracionHorarios != null && configuracionHorarios.Any())
+                {
+                    @foreach (var horario in configuracionHorarios.Where(x => x.IdHorarioCita != 8))
+                    {
+                        @if (@horario.IsVisible)
+                        {
+                            <tr>
+                                @if (!readOnly)
+                                {
+                                    <td>
+                                        @if (@horario.IsActivo)
+                                        {
+                                            <input id="@horario.Dia" type="checkbox" value="@horario.IsActivo"
+                                                   @onchange="args => HabilitarDia(args, horario)" checked />
+                                        }
+                                        else
+                                        {
+                                            <input id="@horario.Dia" type="checkbox" value="@horario.IsActivo"
+                                                   @onchange="args => HabilitarDia(args, horario)" />
+                                        }
+                                        <label for="@horario.Dia">@horario.Dia</label>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <label for="@horario.Dia">@horario.Dia</label>
+                                    </td>
+
+                                }
+
+                                <td>
+                                    @if (horario.IsActivo)
+                                    {
+                                        <input readonly="@readOnly" type="time" value="@horario.ConvertirHoraInicio()"
+                                               @onchange="args => ActualizarHoraDia(args, horario, 1)" />
+                                    }
+                                </td>
+                                <td>
+                                    @if (horario.IsActivo)
+                                    {
+                                        <input type="time" readonly="@readOnly" value="@horario.ConvertirHoraFin()"
+                                               @onchange="args=>ActualizarHoraDia(args, horario, 2)" />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+        @if (!readOnly)
+        {
+            <div>
+
+                <fieldset>
+                    <legend>Configuración avanzada</legend>
+
+                    @if (@isActiveIndependiente)
+                    {
+                        <input id="diferente" type="checkbox" @onchange="args=>HorarioDiferente(args)" checked />
+                    }
+                    else
+                    {
+                        <input id="diferente" type="checkbox" @onchange="args=>HorarioDiferente(args)" />
+                    }
+                    <label for="diferente">Horario diferente para cada dia hábil</label>
+
+                    <br />
+
+                    @if (@isActiveHoraAlmuerzo)
+                    {
+                        <input id="almuerzo" type="checkbox" @onchange="args=>HorarioAlmuerzo(args)" checked />
+                    }
+                    else
+                    {
+                        <input id="almuerzo" type="checkbox" @onchange="args=>HorarioAlmuerzo(args)" />
+                    }
+                    <label for="almuerzo">Horario de almuerzo</label>
+
+                    @if (configuracionHorarios != null && configuracionHorarios.Any())
+                    {
+
+                        @foreach (var horario in configuracionHorarios.Where(x => x.IdHorarioCita == 8 && x.IsVisible == true))
+                        {
+                            <table class="tabla-almuerzo tabla-responsive">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Hora inicio</th>
+                                        <th>Hora fin</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@horario.Dia</td>
+                                        <td>
+                                            <input type="time" value="@horario.ConvertirHoraInicio()"
+                                                   @onchange="args => ActualizarHoraDia(args, horario, 1)" />
+                                        </td>
+                                        <td>
+                                            <input type="time" value="@horario.ConvertirHoraFin()"
+                                                   @onchange="args=>ActualizarHoraDia(args, horario, 2)" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        }
+                    }
+                </fieldset>
+            </div>
+        }
+
+
+        @if (isActual && !agendaFutura)
+        {
+            <div>
+                <button class="boton-primario" @onclick="ButtonOnClickNewSchedule">Nuevo Horario</button>
+            </div>
+        }
+
+
+
+        @if (!isActual && createNewConfiguration)
+        {
+            <p>
+                <b>
+                    Esta configuración será válida a partir del día Lunes @fechaParametrizacion .
+                </b>
+            </p>
+            if (!existFutureAppointment)
+            {
+                <button class="boton-secundario" @onclick="ButtonOnClickCancel">Cancelar</button>
+                <button class="boton-primario" @onclick="GuardarConfiguracionhorarios">Guardar Cambios</button>
+            }
+            else
+            {
+                <p>
+                    Debido a que existe citas ya programadas para esa nueva parametrización , no es posible editar, si desea editar ,
+                    debe cancelar las citas agendadas mayor a la fecha  @fechaParametrizacion
+                    o en su defecto esperar hasta ese mismo dia, para crear una nueva parametrización.
+                </p>
+            }
+
+
+
+        }
+    </ContentTemplate>
+</SpinLoader>

@@ -1,0 +1,59 @@
+﻿@page "/compradepin/tipotramite"
+@inherits LayoutComponentBase
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+@using portalAdministrativoSISEC.Pages.CompraPin
+@inject NavigationManager NavManager
+
+
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <legend>
+            @if (pagoPin.OpcionTramite == DescripcionOpcionTramite.FirstOrDefault(x => x.Key == 1).Key)
+            {
+                <h3>Tipo de trámite</h3>
+            }
+            else if (pagoPin.OpcionTramite == DescripcionOpcionTramite.FirstOrDefault(x => x.Key == 2).Key)
+            {
+                <h3>
+                    Trámite para @(pagoPin.PasoCotizacion == PasosCompraPin.TipoTramiteComboCarro ? "Carro" : "Moto")
+                </h3>
+            }
+        </legend>
+
+        <p>Seleccione el tipo de trámite que desea realizar</p>
+
+        <EditForm EditContext="@editContext" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+
+            <div style="margin-bottom:10px">
+                <InputRadioGroup @bind-Value="TipoTramiteSeleccionado" Name="opcionTipo">
+                    @foreach (var tramite in pagoPin.EdadAspirante >= 18
+                    ? ListaSeleccionTramite
+                    : ListaSeleccionTramite.Where(t => t.Id == (int)EnumTramite.PrimeraVez))
+                    {
+                        <div>
+                            <InputRadio Value="@tramite.Id" id="@tramite.Id" />
+                            <label for="@tramite.Id">@tramite.Nombre</label>
+                        </div>
+                    }
+                </InputRadioGroup>
+            </div>
+
+            <ValidationMessage For="@(() => TipoTramiteSeleccionado)" />
+
+            <div class="flex items-center mt-5 space-x-3">
+                <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">Atrás</button>
+                <button type="submit" class="boton-primario">Siguiente</button>
+            </div>
+        </EditForm>
+
+    </ContentTemplate>
+
+</SpinLoader>

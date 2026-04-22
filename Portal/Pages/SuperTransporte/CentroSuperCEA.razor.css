@@ -1,0 +1,9 @@
+.cuadricula {
+  grid-template-rows: repeat(5, 1fr);
+
+  button {
+    min-height: 42px;
+    height: auto;
+    line-height: 1.1;
+  }
+}

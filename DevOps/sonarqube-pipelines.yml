@@ -1,0 +1,50 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+     - Portal
+    
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  dotnetSdkVersion: '8.x'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Use .NET SDK $(dotnetSdkVersion)'
+  inputs:
+    version: '$(dotnetSdkVersion)'
+- task: SonarQubePrepare@7
+  inputs:
+    SonarQube: 'SonarQube'
+    scannerMode: 'dotnet'
+    # dotnetScannerVersion: '8.x'
+    projectKey: 'MiLicencia_PortalAdminCentro'
+    projectName: 'MiLicencia_PortalAdminCentro'
+
+- task: Npm@1
+  displayName: 'npm install'
+  inputs:
+    command: 'install'
+    workingDir: 'Portal'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Application'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+
+- task: SonarQubeAnalyze@7
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
+- task: SonarQubePublish@7
+  inputs:
+    pollingTimeoutSec: '300'

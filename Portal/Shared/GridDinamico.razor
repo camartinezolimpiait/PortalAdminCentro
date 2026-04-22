@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+<SpinLoader IsLoading="isLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <div>
+        <table>
+            <tr>
+                @for (int i = 0; i < propertyNames.Count(); i++)
+                {
+                    <td>@propertyNames[i].ToString()</td>
+                }
+            </tr>
+            
+                @for (int i = 0; i < Listado.Count(); i++)
+                {
+                <tr>
+                    @foreach (var prop in propertyNames)
+                    {
+                        <td>
+                        @Listado[i].GetType().GetProperty(prop).GetValue(Listado[i], null).ToString()
+                        </td>
+                    }
+                </tr>
+                }
+            
+        </table>
+            <button name="atras" @onclick="()=> OnAtrasClicked(seleccion)">Atras</button> <button name="adelante" @onclick="()=> OnSiguienteClicked(seleccion)">Siguiente</button>
+        </div>
+        </ContentTemplate>
+        </SpinLoader>

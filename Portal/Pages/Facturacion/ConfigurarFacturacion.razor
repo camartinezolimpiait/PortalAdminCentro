@@ -1,0 +1,105 @@
+﻿@page "/configuracion/configurarFacturacion"
+@inherits LayoutComponentBase
+@layout Configuracion
+
+@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Pages.Common;
+@using portalAdministrativoSISEC.Pages.Agendamiento;
+@using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.Categorias
+@using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
+@using portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
+@using portalAdministrativoSISEC.Pages.CompraPin.Resumen
+@using portalAdministrativoSISEC.Pages.CompraPin.Tramite
+@using portalAdministrativoSISEC.Pages.CompraPin.Blog;
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo;
+@using System.ComponentModel.DataAnnotations
+@using portalAdministrativoSISEC.Pages.Facturacion.Articulos
+@using portalAdministrativoSISEC.Pages.Facturacion.Comportamiento
+@using portalAdministrativoSISEC.Pages.Facturacion.Credenciales
+@using portalAdministrativoSISEC.Pages.Facturacion.Emision
+@using portalAdministrativoSISEC.Pages.Facturacion.Estado
+@using portalAdministrativoSISEC.Pages.Facturacion.Numeracion
+@using portalAdministrativoSISEC.Util.Extension;
+@using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
+
+@inject NavigationManager NavManager
+
+<SpinLoader IsLoading="IsLoading">
+    <LoadingTemplate>
+        <div style="height:100%;display:flex">
+            <br />
+            <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+        </div>
+    </LoadingTemplate>
+    <ContentTemplate>
+        <EditForm EditContext="@EditContext" id="ConfigurarFacturacion" style="max-width: 99%">
+            <DataAnnotationsValidator />
+
+            <h3>Facturación electrónica automática</h3>
+
+            @if (!FacturacionActiva)
+            {
+                <p class="paragraph">
+                    Olimpia IT ahora ofrece un servicio de facturación que le permite emitir las facturas electrónicas de sus procesos de certificación automáticamente. Para más información o activación del servicio, comuníquese por los canales de atención para CRC o CEA.
+                </p>
+            }
+            else
+            {
+                @* Inicio refactorización/optimización por GitHub Copilot *@
+                @if (GetCentroResponse != null)
+                {
+                    <div class="mb-6">
+                        <Estado IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" Proveedor="true" IsConfiguration="true"></Estado>
+                    </div>
+                    
+                }
+                @* Fin refactorización/optimización por GitHub Copilot *@
+
+                <div class="tabs-container">
+                    <!-- Botones de Tabs -->
+                    @* Inicio refactorización/optimización por GitHub Copilot *@
+                    <div class="tab-buttons">
+                        <button class="@GetTabClass("Tab1")" @onclick="@(() => ChangeTab("Tab1"))" disabled="@IsLoading">Credenciales</button>
+                        <button class="@GetTabClass("Tab2")" @onclick="@(() => ChangeTab("Tab2"))" disabled="@IsLoading">Datos para la emisión</button>
+                        <button class="@GetTabClass("Tab3")" @onclick="@(() => ChangeTab("Tab3"))" disabled="@IsLoading">Numeración DIAN</button>
+                        <button class="@GetTabClass("Tab4")" @onclick="@(() => ChangeTab("Tab4"))" disabled="@IsLoading">Articulos</button>
+                        <button class="@GetTabClass("Tab5")" @onclick="@(() => ChangeTab("Tab5"))" disabled="@IsLoading">Comportamiento</button>
+                     </div>
+                     @* Fin refactorización/optimización por GitHub Copilot *@
+                     
+                     <!-- Contenido de las Tabs -->
+                     @* Inicio refactorización/optimización por GitHub Copilot *@
+                     <div class="tabs-content">
+                        @if (GetCentroResponse != null)
+                        {
+                            @if (activeTab == "Tab1")
+                            {
+                               <Credenciales IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" UsuarioPortal="@(UserName)" ConfigurarCredencialesModel="CredencialesModel" UpdateModel="UpdateModel"></Credenciales>
+                            }
+                            else if (activeTab == "Tab2")
+                            {
+                                <Emision IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" Regimen="@(Regimen)" Departamentos="@(Departamentos)" Municipios="@(Municipios)" TiposPersona="@(TiposPersona)" UserName="@(UserName)" ConfigurarEmisionModel="EmisionModel" UpdateModel="UpdateModel"></Emision>
+                            }
+                            else if (activeTab == "Tab3")
+                            {
+                                <Numeracion IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" UserName="@(UserName)" ConfigurarNumeracionModel="NumeracionModel" UpdateModel="UpdateModel"></Numeracion>
+                            }
+                            else if (activeTab == "Tab4")
+                            {
+                                <Articulos IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" Negocio="@(Plataforma)" UserName="@(UserName)" CategoriasCEA="@(CategoriasCEA)" UpdateModel="UpdateModel"></Articulos>
+                            }
+                            else if (activeTab == "Tab5")
+                            {
+                                <Comportamiento IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" UserName="@(UserName)" DisparadoresFacturacion="@(DisparadoresFacturacion)" ConfigurarComportamientoModel="ComportamientoModel" UpdateModel="UpdateModel"></Comportamiento>
+                            }
+                        }
+                     </div>
+                     @* Fin refactorización/optimización por GitHub Copilot *@
+                </div>
+            }
+
+        </EditForm>
+    </ContentTemplate>
+</SpinLoader>

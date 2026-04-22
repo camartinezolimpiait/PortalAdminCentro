@@ -1,0 +1,33 @@
+﻿@if (Open)
+{
+    <!-- Backdrop -->
+    <div class="fixed inset-0 z-50 grid place-items-center bg-black/40">
+        <!-- Contenedor 414x260 -->
+        <div role="dialog"
+             aria-modal="true"
+             class="w-[414px] h-[260px] rounded-lg bg-base-100 shadow-xl p-6 flex flex-col gap-4 text-center">
+            <h2 class="text-xl font-bold text-black m-0">Redirigiendo</h2>
+            <p class="text-center m-0 text-lg leading-snug text-balance">
+                Te estamos redirigiendo a PSE 
+                Colpatria para continuar con tu pago
+            </p>
+
+
+            <!-- Spacer flexible para centrar el loader verticalmente -->
+            <div class="flex-1 grid place-items-center">
+                <Circle Center="true" Color="var(--color-azul-600)"></Circle>
+            </div>
+
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public bool CloseOnBackdrop { get; set; } = true;
+
+    private async Task Close() => await OpenChanged.InvokeAsync(false);
+    private async Task OnBackdropClick() { if (CloseOnBackdrop) await Close(); }
+}

@@ -1,0 +1,31 @@
+﻿.blocking {
+    background: var(--color-naranja-200) !important;
+    color: var(--color-naranja-900) !important;
+}
+
+.agenda-details-body {
+    flex: auto;
+    display: flex;
+    flex-flow: column;
+    align-items: stretch;
+}
+
+    .agenda-details-body button {
+        padding: 0.4rem;
+    }
+
+.helper {
+    text-align: center;
+    margin: auto 0;
+    opacity: 0.7;
+    display: flex;
+    flex-flow: column;
+}
+
+    .helper > .feather {
+        width: 120px;
+        height: 120px;
+        stroke-width: 2;
+        margin: 0 auto 1rem auto;
+        opacity: 0.4;
+    }

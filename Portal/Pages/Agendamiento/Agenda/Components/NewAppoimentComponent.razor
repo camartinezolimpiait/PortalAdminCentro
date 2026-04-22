@@ -1,0 +1,188 @@
+﻿@using portalAdministrativoSISEC.Enum
+
+<SpinLoader IsLoading="isLoading" Spinner="SpinnerType.Circle">
+	<LoadingTemplate>
+		<div style="background-color: white; height: 100%; display: flex; align-items: center;">
+			<Circle Center="true" Color="var(--color-azul-300)" />
+		</div>
+	</LoadingTemplate>
+	<ContentTemplate>
+		<h5 class="agenda-details-title">Nueva cita,  @OptionAppoiment.ScheduleDay.Value.ToString("dd/MM/yyyy") - @convertirHoraEstandar(@OptionAppoiment.TimeString)</h5>
+		<div class="agenda-details-body">
+			<EditForm Model=@dataAgenda OnSubmit="@OnSubmitSaveSchedule" id="@FormId">
+				<div class="form-group">
+					<label for="firstName">Nombres</label>
+					<input type="text" id="firstName" maxlength="50" required autocomplete="off" @bind-value="dataAgenda.Nombres" />
+				</div>
+				<div class="form-group">
+					<label for="lastName">Apellidos</label>
+					<input type="text" id="lastName" maxlength="50" required autocomplete="off" @bind-value="dataAgenda.Apellidos" />
+				</div>
+				<div class="form-group">
+					<label for="documentType">Tipo de documento</label>
+					<select id="documentType" @onchange="@((ChangeEventArgs e) => selectDocumento(e))" required>
+						<!--@bind="dataAgenda.TipoDocumento" -->
+						
+						<option value=""></option>
+						@if (TiposDeDocumento is not null)
+						{
+							foreach (var tipoDocumento in TiposDeDocumento)
+							{
+								<option value="@tipoDocumento.Id">@tipoDocumento.descripcion</option>
+							}
+						}
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="document">Número de documento</label>
+					<input type="text" id="document" required autocomplete="off" maxlength="10" min="3" @bind-value="dataAgenda.NumeroDocumento" />
+				</div>
+				<fieldset class="form-group border-none p-0 mb-2">
+					<legend>Género</legend>
+					<div class="radiobuttons-container two-columns">
+						<label for="male" style="cursor:pointer;">
+							<input type="radio" name="genre" id="male"
+								   value="1" checked="checked"
+							@onchange="GenreOnChange" /> Masculino
+						</label>
+						<label for="female" style="cursor:pointer;">
+							<input type="radio" name="genre" id="female"
+								   value="2"
+							@onchange="GenreOnChange" /> Femenino
+						</label>
+					</div>
+				</fieldset>
+
+				@if (!isArmas)
+				{
+					if (selectTi == false)
+					{
+						<div class="form-group">
+							<label for="process">Trámite</label>
+							<select id="process" @bind="dataAgenda.IdTramite">
+								@if (Tramites is not null)
+								{
+									foreach (var tramite in Tramites)
+									{
+										<option value="@tramite.IdTramite">@tramite.Nombre</option>
+									}
+								}
+							</select>
+						</div>
+					}
+					else
+					{
+						<div class="form-group">
+							<label for="process">Trámite</label>
+							<select id="process" @bind="dataAgenda.IdTramite">
+							     
+								@if (Tramites is not null)
+								{
+									foreach (var tramite in TramiteTI)
+									{
+										<option value="@tramite.IdTramite">@tramite.Nombre</option>
+									}
+								}
+							</select>
+						</div>
+					}
+
+				}
+
+				@if (!isArmas)
+				{
+					if (selectTi == false)
+					{
+						<fieldset class="form-group border-none p-0 mb-2">
+							<legend>Categoría</legend>
+							@if (Categorias is not null)
+							{
+								<div class="radiobuttons-container">
+									@foreach (var categoria in Categorias.OrderBy(x => x.Codigo))
+									{
+										<label for="@categoria.Codigo" style="cursor:pointer;">
+											<input type="checkbox" id="@categoria.Codigo"
+												   value="@categoria.Codigo"
+												   @onchange="(e) => CategoryOnChange(e, categoria.Codigo)"
+												   checked="@CategoriesSelected.Contains(categoria.Codigo)" /> @categoria.Codigo
+										</label>
+									}
+								</div>
+							}
+						</fieldset>
+					}
+					else
+					{
+						<fieldset class="form-group border-none p-0 mb-2">
+							<legend>Categoría</legend>
+							@if (CategoriaTI is not null)
+							{
+								<div class="radiobuttons-container">
+									@foreach (var categoriaTi in CategoriaTI.OrderBy(x => x.Codigo))
+									{
+										<label for="@categoriaTi.Codigo" style="cursor:pointer;">
+											<input type="checkbox" id="@categoriaTi.Codigo"
+												   value="@categoriaTi.Codigo"
+												   @onchange="(e) => CategoryOnChange(e, categoriaTi.Codigo)"
+												   checked="@CategoriesSelected.Contains(categoriaTi.Codigo)" /> @categoriaTi.Codigo
+										</label>
+									}
+								</div>
+							}
+						</fieldset>
+					
+					}
+
+
+				}
+
+				<div class="form-group">
+					<label for="phone">Teléfono</label>
+					<input type="text" id="phone" required autocomplete="off" @bind-value="dataAgenda.Telefono" maxlength="10" min="1" />
+				</div>
+				<div class="form-group">
+					<label for="email">Correo electrónico</label>
+					<input type="email" id="email" required autocomplete="off" @bind-value="dataAgenda.Correo" />
+				</div>
+				<div class="form-group">
+					<label for="scheduleType">Tipo Cita</label>
+					<select id="scheduleType" @bind="dataAgenda.IdTipoCita">
+						@if (TiposCita is not null)
+						{
+							foreach (var tipoCita in TiposCita)
+							{
+								<option value="@tipoCita.IdTipoCita">@tipoCita.Descripcion</option>
+							}
+						}
+					</select>
+				</div>
+				@if (dataAgenda.IdTipoCita == (int)TipoCitaAgenda.ContinuarProceso)
+				{
+					<div class="form-group">
+						<label for="reason">Motivo</label>
+						<select id="reason" @bind="dataAgenda.IdMotivo">
+							@if (Motivos is not null)
+							{
+								foreach (var motivo in Motivos)
+								{
+									<option value="@motivo.IdMotivo">@motivo.Nombre</option>
+								}
+							}
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="comments">Observación</label>
+						<textarea type="text" id="comments" @bind="dataAgenda.Observaciones" autocomplete="off" rows="5" maxlength="200" />
+					</div>
+				}
+
+			</EditForm>
+		</div>
+		<div class="agenda-details-buttons">
+			<button class="boton-primario" type="submit" form="@FormId">Programar Cita</button>
+			<button type="button" class="boton-secundario" @onclick="CancelFormClick">Cancelar</button>
+		</div>
+
+	</ContentTemplate>
+</SpinLoader>
+
