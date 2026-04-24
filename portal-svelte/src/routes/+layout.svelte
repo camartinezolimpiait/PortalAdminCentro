@@ -1,11 +1,10 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
+import '../app.css';
+import ToastContainer from '$lib/components/shared/ToastContainer.svelte';
+import type { Snippet } from 'svelte';
 
-	let { children } = $props();
+let { children, data }: { children: Snippet; data: { user: import('$lib/types/models').SessionUser | null } } = $props();
 </script>
 
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
-
+<ToastContainer />
 {@render children()}
