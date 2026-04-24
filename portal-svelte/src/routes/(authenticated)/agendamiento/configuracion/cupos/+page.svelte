@@ -4,13 +4,13 @@ import { enhance } from '$app/forms';
 <svelte:head><title>cupos - Configuración</title></svelte:head>
 <div class="space-y-4">
 <div class="flex items-center justify-between">
-<h2 class="text-xl font-bold">cupos</h2>
+<h2 class="text-xl font-bold">Cupos</h2>
 <a href="/agendamiento/configuracion" class="btn btn-ghost btn-sm">← Volver</a>
 </div>
 <div class="card bg-base-100 shadow">
 <div class="card-body">
 <form method="POST" use:enhance>
-<p class="mb-4">Configuración de cupos del agendamiento.</p>
+<p class="mb-4">Configuración de Cupos del agendamiento.</p>
 <div class="alert alert-info">
 <span>Los parámetros de configuración se cargan desde el servicio de agendamiento del backend.</span>
 </div>
