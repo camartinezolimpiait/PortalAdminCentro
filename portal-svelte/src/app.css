@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Custom Theme Extensions ===== */
+:root {
+  --color-azul-600: #1e40af;
+  --color-rojo-alerta: #dc2626;
+  --color-verde-ok: #16a34a;
+  --color-naranja-warn: #ea580c;
+}
+
+/* ===== Layout Styles ===== */
+.admin-layout {
+  @apply min-h-screen flex flex-col;
+}
+
+/* ===== Login Page ===== */
+.login-container {
+  @apply min-h-screen flex items-center justify-center bg-base-200;
+}
+
+.logotipo-titulo {
+  @apply text-3xl font-bold text-center mb-6 text-primary;
+}
+
+/* ===== Navigation ===== */
+.header-lista {
+  @apply flex items-center justify-between px-4 py-2 bg-base-100 shadow-sm;
+}
+
+.menu_principal {
+  @apply flex gap-1 items-center;
+}
+
+.header-link {
+  @apply btn btn-ghost btn-sm;
+}
+
+/* ===== Form Styles ===== */
+.formulario-marco {
+  @apply card bg-base-100 shadow-xl p-6 w-full max-w-md;
+}
+
+.formulario-marco-2 {
+  @apply text-center mt-4;
+}
+
+/* ===== SuperTransporte ===== */
+.wrapper_st {
+  @apply p-4;
+}
+
+.retornar {
+  @apply mb-4;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .menu_principal {
+    @apply hidden;
+  }
+}
+
+/* ===== Accessibility ===== */
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary;
+}
+
+/* ===== Semantic Business States ===== */
+.state-alerta-temprana {
+  @apply bg-warning text-warning-content;
+}
+
+.state-irregularidad {
+  @apply bg-error text-error-content;
+}
+
+.state-sin-soat {
+  @apply bg-error/20 text-error border border-error;
+}
+
+.state-sin-rtmyec {
+  @apply bg-warning/20 text-warning border border-warning;
+}
+
+.state-vigente {
+  @apply bg-success/20 text-success border border-success;
+}
+
+.state-vencido {
+  @apply bg-error/20 text-error border border-error;
+}
