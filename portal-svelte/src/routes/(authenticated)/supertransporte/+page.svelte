@@ -1,6 +1,6 @@
 <script lang="ts">
 let { data } = $props();
-const plataforma = data.user?.plataforma || '';
+const plataforma = $derived(data.user?.plataforma || '');
 </script>
 <svelte:head><title>SuperTransporte</title></svelte:head>
 <div class="space-y-4">

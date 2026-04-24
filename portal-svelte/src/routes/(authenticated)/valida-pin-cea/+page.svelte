@@ -8,8 +8,8 @@ import { enhance } from '$app/forms';
 <div class="card-body">
 <form method="POST" use:enhance>
 <div class="form-control mb-4">
-<label class="label"><span class="label-text">Número de PIN</span></label>
-<input name="pin" type="text" class="input input-bordered" placeholder="Ingrese el PIN" required />
+<label class="label" for="pin-cea"><span class="label-text">Número de PIN</span></label>
+<input id="pin-cea" name="pin" type="text" class="input input-bordered" placeholder="Ingrese el PIN" required />
 </div>
 <button type="submit" class="btn btn-primary w-full">Validar</button>
 </form>

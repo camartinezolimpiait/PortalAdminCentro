@@ -1,7 +1,6 @@
-@import 'tailwindcss';
-@plugin "daisyui" {
-  themes: light --default, dark;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ===== Custom Theme Extensions ===== */
 :root {

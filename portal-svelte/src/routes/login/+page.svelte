@@ -10,7 +10,7 @@
 
 	let { data, form } = $props();
 
-	let recoverMode = $state(data.recoverMode || form?.recover === true);
+	let recoverMode = $derived(data.recoverMode || form?.recover === true);
 	let showLoader = $state(false);
 	let showModal = $state(false);
 	let recoveredEmail = $state('');
