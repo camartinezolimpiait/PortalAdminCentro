@@ -1,20 +1,20 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 
 using System.Threading.Tasks;
 using portalAdministrativoSISEC.Entidades.Pago;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
-using portalAdministrativoSISEC.Data.CompraPin.Wompi;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
+using portalAdministrativoSISEC.Application.Data.CompraPin.Wompi;
 using portalAdministrativoSISEC.Entidades.Pago.Wompi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Data.CompraPin.CDA;
+using portalAdministrativoSISEC.Application.Data.CompraPin.CDA;
 using portalAdministrativoSISEC.Entidades.Pago.Wompi.CDA.Request;
 using static portalAdministrativoSISEC.Entidades.Pago.Wompi.CDA.Request.ReferenciaBancolombiaCdaWompi;
 using portalAdministrativoSISEC.Entidades.Pago.Wompi.CDA.Response;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 
 namespace portalAdministrativoSISEC.Pages.CompraPinCDA.ComfirmacionCompraCDA
 {
@@ -340,3 +340,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.ComfirmacionCompraCDA
         #endregion Methods
     }
 }
+

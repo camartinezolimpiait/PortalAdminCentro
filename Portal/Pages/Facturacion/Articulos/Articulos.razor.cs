@@ -1,9 +1,9 @@
-锘縰sing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.Facturacion.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Extension;
 using System;
 using System.Collections.Generic;
@@ -34,12 +34,12 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Articulos
 
         #endregion Properties
 
-        #region Inyecci贸n Dependencias
+        #region Inyecci髇 Dependencias
 
         [Inject]
         private IMiLicenciaService MiLicenciaService { get; set; }
 
-        #endregion Inyecci贸n Dependencias
+        #endregion Inyecci髇 Dependencias
 
         #region Fields
 
@@ -145,7 +145,7 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Articulos
                     await responseArticulos.ShowErrorMessageCollection(MiLicenciaService, "Recaudo");
             }
             else
-                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Warning, "Hay validaciones en el formulario que no se est谩n cumpliendo");
+                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Warning, "Hay validaciones en el formulario que no se est醤 cumpliendo");
         }
 
         private async Task CrearListaArticulos()
@@ -179,14 +179,14 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Articulos
             {
                 nombreCategoria = nombreCategoria switch
                 {
-                    "Curso de conducci贸n" => "CursoConduccion",
-                    "Curso de instructor en conducci贸n" => "CursoConduccionInstructor",
+                    "Curso de conducci髇" => "CursoConduccion",
+                    "Curso de instructor en conducci髇" => "CursoConduccionInstructor",
                     "Impuesto ANSV" => "TarifaAnsv",
                     "Tarifa del SICOV" => "TarifaSicov",
                     "Tarifa del aliado de recaudo" => "TarifaAliado",
-                    "Examen m茅dico" => "ExamenMedico",
-                    "Examen m茅dico Sencillo" => "ExamenMedicoSencillo",
-                    "Examen m茅dico Combo" => "ExamenMedicoCombo",
+                    "Examen m閐ico" => "ExamenMedico",
+                    "Examen m閐ico Sencillo" => "ExamenMedicoSencillo",
+                    "Examen m閐ico Combo" => "ExamenMedicoCombo",
                     _ => "",
                 };
 

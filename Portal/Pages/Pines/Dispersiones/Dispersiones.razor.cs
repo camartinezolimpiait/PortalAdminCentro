@@ -1,14 +1,14 @@
-Ôªøusing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.JSInterop;
 using OfficeOpenXml;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Entidades.Common;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util;
 using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 using portalAdministrativoSISEC.Util.Extension;
@@ -100,8 +100,8 @@ namespace portalAdministrativoSISEC.Pages.Pines.Dispersiones
                             new ColumnList { NameColumn = "Negocio", Value = (!string.IsNullOrEmpty(x.Negocio)?x.Negocio :"No encontrado") },
                             new ColumnList { NameColumn = "Banco", Value = (!string.IsNullOrEmpty(x.Banco)?x.Banco :"No encontrado") },
                             new ColumnList { NameColumn = "Cuenta" ,Value = (!string.IsNullOrEmpty(x.Cuenta)?x.Cuenta :"No encontrado")},
-                            new ColumnList { NameColumn = "Total Dispersi√≥n", Value = (!string.IsNullOrEmpty(x.ValorTotalDispersion)?valorDispersion :"0") },
-                            new ColumnList { NameColumn = "Agente Dispersi√≥n", Value = (!string.IsNullOrEmpty(x.AgenteDispersion)?x.AgenteDispersion :"No encontrado") },
+                            new ColumnList { NameColumn = "Total DispersiÛn", Value = (!string.IsNullOrEmpty(x.ValorTotalDispersion)?valorDispersion :"0") },
+                            new ColumnList { NameColumn = "Agente DispersiÛn", Value = (!string.IsNullOrEmpty(x.AgenteDispersion)?x.AgenteDispersion :"No encontrado") },
                             new ColumnList { NameColumn = "Detalle de Pago", Value =  (x.IdDispersion>0 ? x.IdDispersion.ToString():"0") },
                         };
 
@@ -110,7 +110,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Dispersiones
             }
             else
             {
-                // Agregar solo los encabezados si la lista es nula o est√° vac√≠a
+                // Agregar solo los encabezados si la lista es nula o est· vacÌa
                 List<ColumnList> headers = PagoPinConst.InicializarColumnasDispersiones();
 
                 rows.Add(new RowList { Row = headers });
@@ -138,7 +138,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Dispersiones
             }
             else
             {
-                _toastService.ShowWarning("El centro, la fecha inicial y la fecha final son datos necesarios. Por favor llene los datos y vuelva a intentarlo.", "Informaci√≥n");
+                _toastService.ShowWarning("El centro, la fecha inicial y la fecha final son datos necesarios. Por favor llene los datos y vuelva a intentarlo.", "InformaciÛn");
             }
         }
 
@@ -160,7 +160,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Dispersiones
                 else
                 {
                     isLoading = false;
-                    _toastService.ShowWarning("Debe seleccionar un centro para realizar la descarga.", "Informaci√≥n");
+                    _toastService.ShowWarning("Debe seleccionar un centro para realizar la descarga.", "InformaciÛn");
                 }
         }
         }
@@ -199,7 +199,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Dispersiones
 
                         if (esBusquedaManual)
                         {
-                            _toastService.ShowInfo(!string.IsNullOrEmpty(result.Respuesta) ? result.Respuesta : "Ha ocurrido un error en la consulta inicial.", "Informaci√≥n");
+                            _toastService.ShowInfo(!string.IsNullOrEmpty(result.Respuesta) ? result.Respuesta : "Ha ocurrido un error en la consulta inicial.", "InformaciÛn");
                         }
                             
                     }
@@ -231,7 +231,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Dispersiones
                         }
                         else
                         {
-                            _toastService.ShowInfo(!string.IsNullOrEmpty(result.Respuesta) ? result.Respuesta : "No se encontraron datos para la descarga.", "Informaci√≥n");
+                            _toastService.ShowInfo(!string.IsNullOrEmpty(result.Respuesta) ? result.Respuesta : "No se encontraron datos para la descarga.", "InformaciÛn");
                         }
                         
                         
@@ -239,7 +239,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Dispersiones
                     else
                     {
                         ListadoDescarga = new();
-                        _toastService.ShowInfo(!string.IsNullOrEmpty(result.Respuesta) ? result.Respuesta : "Ha ocurrido un error en la consulta inicial.", "Informaci√≥n");
+                        _toastService.ShowInfo(!string.IsNullOrEmpty(result.Respuesta) ? result.Respuesta : "Ha ocurrido un error en la consulta inicial.", "InformaciÛn");
                     }
                 }
                 else
@@ -389,3 +389,4 @@ namespace portalAdministrativoSISEC.Pages.Pines.Dispersiones
         #endregion Methods
     }
 }
+

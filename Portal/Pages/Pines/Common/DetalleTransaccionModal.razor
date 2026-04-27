@@ -1,5 +1,5 @@
 @using System.Globalization
-@using portalAdministrativoSISEC.Data.Pines
+@using portalAdministrativoSISEC.Application.Data.Pines
 @using portalAdministrativoSISEC.Enum.PortalAdministrativo
 @using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo
 @using portalAdministrativoSISEC.Enum
@@ -293,7 +293,7 @@
     [Parameter, EditorRequired] public ResponseInfoPinEstado? Item { get; set; }
 
     // Inicio código generado por GitHub Copilot
-    [Inject] private portalAdministrativoSISEC.Services.MiLicencia.IMiLicenciaService MiLicenciaService { get; set; } = default!;
+    [Inject] private portalAdministrativoSISEC.Application.Contracts.MiLicencia.IMiLicenciaService MiLicenciaService { get; set; } = default!;
     [Inject] private Microsoft.JSInterop.IJSRuntime JS { get; set; } = default!;
 
     // Método generado por GitHub Copilot
@@ -339,3 +339,5 @@
     }
     // Fin código generado por GitHub Copilot
 }
+
+

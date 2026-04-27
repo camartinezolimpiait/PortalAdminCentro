@@ -1,9 +1,9 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 using System;
 using System.Collections.Generic;
@@ -243,7 +243,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite
         private void OnSubmit()
         {
            
-            // AquÃ­ irÃ­a tu lÃ³gica de negocio (guardar, navegar, etc.)
+            // Aquí iría tu lógica de negocio (guardar, navegar, etc.)
         }
 
         /// <summary>
@@ -276,3 +276,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite
         #endregion Metodos
     }
 }
+

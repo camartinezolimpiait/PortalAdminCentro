@@ -1,12 +1,12 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 
 namespace portalAdministrativoSISEC.Shared
 {
@@ -45,13 +45,13 @@ namespace portalAdministrativoSISEC.Shared
 			isLoading = true;
 			var menuPadre = menuService.menuList.FirstOrDefault(m => currentPath.StartsWith(m.Ruta.ToLower()));
 
-			// Si se encuentra un menÃº padre y no se han cargado aÃºn los submenÃºs
+			// Si se encuentra un menú padre y no se han cargado aún los submenús
 			if (menuService != null && menuService.SubMenuList == null && menuPadre != null)
 			{
-				int idPadre = menuPadre.Id;  // Obtener el ID del menÃº padre
-											 // Cargar los submenÃºs basados en el ID del padre
+				int idPadre = menuPadre.Id;  // Obtener el ID del menú padre
+											 // Cargar los submenús basados en el ID del padre
 				menuService.SubMenuList = menuService.menuList.Where(x => x.Padre == idPadre).ToList();
-				padre = menuPadre.Pagina;  // Guardar el nombre de la pÃ¡gina del menÃº padre
+				padre = menuPadre.Pagina;  // Guardar el nombre de la página del menú padre
 			}
 			isLoading = false;
 			await base.OnParametersSetAsync();
@@ -59,3 +59,5 @@ namespace portalAdministrativoSISEC.Shared
         }
     }
 }
+
+

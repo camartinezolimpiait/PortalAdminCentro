@@ -1,16 +1,16 @@
-Ôªøusing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
 using portalAdministrativoSISEC.Pages.Facturacion.Common;
 using portalAdministrativoSISEC.Pages.Facturacion.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Helpers;
 using System;
 using System.Collections.Generic;
@@ -22,14 +22,14 @@ using System.Threading.Tasks;
 namespace portalAdministrativoSISEC.Pages.Facturacion.EstadosConsultarFacturacion;
 
 /// <summary>
-/// Componente hijo que contiene la l√≥gica de filtrado y visualizaci√≥n de solicitudes de facturaci√≥n
-/// Recibe el estado como par√°metro del componente padre
+/// Componente hijo que contiene la lÛgica de filtrado y visualizaciÛn de solicitudes de facturaciÛn
+/// Recibe el estado como par·metro del componente padre
 /// </summary>
 public partial class EstadosConsultarFacturacion : ComponentBase
 {
-    // Inicio c√≥digo generado por GitHub Copilot
+    // Inicio cÛdigo generado por GitHub Copilot
 
-    #region Inyecci√≥n de Dependencias
+    #region InyecciÛn de Dependencias
 
     /// <summary>
     /// Servicio principal para consumir APIs de MiLicencia y Portal Administrativo
@@ -38,7 +38,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     public IMiLicenciaService MiLicenciaService { get; set; }
 
     /// <summary>
-    /// Almacenamiento protegido en sesi√≥n del navegador
+    /// Almacenamiento protegido en sesiÛn del navegador
     /// </summary>
     [Inject]
     private ProtectedSessionStorage ProtectedSessionStore { get; set; }
@@ -46,9 +46,9 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     [Inject]
     private IJSRuntime JsRuntime { get; set; }
 
-    #endregion Inyecci√≥n de Dependencias
+    #endregion InyecciÛn de Dependencias
 
-    #region Par√°metros del Componente
+    #region Par·metros del Componente
 
     /// <summary>
     /// Estado recibido del componente padre (PorRevisar, Facturadas, Anuladas, EnCola)
@@ -59,12 +59,12 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     [Parameter]
     public EventCallback<bool> OnFormCompleteChanged { get; set; }
 
-    #endregion Par√°metros del Componente
+    #endregion Par·metros del Componente
 
     #region Variables de QuickGrid
 
     /// <summary>
-    /// Estado de paginaci√≥n del grid (p√°gina actual, items por p√°gina, etc.)
+    /// Estado de paginaciÛn del grid (p·gina actual, items por p·gina, etc.)
     /// </summary>
     private readonly PaginationState Pagination = new() { ItemsPerPage = 10 };
 
@@ -74,27 +74,27 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     private QuickGrid<PINDetail>? Grid;
 
     /// <summary>
-    /// Delegado que provee los datos al QuickGrid de forma as√≠ncrona
+    /// Delegado que provee los datos al QuickGrid de forma asÌncrona
     /// </summary>
     private GridItemsProvider<PINDetail> FacturacionProvider;
 
     /// <summary>
-    /// Indica si el componente ya complet√≥ su primera renderizaci√≥n
+    /// Indica si el componente ya completÛ su primera renderizaciÛn
     /// </summary>
     private bool _firstRenderComplete = false;
 
     /// <summary>
-    /// Indica si hubo cambios en los par√°metros que requieren refrescar el grid
+    /// Indica si hubo cambios en los par·metros que requieren refrescar el grid
     /// </summary>
     private bool _parametersChanged = false;
 
     /// <summary>
-    /// Lista en memoria de la p√°gina actual para poder trabajar con selecci√≥n m√∫ltiple
+    /// Lista en memoria de la p·gina actual para poder trabajar con selecciÛn m˙ltiple
     /// </summary>
     private List<PINDetail> DatosPaginaActual { get; set; } = [];
 
     /// <summary>
-    /// Indica si el checkbox de seleccionar todos en el encabezado est√° activo
+    /// Indica si el checkbox de seleccionar todos en el encabezado est· activo
     /// </summary>
     private bool SeleccionarTodos { get; set; }
 
@@ -104,58 +104,58 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     private bool HaySeleccionados => DatosPaginaActual?.Any(p => p.Seleccionado) == true;
 
     /// <summary>
-    /// Cantidad de registros seleccionados en la p√°gina actual.
+    /// Cantidad de registros seleccionados en la p·gina actual.
     /// </summary>
     private int CantidadSeleccionados => DatosPaginaActual?.Count(p => p.Seleccionado) ?? 0;
 
     /// <summary>
-    /// Texto a mostrar en el bot√≥n de exportaci√≥n de selecci√≥n.
+    /// Texto a mostrar en el botÛn de exportaciÛn de selecciÛn.
     /// </summary>
     private string TextoBotonExportarSeleccion
      => CantidadSeleccionados ==1 ? "Exportar1 solicitud" : $"Exportar {CantidadSeleccionados} solicitudes";
 
     /// <summary>
-    /// Descripci√≥n mostrada en el modal al finalizar la exportaci√≥n.
+    /// DescripciÛn mostrada en el modal al finalizar la exportaciÛn.
     /// </summary>
     private string DescripcionModal { get; set; } = "Datos exportados exitosamente";
 
     #endregion
 
-    #region Variables de Estado y Configuraci√≥n
+    #region Variables de Estado y ConfiguraciÛn
 
     /// <summary>
-    /// Datos compartidos de la aplicaci√≥n (usuario, centro, etc.)
+    /// Datos compartidos de la aplicaciÛn (usuario, centro, etc.)
     /// </summary>
     private ApplicationShared ApplicationShared = new();
 
     /// <summary>
-    /// Datos del centro actual obtenidos de la sesi√≥n
+    /// Datos del centro actual obtenidos de la sesiÛn
     /// </summary>
     private GetDataResponseCentro GetCentroResponse = new();
 
     /// <summary>
-    /// Validaci√≥n de formularios para la configuraci√≥n de facturaci√≥n electr√≥nica
+    /// ValidaciÛn de formularios para la configuraciÛn de facturaciÛn electrÛnica
     /// </summary>
     private EditContext EditContext;
 
     /// <summary>
-    /// Indica si el componente est√° cargando datos
+    /// Indica si el componente est· cargando datos
     /// </summary>
     private bool IsLoading = true;
 
     /// <summary>
-    /// Indica si la consulta no retorn√≥ resultados (para mostrar mensaje de estado vac√≠o)
+    /// Indica si la consulta no retornÛ resultados (para mostrar mensaje de estado vacÌo)
     /// </summary>
     private bool SinResultados { get; set; }
 
     /// <summary>
-    /// Indica si el usuario ha realizado al menos una b√∫squeda manual
-    /// Se usa para diferenciar la carga inicial de b√∫squedas posteriores
+    /// Indica si el usuario ha realizado al menos una b˙squeda manual
+    /// Se usa para diferenciar la carga inicial de b˙squedas posteriores
     /// </summary>
     private bool BusquedaManualRealizada { get; set; } = false;
 
     /// <summary>
-    /// Diccionario para almacenar los contadores de registros por estado/pesta√±a
+    /// Diccionario para almacenar los contadores de registros por estado/pestaÒa
     /// </summary>
     private Dictionary<int, int> Contadores { get; set; } = new Dictionary<int, int>
     {
@@ -169,22 +169,22 @@ public partial class EstadosConsultarFacturacion : ComponentBase
 
     private bool HasFE;
 
-    #endregion Variables de Estado y Configuraci√≥n
+    #endregion Variables de Estado y ConfiguraciÛn
 
     #region Variables de Filtros
 
     /// <summary>
-    /// Estado actual de facturaci√≥n (1=PorRevisar,2=Facturadas,3=Anuladas,4=EnCola)
+    /// Estado actual de facturaciÛn (1=PorRevisar,2=Facturadas,3=Anuladas,4=EnCola)
     /// </summary>
     private int FiltroEstado = (int)EnumEstadoFacturacionElectronica.PorRevisar;
 
     /// <summary>
-    /// Fecha inicial del rango de b√∫squeda (por defecto: hace15 d√≠as)
+    /// Fecha inicial del rango de b˙squeda (por defecto: hace15 dÌas)
     /// </summary>
     private DateTime FiltroFechaDesde = DateTime.Today;
 
     /// <summary>
-    /// Fecha final del rango de b√∫squeda (por defecto: hoy)
+    /// Fecha final del rango de b˙squeda (por defecto: hoy)
     /// </summary>
     private DateTime FiltroFechaHasta = DateTime.Today;
 
@@ -211,8 +211,8 @@ public partial class EstadosConsultarFacturacion : ComponentBase
 
     private FiltrosConsultaFacturacionModel FiltrosConsultaFacturacion = new();
     /// <summary>
-    /// Indica si hay errores de validaci√≥n en los campos del formulario
-    /// Se calcula din√°micamente consultando el EditContext
+    /// Indica si hay errores de validaciÛn en los campos del formulario
+    /// Se calcula din·micamente consultando el EditContext
     /// </summary>
     private bool HayErroresEnCampos => EditContext?.GetValidationMessages().Any() ?? false;
     #endregion Variables de Filtros
@@ -220,35 +220,35 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     #region Listas de Datos
 
     /// <summary>
-    /// Cat√°logo de tipos de documento habilitados para facturaci√≥n electr√≥nica
+    /// Cat·logo de tipos de documento habilitados para facturaciÛn electrÛnica
     /// Obtenido del servicio y filtrado por VisualizarFacturacionElectronica
     /// </summary>
     private List<TipoDocumentoFacturacionElectronica> ListaDocumentos = [];
 
     #endregion Listas de Datos
 
-    #region M√©todos del Ciclo de Vida de Blazor
+    #region MÈtodos del Ciclo de Vida de Blazor
 
     /// <summary>
-    /// M√©todo del ciclo de vida que se ejecuta cuando cambian los par√°metros
-    /// Actualiza el filtro de estado seg√∫n el par√°metro recibido del padre
-    /// Limpia los filtros cuando se cambia de pesta√±a para evitar resultados incorrectos
+    /// MÈtodo del ciclo de vida que se ejecuta cuando cambian los par·metros
+    /// Actualiza el filtro de estado seg˙n el par·metro recibido del padre
+    /// Limpia los filtros cuando se cambia de pestaÒa para evitar resultados incorrectos
     /// </summary>
     protected override async Task OnParametersSetAsync()
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         // Guardar el estado anterior para comparar
         var estadoAnterior = FiltroEstado;
 
-        // Si el par√°metro existe y es un enum v√°lido
+        // Si el par·metro existe y es un enum v·lido
         if (!string.IsNullOrEmpty(Estado) &&
             System.Enum.TryParse<EnumEstadoFacturacionElectronica>(Estado, ignoreCase: true, out var estadoEnum))
             FiltroEstado = (int)estadoEnum;
         else
-            // Valor por defecto si no es v√°lido
+            // Valor por defecto si no es v·lido
             FiltroEstado = (int)EnumEstadoFacturacionElectronica.PorRevisar;
 
-        // Si el estado cambi√≥, limpiar los filtros (excepto fechas)
+        // Si el estado cambiÛ, limpiar los filtros (excepto fechas)
         if (estadoAnterior != FiltroEstado)
         {
             // Limpiar modelo de filtros
@@ -259,34 +259,34 @@ public partial class EstadosConsultarFacturacion : ComponentBase
             _parametersChanged = true;
         }
 
-        // Solo refrescar si ya se complet√≥ el primer render Y hubo cambios
+        // Solo refrescar si ya se completÛ el primer render Y hubo cambios
         if (_firstRenderComplete && _parametersChanged && Grid != null)
         {
             _parametersChanged = false;
-            // Usar Task.Delay para diferir la ejecuci√≥n y evitar conflictos
+            // Usar Task.Delay para diferir la ejecuciÛn y evitar conflictos
             await Task.Delay(1);
             await FilterChangedAsync(esManual: false);
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
     /// <summary>
-    /// M√©todo del ciclo de vida que se ejecuta al inicializar el componente
+    /// MÈtodo del ciclo de vida que se ejecuta al inicializar el componente
     /// Carga datos iniciales y configura el provider del grid
     /// </summary>
     protected override async Task OnInitializedAsync()
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         // Suscribirse al evento de cambio de conteo total para actualizar la UI
         Pagination.TotalItemCountChanged += Pagination_TotalItemCountChanged;
 
-        // Cargar datos de sesi√≥n del centro
+        // Cargar datos de sesiÛn del centro
         var centroShared = await ProtectedSessionStore.GetAsync<GetCentroResponse>("centroStorage");
 
         if (centroShared.Success && centroShared.Value != null)
             GetCentroResponse = centroShared.Value.Respuesta;
 
-        // Consultar el estado de facturaci√≥n electr√≥nica
+        // Consultar el estado de facturaciÛn electrÛnica
         FacturacionResponse<EstadoFacturacion> responseEstado = await MiLicenciaService.ConsultarEstadoFacturacionElectronica(
             new ConsultaEstadoFacturacion() { IdRunt = $"{GetCentroResponse.CodigoRUNT ?? 0}" }
             //new ConsultaEstadoFacturacion() { IdRunt = "1234" }
@@ -298,41 +298,41 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         // Inicializar EditContext
         EditContext = new EditContext(FiltrosConsultaFacturacion);
 
-        // Cargar datos compartidos de la aplicaci√≥n
+        // Cargar datos compartidos de la aplicaciÛn
         var result = await ProtectedSessionStore.GetAsync<ApplicationShared>(ApplicationShared.NameLocalStorage);
 
         if (result.Success && result.Value != null)
             ApplicationShared = result.Value;
 
-        // Cargar tipos de documento habilitados para facturaci√≥n electr√≥nica
+        // Cargar tipos de documento habilitados para facturaciÛn electrÛnica
         ListaDocumentos = await MiLicenciaService.ObtenerTiposDocumentoFacturacionElectronica();
 
         // Configurar el provider que alimenta el QuickGrid
         ConfigurarGridProvider();
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
         IsLoading = false;
     }
 
     /// <summary>
-    /// M√©todo del ciclo de vida que se ejecuta despu√©s de cada renderizaci√≥n
-    /// En el primer render, procesa los cambios de par√°metros pendientes
+    /// MÈtodo del ciclo de vida que se ejecuta despuÈs de cada renderizaciÛn
+    /// En el primer render, procesa los cambios de par·metros pendientes
     /// </summary>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         await base.OnAfterRenderAsync(firstRender);
 
         if (firstRender)
         {
             _firstRenderComplete = true;
 
-            // Si hubo cambios de par√°metros antes del primer render, aplicarlos ahora
+            // Si hubo cambios de par·metros antes del primer render, aplicarlos ahora
             if (_parametersChanged && Grid != null)
             {
                 _parametersChanged = false;
 
-                // Diferir la ejecuci√≥n para evitar conflictos de enumeraci√≥n
+                // Diferir la ejecuciÛn para evitar conflictos de enumeraciÛn
                 await Task.Delay(10);
 
                 await InvokeAsync(async () =>
@@ -342,29 +342,29 @@ public partial class EstadosConsultarFacturacion : ComponentBase
                 });
             }
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
-    #endregion M√©todos del Ciclo de Vida de Blazor
+    #endregion MÈtodos del Ciclo de Vida de Blazor
 
-    // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+    // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
     private void HandleFieldChanged(object? sender, FieldChangedEventArgs e)
     {
         EditContext?.Validate();
     }
-    // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+    // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
 
-// Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
-    #region L√≥gica din√°mica de campo N√∫mero de Documento
+// Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
+    #region LÛgica din·mica de campo N˙mero de Documento
 
     private void OnNumeroDocumentoInput(ChangeEventArgs e)
     {
         string raw = e.Value?.ToString() ?? string.Empty;
 
-        // Filtrar caracteres no permitidos seg√∫n el tipo de documento seleccionado
+        // Filtrar caracteres no permitidos seg˙n el tipo de documento seleccionado
         string filtrado = DocumentoFacturacionHelper.FiltrarCaracteres(raw, FiltrosConsultaFacturacion.TipoDocumento);
 
-        // Truncar al l√≠mite del tipo (int.MaxValue = sin l√≠mite, caso "Todos")
+        // Truncar al lÌmite del tipo (int.MaxValue = sin lÌmite, caso "Todos")
         int max = DocumentoFacturacionHelper.GetMaxLength(FiltrosConsultaFacturacion.TipoDocumento);
         if (max != int.MaxValue && filtrado.Length > max)
             filtrado = filtrado[..max];
@@ -373,18 +373,18 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         EditContext?.NotifyFieldChanged(FieldIdentifier.Create(() => FiltrosConsultaFacturacion.NumeroDocumento));
     }
 
-    #endregion L√≥gica din√°mica de campo N√∫mero de Documento
-    // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+    #endregion LÛgica din·mica de campo N˙mero de Documento
+    // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
     
-    #region Configuraci√≥n del Grid Provider
+    #region ConfiguraciÛn del Grid Provider
 
     /// <summary>
     /// Configura el delegado que provee datos al QuickGrid
-    /// Este m√©todo se ejecuta cada vez que el grid necesita datos (paginaci√≥n, filtros, etc.)
+    /// Este mÈtodo se ejecuta cada vez que el grid necesita datos (paginaciÛn, filtros, etc.)
     /// </summary>
     private void ConfigurarGridProvider()
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         FacturacionProvider = async req =>
         {
             // 1. Construir objeto de consulta con los filtros actuales
@@ -425,11 +425,11 @@ public partial class EstadosConsultarFacturacion : ComponentBase
                 DatosPaginaActual = [];
                 SeleccionarTodos = false;
 
-                // Inicio c√≥digo generado por GitHub Copilot
-                // ‚úÖ Mostrar notificaci√≥n solo si la solicitud fall√≥
+                // Inicio cÛdigo generado por GitHub Copilot
+                // ? Mostrar notificaciÛn solo si la solicitud fallÛ
                 if (!result.SolicitudExitosa)
                 {
-                    // Si hay errores espec√≠ficos, mostrarlos
+                    // Si hay errores especÌficos, mostrarlos
                     if (result.Errores != null && result.Errores.Count > 0)
                     {
                         foreach (var error in result.Errores)
@@ -437,40 +437,40 @@ public partial class EstadosConsultarFacturacion : ComponentBase
                             await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, error);
                         }
                     }
-                    // Si no hay errores espec√≠ficos, mostrar mensaje gen√©rico
+                    // Si no hay errores especÌficos, mostrar mensaje genÈrico
                     else
                     {
                         await MiLicenciaService.ShowNotificacion(
                             NotificationStatus.Error,
-                            "No se pudieron cargar las solicitudes de facturaci√≥n. Por favor, intente nuevamente."
+                            "No se pudieron cargar las solicitudes de facturaciÛn. Por favor, intente nuevamente."
                         );
                     }
                 }
-                // Fin c√≥digo generado por GitHub Copilot
+                // Fin cÛdigo generado por GitHub Copilot
 
                 return GridItemsProviderResult.From(new List<PINDetail>(), 0);
             }
 
-            //4. Actualizar contador de la pesta√±a activa con el total real del API
-            // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+            //4. Actualizar contador de la pestaÒa activa con el total real del API
+            // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
             // TotalEncontrados = totalItemCount
             // QuickGrid y Pagination.TotalItemCount reflejen el conteo desde la primera carga
             Contadores[FiltroEstado] = result.Datos.Datos.TotalEncontrados;
-            // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+            // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
 
-            //5. Datos v√°lidos, filtrar por estado
+            //5. Datos v·lidos, filtrar por estado
             SinResultados = false;
 
-            // Obtener la lista de estados v√°lidos para el filtro actual
+            // Obtener la lista de estados v·lidos para el filtro actual
             var estadosPermitidos = ObtenerNombresEstado(FiltroEstado);
 
-            // Filtrar resultados seg√∫n el estado actual
-            // Un registro se incluye si su estado est√° en la lista de estados permitidos
+            // Filtrar resultados seg˙n el estado actual
+            // Un registro se incluye si su estado est· en la lista de estados permitidos
             var datosFiltrados = result.Datos.Datos.Resultado
                 .Where(x => estadosPermitidos.Contains(x.Estado, StringComparer.OrdinalIgnoreCase))
                 .ToList();
 
-            // Si despu√©s del filtrado no hay datos
+            // Si despuÈs del filtrado no hay datos
             if (datosFiltrados.Count == 0)
             {
                 SinResultados = true;
@@ -479,10 +479,10 @@ public partial class EstadosConsultarFacturacion : ComponentBase
                 return GridItemsProviderResult.From(new List<PINDetail>(), 0);
             }
 
-            // Guardar p√°gina actual para manejo de selecci√≥n m√∫ltiple
+            // Guardar p·gina actual para manejo de selecciÛn m˙ltiple
             DatosPaginaActual = datosFiltrados;
 
-            // Inicializar selecci√≥n seg√∫n el estado del header
+            // Inicializar selecciÛn seg˙n el estado del header
             if (SeleccionarTodos)
             {
                 foreach (var item in DatosPaginaActual)
@@ -492,49 +492,49 @@ public partial class EstadosConsultarFacturacion : ComponentBase
             }
 
             //6. Retornar datos filtrados al QuickGrid
-            // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+            // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
             // TotalEncontrados = totalItemCount
             // QuickGrid y Pagination.TotalItemCount reflejen el conteo desde la primera carga
             return GridItemsProviderResult.From(
                 items: datosFiltrados,
                 totalItemCount: result.Datos.Datos.TotalEncontrados
             );
-            // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+            // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
         };
 
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
-    #endregion Configuraci√≥n del Grid Provider
+    #endregion ConfiguraciÛn del Grid Provider
 
-    #region M√©todos Auxiliares
+    #region MÈtodos Auxiliares
 
     /// <summary>
-    /// Convierte el valor num√©rico del enum a una lista de posibles nombres de estado en texto
-    /// Devuelve m√∫ltiples valores porque varios estados del backend se agrupan en una misma pesta√±a
+    /// Convierte el valor numÈrico del enum a una lista de posibles nombres de estado en texto
+    /// Devuelve m˙ltiples valores porque varios estados del backend se agrupan en una misma pestaÒa
     /// </summary>
     private List<string> ObtenerNombresEstado(int estadoInt)
     {
-        // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
         var estadoEnum = (EnumEstadoFacturacionElectronica)estadoInt;
         return ObtenerEstadosBackend(estadoEnum);
-        // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
     }
 
     /// <summary>
     /// Obtiene la lista de estados del backend que corresponden a un estado del enum
     /// </summary>
-    /// <param name="estado">Estado del enum de facturaci√≥n</param>
+    /// <param name="estado">Estado del enum de facturaciÛn</param>
     /// <returns>Lista de estados del backend que mapean a ese estado</returns>
     private List<string> ObtenerEstadosBackend(EnumEstadoFacturacionElectronica estado)
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         return estado switch
         {
             EnumEstadoFacturacionElectronica.PorRevisar =>
             [
-                "En error de configuraci√≥n",
-                "En error de conexi√≥n"
+                "En error de configuraciÛn",
+                "En error de conexiÛn"
             ],
 
             EnumEstadoFacturacionElectronica.Facturadas =>
@@ -557,20 +557,20 @@ public partial class EstadosConsultarFacturacion : ComponentBase
 
             _ =>
             [
-                "En error de configuraci√≥n",
-                "En error de conexi√≥n"
+                "En error de configuraciÛn",
+                "En error de conexiÛn"
             ]
         };
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
     /// <summary>
-    /// Calcula la cantidad de registros por cada estado/pesta√±a
+    /// Calcula la cantidad de registros por cada estado/pestaÒa
     /// </summary>
     private void CalcularContadores(List<PINDetail> todosLosRegistros)
     {
-        // Inicio c√≥digo generado por GitHub Copilot
-        // Contar registros para cada pesta√±a
+        // Inicio cÛdigo generado por GitHub Copilot
+        // Contar registros para cada pestaÒa
         for (int estadoId = 1; estadoId <= 4; estadoId++)
         {
             var estadosPermitidos = ObtenerNombresEstado(estadoId);
@@ -579,7 +579,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
 
             Contadores[estadoId] = cantidad;
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
     /// <summary>
@@ -588,11 +588,11 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     /// </summary>
     private string GetEstadoBadgeClass(string estado)
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         return estado?.ToLower() switch
         {
-            "en error de configuraci√≥n" => "badge-warning",
-            "en error de conexi√≥n" => "badge-warning",
+            "en error de configuraciÛn" => "badge-warning",
+            "en error de conexiÛn" => "badge-warning",
             "registrado" => "badge-info",
             "listo para procesar" => "badge-info",
             "encolados" => "badge-info",
@@ -601,47 +601,47 @@ public partial class EstadosConsultarFacturacion : ComponentBase
             "anulado" => "badge-neutral",
             _ => "badge"
         };
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
     /// <summary>
-    /// Mapea el estado del backend al nombre de la pesta√±a correspondiente del frontend
-    /// Homologa m√∫ltiples estados del API a las 4 pesta√±as principales
+    /// Mapea el estado del backend al nombre de la pestaÒa correspondiente del frontend
+    /// Homologa m˙ltiples estados del API a las 4 pestaÒas principales
     /// </summary>
     /// <param name="estadoBackend">Estado que viene de la respuesta del API</param>
-    /// <returns>Nombre de la pesta√±a a mostrar en la columna Estado</returns>
+    /// <returns>Nombre de la pestaÒa a mostrar en la columna Estado</returns>
     private string MapearEstadoAPestana(string estadoBackend)
     {
-        // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
         var estadoEnum = ElectronicBillingStatus.MapearDesdeEstadoBackend(estadoBackend);
         return ElectronicBillingStatus.GetEstadoDisplayName(estadoEnum);
-        // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
     }
 
 
 
     /// <summary>
-    /// Obtiene la clase CSS para el badge seg√∫n el estado mapeado a pesta√±a
+    /// Obtiene la clase CSS para el badge seg˙n el estado mapeado a pestaÒa
     /// </summary>
     /// <param name="estadoBackend">Estado original del backend</param>
     /// <returns>Clase CSS del badge</returns>
     private string GetEstadoBadgeClassPorPestana(string estadoBackend)
     {
-        // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
         var estadoEnum = ElectronicBillingStatus.MapearDesdeEstadoBackend(estadoBackend);
         return ObtenerClaseBadge(estadoEnum);
-        // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
     }
 
     /// <summary>
-    /// Obtiene la clase CSS del badge seg√∫n el estado del enum
+    /// Obtiene la clase CSS del badge seg˙n el estado del enum
     /// Retorna las clases personalizadas definidas en el archivo CSS del componente
     /// </summary>
     /// <param name="estado">Estado del enum</param>
     /// <returns>Clase CSS del badge</returns>
     private string ObtenerClaseBadge(EnumEstadoFacturacionElectronica estado)
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         return estado switch
         {
             EnumEstadoFacturacionElectronica.PorRevisar => "badge-warning",
@@ -650,24 +650,24 @@ public partial class EstadosConsultarFacturacion : ComponentBase
             EnumEstadoFacturacionElectronica.Anuladas => "badge-neutral",
             _ => "badge"
         };
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
     /// <summary>
-    /// Obtiene el nombre legible del estado para las pesta√±as de la UI.
+    /// Obtiene el nombre legible del estado para las pestaÒas de la UI.
     /// </summary>
     private string GetEstadoDisplayName(EnumEstadoFacturacionElectronica estado)
     {
-        // M√©todo generado por GitHub Copilot
+        // MÈtodo generado por GitHub Copilot
         return ElectronicBillingStatus.GetEstadoDisplayName(estado);
     }
 
     /// <summary>
-    /// Actualiza la selecci√≥n al marcar o desmarcar "Seleccionar todos" en el encabezado
+    /// Actualiza la selecciÛn al marcar o desmarcar "Seleccionar todos" en el encabezado
     /// </summary>
     private void OnSeleccionarTodosChanged()
     {
-        // M√©todo generado por GitHub Copilot
+        // MÈtodo generado por GitHub Copilot
         if (DatosPaginaActual == null || DatosPaginaActual.Count == 0)
         {
             SeleccionarTodos = false;
@@ -689,7 +689,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     /// </summary>
     private string GenerarCsvSeleccionados()
     {
-        // M√©todo generado por GitHub Copilot
+        // MÈtodo generado por GitHub Copilot
         var seleccionados = DatosPaginaActual
             .Where(p => p.Seleccionado)
             .ToList();
@@ -697,11 +697,11 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         if (seleccionados.Count == 0)
             return string.Empty;
 
-        // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
         // Agregar BOM UTF-8 para que Excel reconozca correctamente acentos y caracteres especiales.
         var sb = new StringBuilder();
         sb.Append('\uFEFF');
-        // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
 
         // Encabezados
         sb.AppendLine(string.Join(';', new[]
@@ -726,12 +726,12 @@ public partial class EstadosConsultarFacturacion : ComponentBase
 
         foreach (var item in seleccionados)
         {
-            // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
-            // Excel tiende a interpretar n√∫meros largos como notaci√≥n cient√≠fica.
+            // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
+            // Excel tiende a interpretar n˙meros largos como notaciÛn cientÌfica.
             // Para evitarlo, exportamos el PIN como texto prefijando un tab (\t).
             // Esto fuerza a Excel a tratar el valor como texto sin alterar el contenido visible.
             var pinComoTextoParaExcel = string.IsNullOrWhiteSpace(item.Pin) ? null : $"\t{item.Pin.Trim()}";
-            // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+            // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
 
             sb.AppendLine(string.Join(';', new[]
             {
@@ -759,7 +759,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     /// </summary>
     private async Task<FacturacionResponse<CancelBillingRequestResult>> AnularSeleccionados()
     {
-        // M√©todo generado por GitHub Copilot
+        // MÈtodo generado por GitHub Copilot
         var seleccionados = DatosPaginaActual
             .Where(p => p.Seleccionado)
             .ToList();
@@ -782,7 +782,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     /// </summary>
     private string EscaparCsv(string valor)
     {
-        // M√©todo generado por GitHub Copilot
+        // MÈtodo generado por GitHub Copilot
         if (valor == null)
         {
             return string.Empty;
@@ -793,7 +793,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
             valor = valor.Replace("\"", "\"\"");
         }
 
-        // Como usamos ';' como separador, escapamos si contiene ';' o saltos de l√≠nea
+        // Como usamos ';' como separador, escapamos si contiene ';' o saltos de lÌnea
         if (valor.Contains(';') || valor.Contains('\n') || valor.Contains('\r'))
         {
             return $"\"{valor}\"";
@@ -807,7 +807,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     /// </summary>
     private async Task ExportarSeleccionAsync()
     {
-        // M√©todo generado por GitHub Copilot
+        // MÈtodo generado por GitHub Copilot
         if (!HaySeleccionados)
         {
             await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No hay registros seleccionados para exportar.");
@@ -817,7 +817,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         var csv = GenerarCsvSeleccionados();
         if (string.IsNullOrWhiteSpace(csv))
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No se pudo generar el archivo de exportaci√≥n.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No se pudo generar el archivo de exportaciÛn.");
             return;
         }
 
@@ -829,18 +829,18 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         // Se incluye hora con hhmmss para evitar colisiones.
         var fileName = $"solicitudesfacturacion_{DateTime.Now:ddMMyyyy_HHmmss}.csv";
 
-        //1) Intentar descarga (si falla, s√≠ mostramos error)
+        //1) Intentar descarga (si falla, sÌ mostramos error)
         try
         {
             await JsRuntime.InvokeVoidAsync("downloadHelper.downloadCsv", fileName, csv);
         }
         catch (JSException jsEx)
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "Ocurri√≥ un error al iniciar la descarga del archivo.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "OcurriÛ un error al iniciar la descarga del archivo.");
         }
         catch (Exception ex)
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "Ocurri√≥ un error inesperado al exportar la informaci√≥n.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "OcurriÛ un error inesperado al exportar la informaciÛn.");
         }
 
         try
@@ -853,7 +853,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         }
         catch (Exception)
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "No se pudo abrir el modal de confirmaci√≥n.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "No se pudo abrir el modal de confirmaciÛn.");
         }
     }
 
@@ -880,13 +880,13 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         }
         catch (Exception)
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "Ocurri√≥ un error inesperado al procesar la solicitud.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "OcurriÛ un error inesperado al procesar la solicitud.");
         }
     }
 
-    #endregion M√©todos Auxiliares
+    #endregion MÈtodos Auxiliares
 
-    #region M√©todos de Filtrado y Paginaci√≥n
+    #region MÈtodos de Filtrado y PaginaciÛn
 
     private bool CanGoBack => Pagination.CurrentPageIndex > 0;
 
@@ -897,7 +897,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     /// </summary>
     private DateTime GetFechaHastaParaConsulta()
     {
-        // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
         var hoy = DateTime.Today;
         var fechaHasta = FiltrosConsultaFacturacion.FechaHasta.Date;
 
@@ -907,26 +907,26 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         }
 
         return fechaHasta.AddDays(1).AddTicks(-1);
-        // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
     }
 
     /// <summary>
-    /// Se ejecuta cuando el usuario aplica filtros o cambia de pesta√±a
+    /// Se ejecuta cuando el usuario aplica filtros o cambia de pestaÒa
     /// </summary>
-    /// <param name="esManual">Indica si la b√∫squeda fue iniciada manualmente por el usuario (true) o autom√°ticamente por el sistema (false)</param>
+    /// <param name="esManual">Indica si la b˙squeda fue iniciada manualmente por el usuario (true) o autom·ticamente por el sistema (false)</param>
     private async Task FilterChangedAsync(bool esManual = true)
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         SeleccionarTodos = false;
         DatosPaginaActual = [];
 
-        // Primero cambiar la p√°gina (esto disparar√° el refresh autom√°ticamente)
+        // Primero cambiar la p·gina (esto disparar· el refresh autom·ticamente)
         if (Pagination != null)
         {
             await Pagination.SetCurrentPageIndexAsync(0);
         }
         
-        // Solo marcar como b√∫squeda manual si el usuario la inici√≥ expl√≠citamente
+        // Solo marcar como b˙squeda manual si el usuario la iniciÛ explÌcitamente
         if (esManual)
         {
             BusquedaManualRealizada = true;
@@ -938,10 +938,10 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         }
         catch (Exception ex)
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "Ocurri√≥ un error inesperado al procesar la solicitud.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "OcurriÛ un error inesperado al procesar la solicitud.");
         }
         
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
     /// <summary>
@@ -962,7 +962,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     /// </summary>
     private async Task LimpiarFiltrosAsync()
     {
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         
         // Limpiar filtros de fechas
         FiltroFechaDesde = DateTime.Today;
@@ -971,7 +971,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         FiltrosConsultaFacturacion.FechaDesde = DateTime.Today;
         FiltrosConsultaFacturacion.FechaHasta = DateTime.Today;
 
-        // Limpiar filtros del modelo de validaci√≥n
+        // Limpiar filtros del modelo de validaciÛn
         FiltrosConsultaFacturacion.TipoDocumento = null;
         FiltrosConsultaFacturacion.NumeroDocumento = null;
         FiltrosConsultaFacturacion.NombreCliente = null;
@@ -982,16 +982,16 @@ public partial class EstadosConsultarFacturacion : ComponentBase
 
         EditContext.Validate();
 
-        // Marcar que el usuario ha realizado una b√∫squeda manual
+        // Marcar que el usuario ha realizado una b˙squeda manual
         BusquedaManualRealizada = true;
 
-        // Solo refrescar si el grid ya est√° inicializado
+        // Solo refrescar si el grid ya est· inicializado
         if (_firstRenderComplete && Grid != null)
         {
             await Task.Delay(1);
             await FilterChangedAsync();
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 
     private void Pagination_TotalItemCountChanged(object sender, int? e) => StateHasChanged();
@@ -1010,17 +1010,17 @@ public partial class EstadosConsultarFacturacion : ComponentBase
 
     private Task GoLastAsync() => GoToPageAsync(Pagination.LastPageIndex.GetValueOrDefault(0));
 
-    #endregion M√©todos de Filtrado y Paginaci√≥n
+    #endregion MÈtodos de Filtrado y PaginaciÛn
 
-    #region M√©todos para manejo del modal
+    #region MÈtodos para manejo del modal
 
-    // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+    // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
     /// <summary>
-    /// Muestra el modal de confirmaci√≥n al usuario antes de proceder con la anulaci√≥n.
+    /// Muestra el modal de confirmaciÛn al usuario antes de proceder con la anulaciÛn.
     /// </summary>
     /// <remarks>
-    /// Este m√©todo valida que haya registros seleccionados antes de mostrar el modal.
-    /// Si no hay selecci√≥n, muestra una notificaci√≥n de advertencia y no abre el modal.
+    /// Este mÈtodo valida que haya registros seleccionados antes de mostrar el modal.
+    /// Si no hay selecciÛn, muestra una notificaciÛn de advertencia y no abre el modal.
     /// Actualiza el estado del componente para reflejar los cambios en la UI.
     /// </remarks>
     private void MostrarModalConfirmacion()
@@ -1036,12 +1036,12 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     }
 
     /// <summary>
-    /// Cierra el modal de di√°logo y restablece el estado del componente.
+    /// Cierra el modal de di·logo y restablece el estado del componente.
     /// </summary>
     /// <remarks>
-    /// Establece la propiedad <see cref="MostrarModal"/> en 0 para indicar que el modal est√° cerrado.
+    /// Establece la propiedad <see cref="MostrarModal"/> en 0 para indicar que el modal est· cerrado.
     /// Limpia los contadores de totales procesados y exitosos.
-    /// Dispara una actualizaci√≥n de la interfaz de usuario.
+    /// Dispara una actualizaciÛn de la interfaz de usuario.
     /// </remarks>
     private void CerrarModal()
     {
@@ -1052,17 +1052,17 @@ public partial class EstadosConsultarFacturacion : ComponentBase
     }
 
     /// <summary>
-    /// Confirma y procesa la anulaci√≥n de las solicitudes de facturaci√≥n seleccionadas.
-    /// Actualiza el estado del resultado seg√∫n el √©xito o fallo de la operaci√≥n.
+    /// Confirma y procesa la anulaciÛn de las solicitudes de facturaciÛn seleccionadas.
+    /// Actualiza el estado del resultado seg˙n el Èxito o fallo de la operaciÛn.
     /// </summary>
     /// <remarks>
-    /// Este m√©todo procesa de forma as√≠ncrona la anulaci√≥n de las solicitudes seleccionadas y actualiza
-    /// las propiedades de resumen como el n√∫mero total de registros procesados y anulaciones exitosas.
-    /// Establece el estado del modal seg√∫n el resultado de la operaci√≥n (√©xito total, error total o √©xito parcial).
-    /// Incluye manejo robusto de excepciones para errores de conexi√≥n, timeout y errores inesperados.
-    /// Despu√©s de una anulaci√≥n exitosa, refresca autom√°ticamente el grid para mostrar los cambios.
+    /// Este mÈtodo procesa de forma asÌncrona la anulaciÛn de las solicitudes seleccionadas y actualiza
+    /// las propiedades de resumen como el n˙mero total de registros procesados y anulaciones exitosas.
+    /// Establece el estado del modal seg˙n el resultado de la operaciÛn (Èxito total, error total o Èxito parcial).
+    /// Incluye manejo robusto de excepciones para errores de conexiÛn, timeout y errores inesperados.
+    /// DespuÈs de una anulaciÛn exitosa, refresca autom·ticamente el grid para mostrar los cambios.
     /// </remarks>
-    /// <returns>Una tarea que representa la operaci√≥n as√≠ncrona.</returns>
+    /// <returns>Una tarea que representa la operaciÛn asÌncrona.</returns>
     private async Task ConfirmarAnulacion()
     {
         try
@@ -1079,7 +1079,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
             // Validar que la respuesta no sea nula
             if (response == null)
             {
-                await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "No se recibi√≥ respuesta del servidor.");
+                await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "No se recibiÛ respuesta del servidor.");
                 MostrarModal = 3; // Modal de error total
                 StateHasChanged();
                 return;
@@ -1088,7 +1088,7 @@ public partial class EstadosConsultarFacturacion : ComponentBase
             // Validar que los datos no sean nulos
             if (response.Datos == null)
             {
-                await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "La respuesta del servidor no contiene datos v√°lidos.");
+                await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "La respuesta del servidor no contiene datos v·lidos.");
                 MostrarModal = 3; // Modal de error total
                 StateHasChanged();
                 return;
@@ -1099,27 +1099,27 @@ public partial class EstadosConsultarFacturacion : ComponentBase
             TotalExitosos = response.Datos.TotalExitosos;
             var totalFallidos = response.Datos.TotalFallidos;
 
-            // Determinar el tipo de modal seg√∫n los resultados
+            // Determinar el tipo de modal seg˙n los resultados
             if (TotalExitosos == Total && totalFallidos == 0)
             {
-                MostrarModal = 2; // √âxito total
-                await MiLicenciaService.ShowNotificacion(NotificationStatus.Success, $"Se anularon exitosamente {TotalExitosos} solicitud(es) de facturaci√≥n.");
+                MostrarModal = 2; // …xito total
+                await MiLicenciaService.ShowNotificacion(NotificationStatus.Success, $"Se anularon exitosamente {TotalExitosos} solicitud(es) de facturaciÛn.");
             }
             else if (totalFallidos == Total)
             {
                 MostrarModal = 3; // Error total
-                await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "No se pudo anular ninguna solicitud de facturaci√≥n.");
+                await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "No se pudo anular ninguna solicitud de facturaciÛn.");
             }
             else if (totalFallidos > 0 && totalFallidos < Total)
             {
-                MostrarModal = 4; // √âxito parcial
+                MostrarModal = 4; // …xito parcial
                 await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, $"Se anularon {TotalExitosos} de {Total} solicitud(es). {totalFallidos} fallaron.");
             }
             else
             {
-                // Caso por defecto si no se cumple ninguna condici√≥n esperada
+                // Caso por defecto si no se cumple ninguna condiciÛn esperada
                 MostrarModal = 0;
-                await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "La operaci√≥n finaliz√≥ con un resultado inesperado.");
+                await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "La operaciÛn finalizÛ con un resultado inesperado.");
             }
 
             // Refrescar el grid para mostrar los cambios
@@ -1133,37 +1133,39 @@ public partial class EstadosConsultarFacturacion : ComponentBase
         }
         catch (HttpRequestException httpEx)
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "Error de conexi√≥n con el servidor. Por favor, verifique su conexi√≥n a internet.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "Error de conexiÛn con el servidor. Por favor, verifique su conexiÛn a internet.");
             MostrarModal = 3;
             StateHasChanged();
         }
         catch (TaskCanceledException)
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "La operaci√≥n ha tardado demasiado tiempo. Por favor, intente nuevamente.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "La operaciÛn ha tardado demasiado tiempo. Por favor, intente nuevamente.");
             MostrarModal = 3;
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "Ocurri√≥ un error inesperado al procesar la anulaci√≥n.");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Error, "OcurriÛ un error inesperado al procesar la anulaciÛn.");
             MostrarModal = 3;
             StateHasChanged();
         }
     }
 
-    // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+    // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
 
     private async Task ShowModal(int idPtesaPIN)
     {
-        // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
         if (ModalDetalleFacturacionRef != null)
         {
             await ModalDetalleFacturacionRef.AbrirModalAsync(idPtesaPIN);
         }
-        // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
     }
 
-    #endregion M√©todos de Filtrado y Paginaci√≥n
+    #endregion MÈtodos de Filtrado y PaginaciÛn
 
-    // Fin c√≥digo generado por GitHub Copilot
+    // Fin cÛdigo generado por GitHub Copilot
 }
+
+

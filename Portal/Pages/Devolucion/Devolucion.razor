@@ -1,6 +1,6 @@
-Ôªø@page "/compradepin/devoluciones"
+@page "/compradepin/devoluciones"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.Common;
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
@@ -29,7 +29,7 @@
 			<header class="encabezadodos">
 				<div class="wrapper margen_general">
 					<p class="linkdos"><a @onclick="()=> VolverCompraPin()">Regresar</a></p>
-					<p class="titulodos">Devoluci√≥n de PIN Directo Colpatria</p>
+					<p class="titulodos">DevoluciÛn de PIN Directo Colpatria</p>
 				</div>
 			</header>
 
@@ -43,7 +43,7 @@
 									Ingrese un PIN pagado por medio de PIN Directo Colpatria para consultar su estado y realizar:
 								</p>
 								<ul>
-									<li>Devoluci√≥n: repone el dinero inmediatamente en la cuenta Colpatria debitada</li>
+									<li>DevoluciÛn: repone el dinero inmediatamente en la cuenta Colpatria debitada</li>
 								</ul>
 								
 								<ConsultaInfoPin IdRunt="@(CentroSeleccionado.CodigoRUNT?.ToString() ?? "")" ConsultaDevolucionesChanged="ConsultaDevolucionesChanged" OnFormCompleteChanged="OnFormCompleteChanged"></ConsultaInfoPin>
@@ -66,7 +66,7 @@
 								<use href="{feather_sprite}#alert-triangle" />
 							</svg>
 							<p>
-								Este formulario solo permite devolver pines recaudados con PIN Directo Colpatria. Dir√≠jase a
+								Este formulario solo permite devolver pines recaudados con PIN Directo Colpatria. DirÌjase a
 								<strong> centro.milicencia.co</strong> o <strong> milicencia.co </strong> para gestionar este PIN
 							</p>
 						</div>
@@ -76,12 +76,12 @@
 					{
 						<div>
 							<div class="wrapper">
-								<h2>Operaci√≥n completada exitosamente</h2>
+								<h2>OperaciÛn completada exitosamente</h2>
 								<p>
-									La devoluci√≥n del PIN @(ConsultaInfoPin.Data.Entidad.Pin) fue exitosa. Pronto ver√° el dinero reflejado en su cuenta
+									La devoluciÛn del PIN @(ConsultaInfoPin.Data.Entidad.Pin) fue exitosa. Pronto ver· el dinero reflejado en su cuenta
 									Scotiabank Colpatria
 								</p>
-								<a @onclick="()=> VolverCompraPin()" class="boton-primario">Volver al men√∫ principal</a>
+								<a @onclick="()=> VolverCompraPin()" class="boton-primario">Volver al men˙ principal</a>
 							</div>
 						</div>
 					}
@@ -115,7 +115,7 @@
 										<div>@ConsultaInfoPin.Data.Entidad.Pin</div>
 									</div>
 									<div>
-										<div>Tr√°mite y categor√≠a</div>
+										<div>Tr·mite y categorÌa</div>
 										<div>@SetTramiteCategoria()</div>
 									</div>
 
@@ -124,7 +124,7 @@
 										<div>@ConsultaInfoPin.Data.Entidad.Email</div>
 									</div>
 									<div>
-										<div>Tel√©fono</div>
+										<div>TelÈfono</div>
 										<div>@ConsultaInfoPin.Data.Entidad.Telefono</div>
 									</div>
 
@@ -139,7 +139,7 @@
 								</div>
 
 								<div class="botones">
-										<a hidden="@(!AllowReturn)" type="submit" class="boton-primario" @onclick="() => RealizarDevolucion()">Realizar devoluci√≥n</a>
+										<a hidden="@(!AllowReturn)" type="submit" class="boton-primario" @onclick="() => RealizarDevolucion()">Realizar devoluciÛn</a>
 								</div>
 							</div>
 						</div>

@@ -1,12 +1,12 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.Pines;
-using portalAdministrativoSISEC.Data.Pines.Cuotas;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.Pines;
+using portalAdministrativoSISEC.Application.Data.Pines.Cuotas;
 using portalAdministrativoSISEC.Entidades.Common;
 using portalAdministrativoSISEC.Entidades.Devolucion;
 using portalAdministrativoSISEC.Entidades.Devolucion.ConsultaInfoPin;
@@ -15,7 +15,7 @@ using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.Devoluciones;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.PagoCuota.ResumenPagoCuota;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 using System;
 using System.Collections.Generic;
@@ -183,7 +183,7 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota
             paymentOptionModel.ValorParcial = null;
             paymentOptionModel.Cuotas = 1;
 
-            // Limpiar mensajes de validaciÃ³n
+            // Limpiar mensajes de validación
             editContext = new EditContext(paymentOptionModel);
             StateHasChanged();
         }
@@ -228,7 +228,7 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota
             int cuotasPendientesInicial = estadoInicial.CuotasPendientes;
             int cuotasPendientesFinal = estadoFinal.CuotasPendientes;
 
-            // La cuota inicial serÃ¡ la primera cuota que se pagÃ³ en este intervalo
+            // La cuota inicial será la primera cuota que se pagó en este intervalo
             int cuotaInicial = (cuotasTotales - cuotasPendientesInicial) + 1;
 
             return cuotaInicial;
@@ -256,22 +256,22 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota
             switch (casoPago)
             {
                 case 1: // Pago Total de la deuda
-                    notificacion.Encabezado = "Hemos recibido el pago total del curso de conducciÃ³n, que has adquirido, relacionado con el nÃºmero de pin";
+                    notificacion.Encabezado = "Hemos recibido el pago total del curso de conducción, que has adquirido, relacionado con el número de pin";
                     break;
                 case 2: // Pago de Cuotas Completas
                     int cuotasPagadas = (int)(valorAbono / valorCuota);
                     string numeroCuotas = FormatearNumeroCuotas(cuotaInicial, cuotaInicial + cuotasPagadas - 1);
                     if (!string.IsNullOrEmpty(numeroCuotas))
                     {
-                        notificacion.Encabezado = $"Hemos recibido el <strong>pago de las cuotas NÂ° {numeroCuotas}</strong> para el curso de conducciÃ³n, que has adquirido, relacionado con el nÃºmero de pin";
+                        notificacion.Encabezado = $"Hemos recibido el <strong>pago de las cuotas N° {numeroCuotas}</strong> para el curso de conducción, que has adquirido, relacionado con el número de pin";
                     }
                     else
                     {
-                        notificacion.Encabezado = "Hemos recibido un pago para el curso de conducciÃ³n, que has adquirido, relacionado con el nÃºmero de pin";
+                        notificacion.Encabezado = "Hemos recibido un pago para el curso de conducción, que has adquirido, relacionado con el número de pin";
                     }
                     break;
                 case 3: // Abono parcial
-                    notificacion.Encabezado = "Hemos recibido un abono al curso de conducciÃ³n, que has adquirido, relacionado con el nÃºmero de pin";
+                    notificacion.Encabezado = "Hemos recibido un abono al curso de conducción, que has adquirido, relacionado con el número de pin";
                     break;
             }
             return notificacion;
@@ -303,3 +303,5 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota
         }
     }
 }
+
+

@@ -1,9 +1,9 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
 using portalAdministrativoSISEC.Entidades.SuperTransporte;
-using portalAdministrativoSISEC.Services.SuperTransporte;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Forms;
@@ -75,7 +75,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte
                 var resultado = await _superTransporteService.PutCentro(_centroSuper, applicationShared.IdCentroStrappi);
                 if (resultado != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraciÃ³n correctamente.", "InformaciÃ³n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuración correctamente.", "Información");
                     Navigation.NavigateTo("/supertransporte/centro-cea", false);
                 }
             }
@@ -135,3 +135,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte
         }
     }
 }
+
+

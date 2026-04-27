@@ -19,8 +19,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders;
 using Microsoft.PowerBI.Api.Models;
 using portalAdministrativoSISEC.Aplication;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Pages.Agendamiento;
+using portalAdministrativoSISEC.Application.Contracts;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.HorarioAtencion;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
 using portalAdministrativoSISEC.Services;
 using portalAdministrativoSISEC.Services.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Services.SuperTransporte;
@@ -48,10 +51,7 @@ namespace portalAdministrativoSISEC
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddRazorPages();
-            services.AddServerSideBlazor(options =>
-            {
-                options.DetailedErrors = Configuration.GetValue<bool>("DetailedErrors");
-            });
+            services.AddServerSideBlazor();
 
             services.AddSession(options =>
             {
@@ -78,8 +78,8 @@ namespace portalAdministrativoSISEC
             {
                 options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Latin1Supplement);
             });
-            //Conexion nueva como base
-            services.AgregarHttpClient(services.BuildServiceProvider().GetRequiredService<IOptions<AppSettings>>());
+            // Legacy Startup remains compilable, but Program.cs owns the runtime bootstrapping.
+            services.AgregarHttpClient(Configuration);
             services.AddHttpClient<ICategoriaService, CategoriaService>(client =>
             {
                 client.BaseAddress = new Uri(Configuration.GetSection("AppSettings:ApiPortalAdministrativo:Url").Value);
@@ -158,3 +158,5 @@ namespace portalAdministrativoSISEC
         }
     }
 }
+
+

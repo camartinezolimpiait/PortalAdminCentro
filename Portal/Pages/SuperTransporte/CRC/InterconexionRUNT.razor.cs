@@ -1,8 +1,8 @@
-ï»¿using Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Services.SuperTransporte;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
+using portalAdministrativoSISEC.Application.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
 using portalAdministrativoSISEC.Pages.SuperTransporte.CRC;
@@ -68,7 +68,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
                 }, applicationShared.IdCentroStrappi);
                 if (resultado != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraciÃ³n correctamente.", "InformaciÃ³n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuración correctamente.", "Información");
                     Navigation.NavigateTo("/supertransporte/centro", false);
                 }
             }
@@ -93,3 +93,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
         }
     }
 }
+
+

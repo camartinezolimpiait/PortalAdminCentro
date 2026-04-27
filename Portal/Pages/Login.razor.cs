@@ -1,19 +1,19 @@
-Ôªøusing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Microsoft.PowerBI.Api.Models;
 using Newtonsoft.Json;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Entidades;
 using portalAdministrativoSISEC.Entidades.Recaptcha;
 using portalAdministrativoSISEC.Entidades.PortalAdministrativo;
 using portalAdministrativoSISEC.Entidades.SuperTransporte;
-using portalAdministrativoSISEC.Services.Agendamiento.Perfil;
-using portalAdministrativoSISEC.Services.MiLicencia.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.SuperTransporte;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Perfil;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia.PortalAdministrativo;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
 using portalAdministrativoSISEC.Util.LogAuditoria;
 using System;
 using System.Collections.Generic;
@@ -91,10 +91,10 @@ namespace portalAdministrativoSISEC.Pages
 
             // Input validation
             if (string.IsNullOrWhiteSpace(endpoint))
-                throw new ArgumentNullException(nameof(endpoint), "El endpoint de la API no puede ser nulo o vac√≠o.");
+                throw new ArgumentNullException(nameof(endpoint), "El endpoint de la API no puede ser nulo o vacÌo.");
 
             if (string.IsNullOrWhiteSpace(httpMethod))
-                throw new ArgumentNullException(nameof(httpMethod), "El m√©todo HTTP no puede ser nulo ni estar vac√≠o");
+                throw new ArgumentNullException(nameof(httpMethod), "El mÈtodo HTTP no puede ser nulo ni estar vacÌo");
 
             try
             {
@@ -117,7 +117,7 @@ namespace portalAdministrativoSISEC.Pages
             {
                 // Log the error to a fallback mechanism (e.g., console, file, or another logger)
                 // Note: In a real implementation, use a proper fallback logging mechanism
-                string value = $"Error al registrar el log de informaci√≥n: {ex.Message}";
+                string value = $"Error al registrar el log de informaciÛn: {ex.Message}";
                 Console.Error.WriteLine(value);
 
                 // Optionally rethrow or handle based on requirements
@@ -142,7 +142,7 @@ namespace portalAdministrativoSISEC.Pages
         {
             try
             {
-                // Verificar si el captcha est√° activo
+                // Verificar si el captcha est· activo
                 if (firstRender)
                 {
                     clienteDtoGral = await GetClients();
@@ -167,7 +167,7 @@ namespace portalAdministrativoSISEC.Pages
                 google = await _jsRuntime.InvokeAsync<string>("runCaptcha");
                 if (firstRender)
                 {
-                    StateHasChanged(); // Esto puede omitirse si no se necesita forzar una actualizaci√≥n.
+                    StateHasChanged(); // Esto puede omitirse si no se necesita forzar una actualizaciÛn.
                 }
             }
             catch (Exception ex)
@@ -232,7 +232,7 @@ namespace portalAdministrativoSISEC.Pages
 
                     if (respuestaCentro == null || respuestaCentro.Respuesta == null)
                     {
-                        message = "No se pudo obtener la informaci√≥n del centro asociado a este usuario. Por favor, comun√≠quese con el administrador del sistema.";
+                        message = "No se pudo obtener la informaciÛn del centro asociado a este usuario. Por favor, comunÌquese con el administrador del sistema.";
                         typeAlert = "danger";
                         showLoader = false;
                         return;
@@ -241,7 +241,7 @@ namespace portalAdministrativoSISEC.Pages
                     {
                         if (respuestaCentro.Respuesta.CodigoRUNT == null)
                         {
-                            message = "El centro asociado a este usuario no tiene c√≥digo RUNT asignado. Por favor, comun√≠quese con el administrador del sistema.";
+                            message = "El centro asociado a este usuario no tiene cÛdigo RUNT asignado. Por favor, comunÌquese con el administrador del sistema.";
                             typeAlert = "danger";
                             showLoader = false;
                             return;
@@ -496,10 +496,10 @@ namespace portalAdministrativoSISEC.Pages
             }
         }
 
-        // M√©todo generado por GitHub Copilot
-        // Inicio c√≥digo generado por GitHub Copilot
+        // MÈtodo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         /// <summary>
-        /// Env√≠a un correo electr√≥nico para recuperaci√≥n de contrase√±a al usuario especificado.
+        /// EnvÌa un correo electrÛnico para recuperaciÛn de contraseÒa al usuario especificado.
         /// Valida todos los posibles errores por objetos nulos.
         /// </summary>
         /// <param name="nameClient">Nombre del cliente destinatario.</param>
@@ -509,7 +509,7 @@ namespace portalAdministrativoSISEC.Pages
             {
                 if (string.IsNullOrWhiteSpace(nameClient))
                 {
-                    message = "No se pudo enviar el correo de recuperaci√≥n de contrase√±a.";
+                    message = "No se pudo enviar el correo de recuperaciÛn de contraseÒa.";
                     typeAlert = "danger";
                     return;
                 }
@@ -531,7 +531,7 @@ namespace portalAdministrativoSISEC.Pages
                 var baseAddress = _configuration["AppSettings:uriSisecAuth"];
                 if (string.IsNullOrWhiteSpace(baseAddress))
                 {
-                    message = "No se encuentra la URL base para el env√≠o de correo.";
+                    message = "No se encuentra la URL base para el envÌo de correo.";
                     typeAlert = "danger";
                     return;
                 }
@@ -546,12 +546,12 @@ namespace portalAdministrativoSISEC.Pages
                 // Validar la respuesta de la API y manejar posibles errores
                 if (response?.HttpResponse?.IsSuccessStatusCode == true)
                 {
-                    message = "Correo de recuperaci√≥n enviado exitosamente.";
+                    message = "Correo de recuperaciÛn enviado exitosamente.";
                     typeAlert = "success";
                 }
                 else
                 {
-                    message = "No se pudo enviar el correo de recuperaci√≥n de contrase√±a.";
+                    message = "No se pudo enviar el correo de recuperaciÛn de contraseÒa.";
                     typeAlert = "danger";
                 }
             }
@@ -562,11 +562,11 @@ namespace portalAdministrativoSISEC.Pages
                 await _portalAdministrativoService.RegisterExceptionLog(
                     ExtensionLog.GenerateExceptionLog(ex, methodName, componentName, null, null, null)
                 );
-                message = "No se pudo enviar el correo de recuperaci√≥n de contrase√±a.";
+                message = "No se pudo enviar el correo de recuperaciÛn de contraseÒa.";
                 typeAlert = "danger";
             }
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
 
         protected async Task<List<ClienteDTO>> GetClients()
@@ -589,7 +589,7 @@ namespace portalAdministrativoSISEC.Pages
                 }
                 else
                 {
-                    message = "Fall√≥ la conexi√≥n con la base de datos";
+                    message = "FallÛ la conexiÛn con la base de datos";
                     typeAlert = "danger";
                     showLoader = false;
                 }
@@ -679,22 +679,22 @@ namespace portalAdministrativoSISEC.Pages
         {
             ReCaptcha reCaptcha = new();
 
-            // Si el captcha no est√° activo, retornar true directamente
+            // Si el captcha no est· activo, retornar true directamente
             if (!isRecaptchaActive)
             {
                 reCaptcha.Success = "true";
-                reCaptcha.ErrorCodes = new string[] { $"Token de reCAPTCHA v√°lido" };
+                reCaptcha.ErrorCodes = new string[] { $"Token de reCAPTCHA v·lido" };
                 return reCaptcha;
             }
             // Si no hay respuesta del captcha, rechazar
             if (string.IsNullOrEmpty(gResponse))
             {
                 reCaptcha.Success = "false";
-                reCaptcha.ErrorCodes = new string[] { $"Token de reCAPTCHA inv√°lido, por favor refresca la pagina, intenta de nuevo" };
+                reCaptcha.ErrorCodes = new string[] { $"Token de reCAPTCHA inv·lido, por favor refresca la pagina, intenta de nuevo" };
 
                 return reCaptcha;
             }
-            // Usar using declaration (C# 8+) para gestionar la disposici√≥n autom√°tica
+            // Usar using declaration (C# 8+) para gestionar la disposiciÛn autom·tica
             using var client = new HttpClient();
             string secretKey = @_configuration["AppSettings:SecretKey"];
             string verifyUrl = @_configuration["AppSettings:CaptchaVerifyUrl"];
@@ -707,7 +707,7 @@ namespace portalAdministrativoSISEC.Pages
                 if (!gReply.IsSuccessStatusCode)
                 {
                     reCaptcha.Success = "false";
-                    reCaptcha.ErrorCodes = new string[] { "El servicio de verificaci√≥n de reCAPTCHA no responde. Por favor, intenta de nuevo." };
+                    reCaptcha.ErrorCodes = new string[] { "El servicio de verificaciÛn de reCAPTCHA no responde. Por favor, intenta de nuevo." };
                     return reCaptcha;
                 }
 
@@ -717,9 +717,9 @@ namespace portalAdministrativoSISEC.Pages
 
                 if (!recaptchaResponse.Success)
                 {
-                    string source = responseContent.Contains("duplicate", StringComparison.OrdinalIgnoreCase) ? "Refresca la p√°gina." : string.Empty;
+                    string source = responseContent.Contains("duplicate", StringComparison.OrdinalIgnoreCase) ? "Refresca la p·gina." : string.Empty;
                     reCaptcha.Success = "false";
-                    reCaptcha.ErrorCodes = new string[] { $"Token de reCAPTCHA inv√°lido. {source} Por favor intenta de nuevo." };
+                    reCaptcha.ErrorCodes = new string[] { $"Token de reCAPTCHA inv·lido. {source} Por favor intenta de nuevo." };
                     return reCaptcha;
                 }
                 // La propiedad Success probablemente es un bool, no una string
@@ -755,3 +755,4 @@ namespace portalAdministrativoSISEC.Pages
         #endregion metodos
     }
 }
+

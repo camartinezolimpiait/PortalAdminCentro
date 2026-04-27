@@ -1,10 +1,10 @@
-Ôªøusing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.CompraPin.Models;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.Models;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Const;
 using System;
 using System.Collections.Generic;
@@ -61,8 +61,8 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
         public Dictionary<int, string> DescripcionOpcionTramite { get; set; } =
     new()
     {
-            { 1, "Un solo tr√°mite" },
-            { 2, "Varios tr√°mites (Carro y moto)" }
+            { 1, "Un solo tr·mite" },
+            { 2, "Varios tr·mites (Carro y moto)" }
     };
         #endregion
         protected override void OnInitialized()
@@ -273,7 +273,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
             // Llamada al servicio (supongo que tu API devuelve algo tipo IEnumerable<Categoria>)
             var centroCategoria = await MiLicenciaService.ConsultaCategoriasCentro(pagoPin.CentroSeleccionado.IdCentro);
 
-            // Procesar categor√≠as
+            // Procesar categorÌas
             CargarCategoriasCentro(centroCategoria);
 
             if (pagoPin.CentroSeleccionado != null)
@@ -300,7 +300,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
 
         public void CalcularRecategorizacion()
         {
-            // "actual" ser√≠a la categor√≠a seleccionada en este momento
+            // "actual" serÌa la categorÌa seleccionada en este momento
             var actual = CategoriasActual;
 
             if (!string.IsNullOrEmpty(actual))
@@ -396,7 +396,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
 
                 await PagoPinChanged.InvokeAsync(pagoPin);
 
-                if (esSubmit) // ‚úÖ solo en submit
+                if (esSubmit) // ? solo en submit
                     await OnFormValidChanged.InvokeAsync(true);
             }
             else if (pagoPin.PasoCotizacion == PasosCompraPin.CategoriaComboCarro)
@@ -409,7 +409,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
 
                 if (esSubmit)
                 {
-                    // ‚úÖ solo en submit
+                    // ? solo en submit
                     await OnFormValidChanged.InvokeAsync(false);
                     vistaCategoriasCarro = false;
                     vistaCategoriasMoto = true;
@@ -427,7 +427,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
 
                 if (esSubmit) 
                 {
-                    // ‚úÖ solo en submit
+                    // ? solo en submit
                     await OnFormValidChanged.InvokeAsync(true);
                     vistaCategoriasMoto = false;
                 }
@@ -452,20 +452,20 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
             var categoria1 = this.pagoPin.Categoria1;
             var categoria2 = this.pagoPin.Categoria2;
 
-            // Si es tr√°mite simple
+            // Si es tr·mite simple
             if (this.pagoPin.OpcionTramite == DescripcionOpcionTramite.FirstOrDefault(x => x.Key == 1).Key)
             {
                 var x = this.compraPinForm.CategoriaPrincipal;
                 this.pagoPin.CategoriasActual = this.CategoriasActual;
             }
 
-            // Si est√° en paso de combo Moto
+            // Si est· en paso de combo Moto
             if (this.pagoPin.PasoCotizacion == PasosCompraPin.CategoriaComboMoto)
             {
                 this.pagoPin.Categoria2 = this.compraPinForm.CategoriaPrincipal;
                 this.pagoPin.CategoriasActual = this.CategoriasActual;
             }
-            // Si est√° en paso de combo Carro
+            // Si est· en paso de combo Carro
             else if (this.pagoPin.PasoCotizacion == PasosCompraPin.CategoriaComboCarro)
             {
                 this.pagoPin.Categoria1 = this.compraPinForm.CategoriaPrincipal;
@@ -524,3 +524,5 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.SeleccionCategorias
 
     }
 }
+
+

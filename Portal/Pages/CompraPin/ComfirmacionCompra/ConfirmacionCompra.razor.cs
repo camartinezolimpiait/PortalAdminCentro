@@ -1,8 +1,8 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.CompraPin.Models;
-using portalAdministrativoSISEC.Data.CompraPin.Wompi;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.Models;
+using portalAdministrativoSISEC.Application.Data.CompraPin.Wompi;
 using portalAdministrativoSISEC.Entidades;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda;
 using portalAdministrativoSISEC.Entidades.Pago.Wompi;
@@ -11,7 +11,7 @@ using portalAdministrativoSISEC.Enum.CompraPin;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.Common;
 using portalAdministrativoSISEC.Pages.CompraPin.ProcesoDePago;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Extension;
 using System;
 using System.Collections.Generic;
@@ -266,7 +266,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
                 IsLoadingData = false;
                 CloseDialog();
                 await MiLicenciaService.ShowNotificacion(NotificationStatus.Error,
-                        $"La referencia no se generÃ³ correctamente. Ha ocurrido un error intentelo nuevamente.");
+                        $"La referencia no se generó correctamente. Ha ocurrido un error intentelo nuevamente.");
                 IrAResumenCompra(false, "");
             }
         }
@@ -282,7 +282,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
 
             if (PagoPin.ConfiguracionCuotas.PermiteCuotas)
             {
-                // Inicio refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+                // Inicio refactorización/optimización por GitHub Copilot
                 if (PagoPin.Cuotas != 0)
                 {
                     CuotaSeleccionada = PagoPin.ConfiguracionCuotas.CuotaSeleccionada;
@@ -296,7 +296,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
                         });
                     }
                 }
-                // Fin refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+                // Fin refactorización/optimización por GitHub Copilot
             }
 
             return await Task.FromResult(totalCuotas);
@@ -457,9 +457,9 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
         {
             return plataforma switch
             {
-                "CEA" => "Curso de conducciÃ³n",
-                "CRC" => "Examen mÃ©dico",
-                "CDA" => "RevisiÃ³n tÃ©cnico-mecÃ¡nica", // opcional
+                "CEA" => "Curso de conducción",
+                "CRC" => "Examen médico",
+                "CDA" => "Revisión técnico-mecánica", // opcional
                 _ => ""
             };
         }
@@ -467,3 +467,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
         #endregion Private Mothods
     }
 }
+

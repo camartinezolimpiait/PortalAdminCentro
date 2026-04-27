@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Politica;
-using portalAdministrativoSISEC.Services.Agendamiento;
-using portalAdministrativoSISEC.Services.Agendamiento.ConfigruracionCuposReglas;
-using portalAdministrativoSISEC.Services.Agendamiento.HorarioAtencion;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Horario;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.ConfiguracionCuposReglas;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Util;
 
 namespace portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionReglas
@@ -47,8 +47,8 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionReglas
         public short TiempoMinAgenda = 1;
         public short TiempoMinCancelar = 1;
         private short _horas = 24;
-        public string TipoTiempoAgenda = "Días";
-        public string TipoTiempoCancelar = "Días";
+        public string TipoTiempoAgenda = "D�as";
+        public string TipoTiempoCancelar = "D�as";
         public bool IsLoading = true;
         public bool getNewSchedule = false;
         public bool createNewSchedule = false;
@@ -76,7 +76,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionReglas
             catch (ApplicationException ae)
             {
                 IsLoading = false;
-                ToastService.ShowWarning(ae.Message, "Información");
+                ToastService.ShowWarning(ae.Message, "Informaci�n");
             }
             catch (Exception ex)
             {
@@ -117,7 +117,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionReglas
                 }
                 else
                 {
-                    TipoTiempoAgenda = "Días";
+                    TipoTiempoAgenda = "D�as";
                     TiempoMinAgenda = (short)(applicationShared.TiempoHoraMinAgenda / _horas);
                 }
 
@@ -128,7 +128,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionReglas
                 }
                 else
                 {
-                    TipoTiempoCancelar = "Días";
+                    TipoTiempoCancelar = "D�as";
                     TiempoMinCancelar = (short)(applicationShared.TiempoHoraMinCancelar / _horas);
                 }
             }
@@ -139,12 +139,12 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionReglas
         /// <returns></returns>
         private async Task GuardarConfiguracionReglas()
         {
-            applicationShared.TiempoHoraMinAgenda = (short)(TipoTiempoAgenda == "Días" ? TiempoMinAgenda * _horas : TiempoMinAgenda);
-            applicationShared.TiempoHoraMinCancelar = (short)(TipoTiempoCancelar == "Días" ? TiempoMinCancelar * _horas : TiempoMinCancelar);
+            applicationShared.TiempoHoraMinAgenda = (short)(TipoTiempoAgenda == "D�as" ? TiempoMinAgenda * _horas : TiempoMinAgenda);
+            applicationShared.TiempoHoraMinCancelar = (short)(TipoTiempoCancelar == "D�as" ? TiempoMinCancelar * _horas : TiempoMinCancelar);
 
             if(applicationShared.TiempoHoraMinAgenda > (ParametrizacionHorario.DisponibilidadAgendaDias * _horas))
             {
-                ToastService.ShowWarning(@"El tiempo mínimo para agendar no puede ser mayor al valor de agenda disponible.", "Información");
+                ToastService.ShowWarning(@"El tiempo m�nimo para agendar no puede ser mayor al valor de agenda disponible.", "Informaci�n");
                 return;
             }
 
@@ -165,14 +165,17 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.ConfiguracionReglas
             await ProtectedSessionStore.SetAsync(applicationShared.NameLocalStorage, applicationShared);
             if (estadoProceso.IdParametroHorario > 0)
             {
-                ToastService.ShowSuccess(@"Se ha guardado la configuración correctamente.", "Información");
+                ToastService.ShowSuccess(@"Se ha guardado la configuraci�n correctamente.", "Informaci�n");
                 Navigation.NavigateTo("/configuracion/configurarParametrizacion", false);
             }
             else
             {
-                ToastService.ShowWarning(@"Ha ocurrido un error, intente nuevamente.", "Información");
+                ToastService.ShowWarning(@"Ha ocurrido un error, intente nuevamente.", "Informaci�n");
             }
         }
     }
     #endregion
 }
+
+
+

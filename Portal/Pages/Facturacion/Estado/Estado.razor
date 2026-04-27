@@ -1,10 +1,10 @@
-Ôªø@* Displays billing status and allows refreshing the current state *@
+@* Displays billing status and allows refreshing the current state *@
 
 @page "/configuracion/configurarFacturacion/estado"
 @inherits LayoutComponentBase
 @layout Configuracion
 
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Entidades.Facturacion
 @using portalAdministrativoSISEC.Pages.Common;
 @using portalAdministrativoSISEC.Pages.Agendamiento;
@@ -22,7 +22,7 @@
 @using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 @using System
 
-<!-- Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot -->
+<!-- Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot -->
 <SpinLoader IsLoading="IsLoading">
     <LoadingTemplate>
         <div style="height:100%;display:flex">
@@ -36,11 +36,11 @@
                 <div class="flex flex-row flex-wrap items-center justify-between gap-2">
                     <div class="flex flex-row items-center gap-1">
                         @ErrorFacturacion?.Estado?.ToLower()?.StatusIndicator()
-                        <div class="ps-2">Pr√≥xima factura: <span class="font-bold">@ErrorFacturacion?.ProximaFactura</span></div>
+                        <div class="ps-2">PrÛxima factura: <span class="font-bold">@ErrorFacturacion?.ProximaFactura</span></div>
                     </div>
 
                     <div>
-                        √öltima actualizaci√≥n: <span class="font-bold">@ErrorFacturacion?.UltimaActualizacion</span>
+                        ⁄ltima actualizaciÛn: <span class="font-bold">@ErrorFacturacion?.UltimaActualizacion</span>
                         <button @onclick="UpdateStatus" aria-label="refresh" class="btn btn-sm btn-circle btn-ghost btn-primary">
                             <svg class="feather size-4">
                                 <use xlink:href="assets/feather-sprite.svg#refresh-cw"></use>
@@ -57,7 +57,7 @@
 
                         @if (!IsConfiguration)
                         {
-                            <NavLink href="/configuracion/configurarFacturacion">Ir a configuraci√≥n de facturaci√≥n</NavLink>
+                            <NavLink href="/configuracion/configurarFacturacion">Ir a configuraciÛn de facturaciÛn</NavLink>
                         }
                     </div>
 
@@ -76,23 +76,23 @@
                             }
                         </ul>
                     }
-                    else if (ErrorFacturacion?.Estado?.ToLower() == "en l√≠nea")
+                    else if (ErrorFacturacion?.Estado?.ToLower() == "en lÌnea")
                     {
                         <p class="leading-tight mb-0">
-                            El sistema de facturaci√≥n electr√≥nica est√° encendido y generando facturas correctamente.
+                            El sistema de facturaciÛn electrÛnica est· encendido y generando facturas correctamente.
                         </p>
                     }
-                    else if (ErrorFacturacion?.Estado?.ToLower() == "sin conexi√≥n")
+                    else if (ErrorFacturacion?.Estado?.ToLower() == "sin conexiÛn")
                     {
                         <p class="leading-tight mb-0">
-                            <span class="text-naranja-500 font-bold">El proveedor tecnol√≥gico no responde</span>
-                            <br />Tus facturas seguir√°n emiti√©ndose autom√°ticamente cuando se restablezca la conexi√≥n
+                            <span class="text-naranja-500 font-bold">El proveedor tecnolÛgico no responde</span>
+                            <br />Tus facturas seguir·n emitiÈndose autom·ticamente cuando se restablezca la conexiÛn
                         </p>
                     }
                     else if (ErrorFacturacion?.Estado?.ToLower() == "apagado")
                     {
                         <p class="leading-tight mb-0">
-                            El servicio est√° apagado y no est√°n generando facturas
+                            El servicio est· apagado y no est·n generando facturas
                         </p>
                     }
                 </div>
@@ -100,4 +100,4 @@
         </details>
     </ContentTemplate>
 </SpinLoader>
-<!-- Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot -->
+<!-- Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot -->

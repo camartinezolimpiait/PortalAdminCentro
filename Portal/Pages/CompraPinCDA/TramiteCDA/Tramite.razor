@@ -1,6 +1,6 @@
-锘緻page "/compradepincda/tramite"
+@page "/compradepincda/tramite"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.CompraPin
 @inject NavigationManager NavManager
 
@@ -13,10 +13,10 @@
     </LoadingTemplate>
     <ContentTemplate>
 <div>
-<h3>Tipo de tr谩mite</h3>
+<h3>Tipo de tr醡ite</h3>
 
-<h4>Curso de conducci贸n</h4>
-<p>Para tramitar la licencia de conducci贸n ante un Organismo de Tr谩nsito</p>
+<h4>Curso de conducci髇</h4>
+<p>Para tramitar la licencia de conducci髇 ante un Organismo de Tr醤sito</p>
  <div name="RadioTramites">
 				
 @for(int i = 0; i < ListadoTramites.Count; i++)
@@ -33,11 +33,11 @@
 
 @if (PagoPinCda.EdadVehiculo > 18)
 {
-	<h4>Curso para formaci贸n de instructores</h4>
-	<p>Para tramitar la certificaci贸n de instructor en conducci贸n</p>
+	<h4>Curso para formaci髇 de instructores</h4>
+	<p>Para tramitar la certificaci髇 de instructor en conducci髇</p>
 
 	<details class="detalles curso_instructor">
-		<summary> Tr谩mites de instructor</summary>
+		<summary> Tr醡ites de instructor</summary>
 		<div class="contenido">
 			@for (int i = 0; i < ListadoTramites.Count; i++)
 			{

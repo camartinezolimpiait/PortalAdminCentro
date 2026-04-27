@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data.Pines;
+using Microsoft.AspNetCore.Components;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Entidades.Devolucion.ConsultaInfoPin;
 using System;
 using System.Threading.Tasks;
@@ -41,7 +41,8 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota.ConfirmacionCompraCuota
 
         private void VolverAlInicio()
         {
-            NavManager.NavigateTo("/compradepin"); // Redirige a la página de inicio
+            NavManager.NavigateTo("/compradepin"); // Redirige a la p�gina de inicio
         }
     }
 }
+

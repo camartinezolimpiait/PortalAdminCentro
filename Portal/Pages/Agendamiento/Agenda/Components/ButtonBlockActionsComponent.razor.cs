@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,10 +6,10 @@ using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.Agendamiento.Agenda;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Agenda;
 
 namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 {
@@ -157,3 +157,5 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
         }
     }
 }
+
+

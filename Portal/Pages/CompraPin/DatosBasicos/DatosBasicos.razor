@@ -1,6 +1,6 @@
-ï»¿@page "/compradepin/datosBasicos"
+@page "/compradepin/datosBasicos"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 @using System.ComponentModel.DataAnnotations
 @using portalAdministrativoSISEC.Pages.CompraPin
@@ -11,7 +11,7 @@
     <div>
         <h3>Sexo y fecha de nacimiento</h3>
         <p>
-            El costo del curso de conducciÃ³n se calcula a partir de la edad y sexo como aparecen en el
+            El costo del curso de conducción se calcula a partir de la edad y sexo como aparecen en el
             documento de identidad
         </p>
     </div>
@@ -42,7 +42,7 @@
         <ValidationMessage For="@(() => DatosBasicosModel.Anio)" />
         <div class="flex gap-x-2">
             <div>
-                <label for="day" class="mb-1 block font-medium">DÃ­a</label>
+                <label for="day" class="mb-1 block font-medium">Día</label>
                 <InputNumber TValue="int?"
                              maxlength="2"
                              type="text"
@@ -72,7 +72,7 @@
                              @bind-Value:after="HandleValid" />
             </div>
             <div>
-                <label for="year" class="mb-1 block font-medium">AÃ±o</label>
+                <label for="year" class="mb-1 block font-medium">Año</label>
                 <InputNumber maxlength="4" TValue="int?"
                              type="text"
                              pattern="[0-9]*"
@@ -95,3 +95,4 @@
 
 
 </EditForm>
+

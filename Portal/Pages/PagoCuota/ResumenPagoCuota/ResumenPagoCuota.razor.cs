@@ -1,12 +1,12 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Routing.Constraints;
-using portalAdministrativoSISEC.Data.Pines;
-using portalAdministrativoSISEC.Data.Pines.Cuotas;
+using portalAdministrativoSISEC.Application.Data.Pines;
+using portalAdministrativoSISEC.Application.Data.Pines.Cuotas;
 using portalAdministrativoSISEC.Entidades.Devolucion;
 using portalAdministrativoSISEC.Entidades.Devolucion.ConsultaInfoPin;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -201,7 +201,7 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota.ResumenPagoCuota
             await peticionCompra.InvokeAsync((true, Pago));
         }
         /// <summary>
-        /// Metodo de generacion de notificaciÃ³n de pago efectivo de cuota
+        /// Metodo de generacion de notificación de pago efectivo de cuota
         /// </summary>
         /// <param name="InfoPago"></param>
         /// <param name="ConsultaPago"></param>
@@ -264,22 +264,22 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota.ResumenPagoCuota
             switch (casoPago)
             {
                 case 1: // Pago Total de la deuda
-                    notificacion.Encabezado = "Hemos recibido el pago total del curso de conducciÃ³n, que has adquirido, relacionado con el nÃºmero de pin";
+                    notificacion.Encabezado = "Hemos recibido el pago total del curso de conducción, que has adquirido, relacionado con el número de pin";
                     break;
                 case 2: // Pago de Cuotas Completas
                     int cuotasPagadas = (int)(valorAbono / valorCuota);
                     string numeroCuotas = FormatearNumeroCuotas(cuotaInicial, cuotaInicial + cuotasPagadas - 1);
                     if (!string.IsNullOrEmpty(numeroCuotas))
                     {
-                        notificacion.Encabezado = $"Hemos recibido el <strong>pago de las cuotas NÂ° {numeroCuotas}</strong> para el curso de conducciÃ³n, que has adquirido, relacionado con el nÃºmero de pin";
+                        notificacion.Encabezado = $"Hemos recibido el <strong>pago de las cuotas N° {numeroCuotas}</strong> para el curso de conducción, que has adquirido, relacionado con el número de pin";
                     }
                     else
                     {
-                        notificacion.Encabezado = "Hemos recibido un pago para el curso de conducciÃ³n, que has adquirido, relacionado con el nÃºmero de pin";
+                        notificacion.Encabezado = "Hemos recibido un pago para el curso de conducción, que has adquirido, relacionado con el número de pin";
                     }
                     break;
                 case 3: // Abono parcial
-                    notificacion.Encabezado = "Hemos recibido un abono al curso de conducciÃ³n, que has adquirido, relacionado con el nÃºmero de pin";
+                    notificacion.Encabezado = "Hemos recibido un abono al curso de conducción, que has adquirido, relacionado con el número de pin";
                     break;
             }
             return notificacion;
@@ -315,7 +315,7 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota.ResumenPagoCuota
             int cuotasPendientesInicial = estadoInicial.CuotasPendientes;
             int cuotasPendientesFinal = estadoFinal.CuotasPendientes;
 
-            // La cuota inicial serÃ¡ la primera cuota que se pagÃ³ en este intervalo
+            // La cuota inicial será la primera cuota que se pagó en este intervalo
             int cuotaInicial = (cuotasTotales - cuotasPendientesInicial) + 1;
 
             return cuotaInicial;
@@ -330,7 +330,7 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota.ResumenPagoCuota
             InfoPin = new ResponseDTO<Entidad>
             {
                 Codigo = 0,
-                Respuesta = "InformaciÃ³n del PIN encontrada",
+                Respuesta = "Información del PIN encontrada",
                 Entidad = new Entidad
                 {
                     Pin = "813702043485486",
@@ -379,7 +379,7 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota.ResumenPagoCuota
             ConsultaPago = new ResponseDTO<Entidad>
             {
                 Codigo = 0,
-                Respuesta = "InformaciÃ³n del PIN encontrada",
+                Respuesta = "Información del PIN encontrada",
                 Entidad = new Entidad
                 {
                     Pin = "813702043485486",
@@ -436,3 +436,5 @@ namespace portalAdministrativoSISEC.Pages.PagoCuota.ResumenPagoCuota
         }
     }
 }
+
+

@@ -1,10 +1,10 @@
-Ôªøusing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.CompraPin.CDA;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.CDA;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPinCDA.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -92,7 +92,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosBasicosCDA
 
         private async Task NotifyValidationStateChanged()
         {
-            bool isValid = editContext.Validate(); // Esto valida el contexto de edici√≥n y devuelve true si es v√°lido.
+            bool isValid = editContext.Validate(); // Esto valida el contexto de ediciÛn y devuelve true si es v·lido.
 
             if (isValid)
             {
@@ -116,7 +116,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosBasicosCDA
             if (DatosBasicosModel.Sexo == 0 || PagoPinCda.Usuario.Genero == 0)
             {
                 isValid = false;
-                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "Se debe seleccionar un g√©nero para continuar");
+                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "Se debe seleccionar un gÈnero para continuar");
             }
 
             await PagoPinChanged.InvokeAsync(PagoPinCda);
@@ -133,7 +133,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosBasicosCDA
                     int edad = await CalcularEdad(fechaNacimiento);
                     if (edad < 16 || edad > 100)
                     {
-                        await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La edad del aspirante no es v√°lida");
+                        await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La edad del aspirante no es v·lida");
 
                         return false;
                     }
@@ -163,7 +163,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosBasicosCDA
             }
             else
             {
-                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La fecha ingresada no es v√°lida");
+                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La fecha ingresada no es v·lida");
                 return false;
             }
         }
@@ -171,7 +171,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosBasicosCDA
         private async Task RadioSelection(ChangeEventArgs args)
         {
             if (PagoPinCda.Usuario == null)
-                PagoPinCda.Usuario = new Data.CompraPin.CDA.DatosBasicosCDA();
+                PagoPinCda.Usuario = new portalAdministrativoSISEC.Application.Data.CompraPin.CDA.DatosBasicosCDA();
 
             if (int.TryParse(args.Value.ToString(), out int idSexo))
                 await SetGenero(idSexo);
@@ -199,3 +199,5 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosBasicosCDA
         #endregion Methods
     }
 }
+
+

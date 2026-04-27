@@ -1,11 +1,11 @@
-ï»¿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Services.MiLicencia.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.PortalAdministrativo;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System.Collections.Generic;
-using portalAdministrativoSISEC.Data.CompraPin.CDA;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.CDA;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Enum;
 using System.Linq;
 using System.Threading.Tasks;
@@ -154,7 +154,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA
 
         private async Task OnSiguienteClicked()
         {
-            await MiLicenciaService.ShowNotificacion(NotificationStatus.Success, "InformaciÃ³n Guardada con Ã©xito");
+            await MiLicenciaService.ShowNotificacion(NotificationStatus.Success, "Información Guardada con éxito");
             GetIsCliked(13);
         }
 
@@ -218,8 +218,8 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA
         {
             if (cotizacionPin.ValorANSV == 0 || cotizacionPin.ValorTotal == 0 || cotizacionPin.ValorAliado == 0 )
             {
-                await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "No se encontrÃ³ informaciÃ³n relacionada para calcular " +
-                    "el costo del PIN para la categorÃ­a seleccionada ");
+                await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "No se encontró información relacionada para calcular " +
+                    "el costo del PIN para la categoría seleccionada ");
                 return false;
             }
             return true;
@@ -262,4 +262,6 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA
         #endregion Metodos
     }
 }
+
+
 

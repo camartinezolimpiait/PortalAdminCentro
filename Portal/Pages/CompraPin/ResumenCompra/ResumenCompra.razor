@@ -1,6 +1,6 @@
-锘緻page "/compradepin/Resumencompra"
+@page "/compradepin/Resumencompra"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Enum.PortalAdministrativo
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
@@ -37,19 +37,19 @@
                             </div>
 
                             <div class="mt-4 w-full rounded-md border border-gray-300 bg-white p-5 text-sm text-gray-800">
-                                <!-- Informaci贸n de la compra -->
-                                <p class="mb-2 font-semibold text-blue-900">Informaci贸n de la compra</p>
+                                <!-- Informaci髇 de la compra -->
+                                <p class="mb-2 font-semibold text-blue-900">Informaci髇 de la compra</p>
                                 <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
-                                    <div class="font-medium text-gray-700">Estado transacci贸n</div>
+                                    <div class="font-medium text-gray-700">Estado transacci髇</div>
                                     <div class="font-semibold text-green-600">Aprobada</div>
 
                                     <div class="font-medium text-gray-700">NUT</div>
                                     <div>@PagoPin.Nut</div>
 
-                                    <div class="font-medium text-gray-700">Descripci贸n</div>
+                                    <div class="font-medium text-gray-700">Descripci髇</div>
                                     <div>@ObtenerDescripcion(PagoPin.ClienteCompra)</div>
 
-                                    <div class="font-medium text-gray-700">Fecha de la transacci贸n</div>
+                                    <div class="font-medium text-gray-700">Fecha de la transacci髇</div>
                                     <div>@infoPin.FechaRecaudo.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)</div>
 
                                     <div class="font-medium text-gray-700">Valor de pago</div>
@@ -65,22 +65,22 @@
                                     <div class="font-medium text-gray-700">Nombre</div>
                                     <div>@infoPin.NombreCompleto</div>
 
-                                    <div class="font-medium text-gray-700">Edad y g茅nero</div>
-                                    <div>@((EnumSexo)Enum.Parse(typeof(EnumSexo), (PagoPin.Usuario.Genero != 0 ? PagoPin.Usuario.Genero.ToString() : "1"))) de @CalcularEdad(@infoPin.FechaNacimiento) a帽os</div>
+                                    <div class="font-medium text-gray-700">Edad y g閚ero</div>
+                                    <div>@((EnumSexo)Enum.Parse(typeof(EnumSexo), (PagoPin.Usuario.Genero != 0 ? PagoPin.Usuario.Genero.ToString() : "1"))) de @CalcularEdad(@infoPin.FechaNacimiento) a駉s</div>
 
-                                    <div class="font-medium text-gray-700">Identificaci贸n</div>
-                                    <div>@* Inicio c贸digo generado por GitHub Copilot *@
+                                    <div class="font-medium text-gray-700">Identificaci髇</div>
+                                    <div>@* Inicio c骴igo generado por GitHub Copilot *@
                                     @{
                                         var esPpt = PagoPin?.Usuario?.TipoDocumento == (int)EnumTipoDocumento.PermisoPorProteccionTemporal;
                                         var descripcionDocumento = esPpt ? "PPT" : PagoPin?.Usuario?.TipoDocumentoDescpcion;
                                     }
                                     <div>@descripcionDocumento @infoPin.NumeroDocumento</div>
-                                    @* Fin c贸digo generado por GitHub Copilot *@</div>
+                                    @* Fin c骴igo generado por GitHub Copilot *@</div>
 
-                                    <div class="font-medium text-gray-700">Correo electr贸nico</div>
+                                    <div class="font-medium text-gray-700">Correo electr髇ico</div>
                                     <div>@infoPin.Email</div>
 
-                                    <div class="font-medium text-gray-700">Tel茅fono</div>
+                                    <div class="font-medium text-gray-700">Tel閒ono</div>
                                     <div>@infoPin.Telefono</div>
                                 </div>
 
@@ -89,12 +89,12 @@
 
                                 @if (PagoPin.FacturacionActiva)
                                 {
-                                    @* Inicio c贸digo generado por GitHub Copilot *@
+                                    @* Inicio c骴igo generado por GitHub Copilot *@
                                     var datosFacturacion = PagoPin.DatosFacturacion;
                                     var esOtraPersona = PagoPin.EmisionOtraPersona && datosFacturacion != null;
 
                                     string tipoPersonaFactura = esOtraPersona
-                                        ? (datosFacturacion.TipoPersonaFacturacion == 1 ? "Persona jur铆dica" : "Persona natural")
+                                        ? (datosFacturacion.TipoPersonaFacturacion == 1 ? "Persona jur韉ica" : "Persona natural")
                                         : "Persona natural";
 
                                     string nombreFactura = esOtraPersona
@@ -110,7 +110,7 @@
                                     string correoFactura = esOtraPersona
                                         ? datosFacturacion.CorreoFacturacion
                                         : PagoPin.Usuario.Correo;
-                                    <p class="mb-2 font-semibold text-blue-900">Datos factura electr贸nica</p>
+                                    <p class="mb-2 font-semibold text-blue-900">Datos factura electr髇ica</p>
                                     <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
                                         <div class="font-medium text-gray-700">Tipo de persona</div>
                                         <div>@tipoPersonaFactura</div>
@@ -118,30 +118,30 @@
                                         <div class="font-medium text-gray-700">Nombre</div>
                                         <div>@nombreFactura</div>
 
-                                        <div class="font-medium text-gray-700">Identificaci贸n</div>
+                                        <div class="font-medium text-gray-700">Identificaci髇</div>
                                         <div>@identificacionFactura</div>
 
-                                        <div class="font-medium text-gray-700">Correo electr贸nico</div>
+                                        <div class="font-medium text-gray-700">Correo electr髇ico</div>
                                         <div>@correoFactura</div>
                                     </div>
-                                    @* Fin c贸digo generado por GitHub Copilot *@
+                                    @* Fin c骴igo generado por GitHub Copilot *@
 
                                     <hr class="my-2 border-gray-200">
                                 }
 
-                                <!-- Detalles del tr谩mite -->
-                                <p class="mb-2 font-semibold text-blue-900">Detalles del tr谩mite</p>
-                                @* Inicio c贸digo generado por GitHub Copilot *@
+                                <!-- Detalles del tr醡ite -->
+                                <p class="mb-2 font-semibold text-blue-900">Detalles del tr醡ite</p>
+                                @* Inicio c骴igo generado por GitHub Copilot *@
                                 <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
                                     <div class="font-medium text-gray-700">@ObtenerTipoCentro()</div>
                                     <div>@CentroSeleccionado.Nombre</div>
 
-                                    <div class="font-medium text-gray-700">Tr谩mite principal</div>
+                                    <div class="font-medium text-gray-700">Tr醡ite principal</div>
                                     <div>@($"{DescripcionesTramite.Descripcion[(EnumTramite)PagoPin.TipoTramite]} - {PagoPin.Categoria1}")</div>
 
                                     @if (PagoPin.TipoTramite2.HasValue && !string.IsNullOrWhiteSpace(PagoPin.Categoria2))
                                     {
-                                        <div class="font-medium text-gray-700">Tr谩mite secundario</div>
+                                        <div class="font-medium text-gray-700">Tr醡ite secundario</div>
                                         <div>@($"{DescripcionesTramite.Descripcion[(EnumTramite)PagoPin.TipoTramite2]} - {PagoPin.Categoria2}")</div>
                                     }
 
@@ -153,7 +153,7 @@
                                         @medio.Nombre
                                     </div>
                                 </div>
-                                @* Fin c贸digo generado por GitHub Copilot *@
+                                @* Fin c骴igo generado por GitHub Copilot *@
 
 
                                 <hr class="my-2 border-gray-200">
@@ -177,7 +177,7 @@
                                     </div>
 
                                     <div class="flex justify-between border-t border-gray-200 pt-2 font-medium">
-                                        <span>Total del tr谩mite</span>
+                                        <span>Total del tr醡ite</span>
                                         <span>@PagoPin.ConfiguracionCuotas.CuotaSeleccionada.ValorTotal.ToString("C0")</span>
                                     </div>
 
@@ -255,7 +255,7 @@
                                             }
                                             else
                                             {
-                                                <span>隆Copiado!</span>
+                                                <span>opiado!</span>
                                             }
                                         </button>
                                     </div>
@@ -284,7 +284,7 @@
                                 <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
                             </svg>
                             <div class="info-text">
-                                <div>Ha ocurrido un error obteniendo la informaci贸n del pin. <br> Vuelve a intentarlo en unos minutos.</div>
+                                <div>Ha ocurrido un error obteniendo la informaci髇 del pin. <br> Vuelve a intentarlo en unos minutos.</div>
                             </div>
                         </div>
 
@@ -313,23 +313,23 @@
                             <strong class="ml-3">Compra Fallida</strong>
                         </div>
 
-                        <!-- Informaci贸n de la compra -->
+                        <!-- Informaci髇 de la compra -->
 
                         <div class="mt-4 w-full rounded-md border border-gray-300 bg-white p-5 text-sm text-gray-800">
-                            <p class="mb-2 font-semibold text-blue-900">Informaci贸n de la compra</p>
+                            <p class="mb-2 font-semibold text-blue-900">Informaci髇 de la compra</p>
                             <div class="mb-4 grid grid-cols-2 gap-y-1 text-sm">
-                                <div class="font-medium text-gray-700">Estado transacci贸n</div>
+                                <div class="font-medium text-gray-700">Estado transacci髇</div>
                                 <div class="font-semibold text-rojo-600">Rechazada</div>
 
                                 <div class="font-medium text-gray-700">NUT</div>
                                 <div>@PagoPin.Nut</div>
 
-                                <div class="font-medium text-gray-700">Descripci贸n</div>
+                                <div class="font-medium text-gray-700">Descripci髇</div>
                                 <div>
                                     @(PagoPin.ClienteCompra == (int)EnumTipoCliente.CEA
-                                                                    ? "Licencia de conducci贸n"
+                                                                    ? "Licencia de conducci髇"
                                                                     : PagoPin.ClienteCompra == (int)EnumTipoCliente.CRC
-                                                                    ? "Ex谩menes m茅dicos"
+                                                                    ? "Ex醡enes m閐icos"
                                                                     : "")
                             </div>
                             <div class="font-medium text-gray-700">Empresa</div>
@@ -398,4 +398,5 @@
         </section>
     </ContentTemplate>
 </SpinLoader>
+
 

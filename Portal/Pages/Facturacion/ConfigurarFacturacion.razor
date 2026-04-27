@@ -1,8 +1,8 @@
-锘緻page "/configuracion/configurarFacturacion"
+@page "/configuracion/configurarFacturacion"
 @inherits LayoutComponentBase
 @layout Configuracion
 
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.Common;
 @using portalAdministrativoSISEC.Pages.Agendamiento;
 @using portalAdministrativoSISEC.Pages.CompraPin
@@ -37,17 +37,17 @@
         <EditForm EditContext="@EditContext" id="ConfigurarFacturacion" style="max-width: 99%">
             <DataAnnotationsValidator />
 
-            <h3>Facturaci贸n electr贸nica autom谩tica</h3>
+            <h3>Facturaci髇 electr髇ica autom醫ica</h3>
 
             @if (!FacturacionActiva)
             {
                 <p class="paragraph">
-                    Olimpia IT ahora ofrece un servicio de facturaci贸n que le permite emitir las facturas electr贸nicas de sus procesos de certificaci贸n autom谩ticamente. Para m谩s informaci贸n o activaci贸n del servicio, comun铆quese por los canales de atenci贸n para CRC o CEA.
+                    Olimpia IT ahora ofrece un servicio de facturaci髇 que le permite emitir las facturas electr髇icas de sus procesos de certificaci髇 autom醫icamente. Para m醩 informaci髇 o activaci髇 del servicio, comun韖uese por los canales de atenci髇 para CRC o CEA.
                 </p>
             }
             else
             {
-                @* Inicio refactorizaci贸n/optimizaci贸n por GitHub Copilot *@
+                @* Inicio refactorizaci髇/optimizaci髇 por GitHub Copilot *@
                 @if (GetCentroResponse != null)
                 {
                     <div class="mb-6">
@@ -55,22 +55,22 @@
                     </div>
                     
                 }
-                @* Fin refactorizaci贸n/optimizaci贸n por GitHub Copilot *@
+                @* Fin refactorizaci髇/optimizaci髇 por GitHub Copilot *@
 
                 <div class="tabs-container">
                     <!-- Botones de Tabs -->
-                    @* Inicio refactorizaci贸n/optimizaci贸n por GitHub Copilot *@
+                    @* Inicio refactorizaci髇/optimizaci髇 por GitHub Copilot *@
                     <div class="tab-buttons">
                         <button class="@GetTabClass("Tab1")" @onclick="@(() => ChangeTab("Tab1"))" disabled="@IsLoading">Credenciales</button>
-                        <button class="@GetTabClass("Tab2")" @onclick="@(() => ChangeTab("Tab2"))" disabled="@IsLoading">Datos para la emisi贸n</button>
-                        <button class="@GetTabClass("Tab3")" @onclick="@(() => ChangeTab("Tab3"))" disabled="@IsLoading">Numeraci贸n DIAN</button>
+                        <button class="@GetTabClass("Tab2")" @onclick="@(() => ChangeTab("Tab2"))" disabled="@IsLoading">Datos para la emisi髇</button>
+                        <button class="@GetTabClass("Tab3")" @onclick="@(() => ChangeTab("Tab3"))" disabled="@IsLoading">Numeraci髇 DIAN</button>
                         <button class="@GetTabClass("Tab4")" @onclick="@(() => ChangeTab("Tab4"))" disabled="@IsLoading">Articulos</button>
                         <button class="@GetTabClass("Tab5")" @onclick="@(() => ChangeTab("Tab5"))" disabled="@IsLoading">Comportamiento</button>
                      </div>
-                     @* Fin refactorizaci贸n/optimizaci贸n por GitHub Copilot *@
+                     @* Fin refactorizaci髇/optimizaci髇 por GitHub Copilot *@
                      
                      <!-- Contenido de las Tabs -->
-                     @* Inicio refactorizaci贸n/optimizaci贸n por GitHub Copilot *@
+                     @* Inicio refactorizaci髇/optimizaci髇 por GitHub Copilot *@
                      <div class="tabs-content">
                         @if (GetCentroResponse != null)
                         {
@@ -80,26 +80,27 @@
                             }
                             else if (activeTab == "Tab2")
                             {
-                                <Emision IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" Regimen="@(Regimen)" Departamentos="@(Departamentos)" Municipios="@(Municipios)" TiposPersona="@(TiposPersona)" UserName="@(UserName)" ConfigurarEmisionModel="EmisionModel" UpdateModel="UpdateModel"></Emision>
+                                <Emision IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" Regimen="@(Regimen)" Departamentos="@(Departamentos)" Municipios="@(Municipios)" TiposPersona="@(TiposPersona)" UserName="@(UserName)" ConfigurarEmisionModel="EmisionModel"></Emision>
                             }
                             else if (activeTab == "Tab3")
                             {
-                                <Numeracion IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" UserName="@(UserName)" ConfigurarNumeracionModel="NumeracionModel" UpdateModel="UpdateModel"></Numeracion>
+                                <Numeracion IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" UserName="@(UserName)" ConfigurarNumeracionModel="NumeracionModel"></Numeracion>
                             }
                             else if (activeTab == "Tab4")
                             {
-                                <Articulos IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" Negocio="@(Plataforma)" UserName="@(UserName)" CategoriasCEA="@(CategoriasCEA)" UpdateModel="UpdateModel"></Articulos>
+                                <Articulos IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" Negocio="@(Plataforma)" UserName="@(UserName)" CategoriasCEA="@(CategoriasCEA)"></Articulos>
                             }
                             else if (activeTab == "Tab5")
                             {
-                                <Comportamiento IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" UserName="@(UserName)" DisparadoresFacturacion="@(DisparadoresFacturacion)" ConfigurarComportamientoModel="ComportamientoModel" UpdateModel="UpdateModel"></Comportamiento>
+                                <Comportamiento IdRunt="@(GetCentroResponse.CodigoRUNT?.ToString() ?? "")" UserName="@(UserName)" DisparadoresFacturacion="@(DisparadoresFacturacion)" ConfigurarComportamientoModel="ComportamientoModel"></Comportamiento>
                             }
                         }
                      </div>
-                     @* Fin refactorizaci贸n/optimizaci贸n por GitHub Copilot *@
+                     @* Fin refactorizaci髇/optimizaci髇 por GitHub Copilot *@
                 </div>
             }
 
         </EditForm>
     </ContentTemplate>
 </SpinLoader>
+

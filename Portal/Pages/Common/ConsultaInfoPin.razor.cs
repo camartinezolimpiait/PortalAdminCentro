@@ -1,11 +1,11 @@
-锘縰sing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Entidades.Common;
 using portalAdministrativoSISEC.Entidades.Devolucion;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Extension;
 using System;
 using System.Collections.Generic;
@@ -59,13 +59,13 @@ namespace portalAdministrativoSISEC.Pages.Common
 		public bool caracteresValidos = false;
         private ConsultaDevolucionPorPinRequest DevolucionPorPinRequest { get; set; } = new();
 
-		// Inicio c贸digo generado por GitHub Copilot
+		// Inicio c骴igo generado por GitHub Copilot
         [Parameter] public string? PinPrefill { get; set; }
         [Parameter] public int? TipoIdPrefill { get; set; }
         [Parameter] public string? NumeroIdPrefill { get; set; }
 
         private bool AutoSubmitEjecutado;
-        // Fin c贸digo generado por GitHub Copilot
+        // Fin c骴igo generado por GitHub Copilot
 
 		protected override async Task OnInitializedAsync()
 		{
@@ -79,7 +79,7 @@ namespace portalAdministrativoSISEC.Pages.Common
 
 		private async Task NotifyValidationStateChanged()
 		{
-			EditContext.Validate(); // Esto valida el contexto de edici贸n y devuelve true si es v谩lido.
+			EditContext.Validate(); // Esto valida el contexto de edici髇 y devuelve true si es v醠ido.
 			StateHasChanged();
 
 			//await Task.FromResult(true);
@@ -87,7 +87,7 @@ namespace portalAdministrativoSISEC.Pages.Common
 
         private async Task OnValidSubmit()
         {
-            // Solo se ejecuta si el formulario es v谩lido
+            // Solo se ejecuta si el formulario es v醠ido
             DevolucionPorPinRequest.Pin = ConsultaDevolucionesModel.Pin;
             DevolucionPorPinRequest.TipoIdentificacion = (int)ConsultaDevolucionesModel.TipoDocumento;
             DevolucionPorPinRequest.NumeroIdentificacion = ConsultaDevolucionesModel.Documento;
@@ -111,9 +111,9 @@ namespace portalAdministrativoSISEC.Pages.Common
                 await OnFormCompleteChanged.InvokeAsync(false);
             }
 
-            // Inicio c贸digo generado por GitHub Copilot
+            // Inicio c骴igo generado por GitHub Copilot
             // Prefill desde querystring:
-            // - Si un valor viene vac铆o, no se toca ese campo.
+            // - Si un valor viene vac韔, no se toca ese campo.
             // - El auto-submit solo corre cuando vienen los 3.
             var hayPinPrefill = !string.IsNullOrWhiteSpace(PinPrefill);
             var hayNumeroPrefill = !string.IsNullOrWhiteSpace(NumeroIdPrefill);
@@ -143,7 +143,7 @@ namespace portalAdministrativoSISEC.Pages.Common
                     await OnValidSubmit();
                 }
             }
-            // Fin c贸digo generado por GitHub Copilot
+            // Fin c骴igo generado por GitHub Copilot
         }
 
         private void LimpiarFormulario()
@@ -157,3 +157,4 @@ namespace portalAdministrativoSISEC.Pages.Common
         }
     }
 }
+

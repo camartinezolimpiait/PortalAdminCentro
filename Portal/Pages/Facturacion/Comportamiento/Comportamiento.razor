@@ -1,8 +1,8 @@
-Ôªø@page "/configuracion/configurarFacturacion/comportamiento"
+@page "/configuracion/configurarFacturacion/comportamiento"
 @inherits LayoutComponentBase
 @layout Configuracion
 
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Entidades.Facturacion
 @using portalAdministrativoSISEC.Pages.Common;
 @using portalAdministrativoSISEC.Pages.Agendamiento;
@@ -36,15 +36,15 @@
             <h4>Comportamiento</h4>
             <div class="mb-20">
                 <InputCheckbox class="mb-0" id="facturacionActiva" maxlength="12" autocomplete="given-name" @bind-Value="ConfigurarComportamientoModel.FacturacionActiva" />
-                <label for="">Activar facturaci√≥n</label>
+                <label for="">Activar facturaciÛn</label>
             </div>
             <div>
-                <label class="bold-label" for="eventoFacturacion">Momento de facturaci√≥n</label>
+                <label class="bold-label" for="eventoFacturacion">Momento de facturaciÛn</label>
             </div>
             
             <div class="flex-container">
                 <div class="flex-item legend-triple">
-                    <p class="paragraph-large-smaller">Especifique el momento en que SISEC enviar√° la solicitud de generaci√≥n de factura a su proveedor</p>
+                    <p class="paragraph-large-smaller">Especifique el momento en que SISEC enviar· la solicitud de generaciÛn de factura a su proveedor</p>
                 </div>
             </div>
 
@@ -62,11 +62,12 @@
                 </div>
             </div>
 
-            <p class="paragraph-large"><strong>Atenci√≥n: </strong> Al cambiar esta configuraci√≥n, los pines ya generados mantendr√°n su configuraci√≥n original, solo los generados despu√©s del cambio seguir√°n la nueva instrucci√≥n.</p>
+            <p class="paragraph-large"><strong>AtenciÛn: </strong> Al cambiar esta configuraciÛn, los pines ya generados mantendr·n su configuraciÛn original, solo los generados despuÈs del cambio seguir·n la nueva instrucciÛn.</p>
 
             <div class="div-btn">
-                <a class="btn-guardar boton-primario" @onclick="() => GuardarDatos()">Guardar configuraci√≥n</a>
+                <a class="btn-guardar boton-primario" @onclick="() => GuardarDatos()">Guardar configuraciÛn</a>
             </div>
         </EditForm>
     </ContentTemplate>
 </SpinLoader>
+

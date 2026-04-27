@@ -1,16 +1,16 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Entidades.Common;
 using portalAdministrativoSISEC.Entidades.Devolucion;
 using portalAdministrativoSISEC.Entidades.Devolucion.ConsultaInfoPin;
 using portalAdministrativoSISEC.Entidades.Recaptcha;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 using portalAdministrativoSISEC.Util.Helpers;
 using System;
@@ -92,7 +92,7 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
         {
             [EnumTipoPago.PinDirecto] = "PIN Directo Davibank",
             [EnumTipoPago.PSEColpatria] = "PSE Davibank",
-            // agregar mÃ¡s mapeos si se habilitan mÃ¡s orÃ­genes
+            // agregar más mapeos si se habilitan más orígenes
         };
 
 
@@ -163,7 +163,7 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
         {
             if (!EsInfoPinValido(infoPin))
             {
-                AsignarError($"Es posible que la informaciÃ³n ingresada estÃ© errada o que el PIN no corresponda a su {plataforma}");
+                AsignarError($"Es posible que la información ingresada esté errada o que el PIN no corresponda a su {plataforma}");
                 return;
             }
 
@@ -171,7 +171,7 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
             {
                 AsignarError(
                     "Este PIN no corresponde a un pago realizado por medio de PIN Directo Colpatria. " +
-                    "DirÃ­gete a centro.milicencia.co o milicencia.co para gestionar este PIN."
+                    "Dirígete a centro.milicencia.co o milicencia.co para gestionar este PIN."
                 );
                 return;
             }
@@ -186,7 +186,7 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
             {
                 AsignarError(
                     "Este formulario solo permite actuar sobre pines recaudados con " +
-                    "PIN DIRECTO Colpatria. DirÃ­jase a centro.milicencia.co para gestionar este PIN."
+                    "PIN DIRECTO Colpatria. Diríjase a centro.milicencia.co para gestionar este PIN."
                 );
                 return;
             }
@@ -198,7 +198,7 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
         {
             abrirModalIrInicio = true;
         }
-        // MÃ©todo generado por GitHub Copilot
+        // Método generado por GitHub Copilot
         private void ConfirmarIrInicio()
         {
             abrirModalIrInicio = false; // cierra el modal
@@ -224,9 +224,9 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
         {
             return plataforma switch
             {
-                "CEA" => "Curso de conducciÃ³n",
-                "CRC" => "Examen mÃ©dico",
-                "CDA" => "RevisiÃ³n tÃ©cnico-mecÃ¡nica", // opcional
+                "CEA" => "Curso de conducción",
+                "CRC" => "Examen médico",
+                "CDA" => "Revisión técnico-mecánica", // opcional
                 _ => ""
             };
         }
@@ -308,12 +308,12 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
 
         private async Task IniciarProcesoAsync()
         {
-            // Cambiar el estado del botÃ³n a "actualizando"
+            // Cambiar el estado del botón a "actualizando"
             IsUpdating = true;
             ButtonText = "Actualizando...";
             ButtonClass = "flex items-center text-white text-sm font-medium bg-gris-400 rounded-md px-3 py-1 transition-colors duration-150 cursor-not-allowed";
 
-            //  Llama tu mÃ©todo principal de consulta
+            //  Llama tu método principal de consulta
             await ConsultaDevolucionPin();
 
             // Inicia el contador regresivo (120 segundos)
@@ -343,11 +343,11 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
                     ButtonText = "Actualizar estado";
                     ButtonClass = "flex items-center text-white text-sm font-medium bg-azul-600 hover:bg-azul-700 rounded-md px-3 py-1 transition-colors duration-150 cursor-pointer";
 
-                    // Guardar la hora de la Ãºltima actualizaciÃ³n
+                    // Guardar la hora de la última actualización
                     LastUpdateTime = DateTime.Now;
                     LastUpdateDisplay = "Hace unos segundos";
 
-                    // ðŸ”¥ Iniciar el actualizador automÃ¡tico del texto
+                    // ?? Iniciar el actualizador automático del texto
                     StartTimeAgoUpdater();
 
                     await InvokeAsync(StateHasChanged);
@@ -378,7 +378,7 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
             else if (diff.TotalHours < 24)
                 return $"{Math.Floor(diff.TotalHours)} h";
             else
-                return $"{Math.Floor(diff.TotalDays)} dÃ­a{(diff.TotalDays >= 2 ? "s" : "")}";
+                return $"{Math.Floor(diff.TotalDays)} día{(diff.TotalDays >= 2 ? "s" : "")}";
         }
 
         private void StartTimeAgoUpdater()
@@ -486,7 +486,7 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
                     }
                     else
                     {
-                        // Ejemplo simplificado de abonos parciales (puedes mantener tu lÃ³gica completa)
+                        // Ejemplo simplificado de abonos parciales (puedes mantener tu lógica completa)
                         rows.Add(new RowList
                         {
                             Row = new List<ColumnList>
@@ -571,13 +571,13 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
                 .ToList();
         }
 
-            // Inicio cÃ³digo generado por GitHub Copilot
+            // Inicio código generado por GitHub Copilot
             [SupplyParameterFromQuery(Name = "pin")] public string? Pin { get; set; }
             [SupplyParameterFromQuery(Name = "tipoId")] public int? TipoId { get; set; }
             [SupplyParameterFromQuery(Name = "numeroId")] public string? NumeroId { get; set; }
-            // Fin cÃ³digo generado por GitHub Copilot
+            // Fin código generado por GitHub Copilot
 
-            // Inicio cÃ³digo generado por GitHub Copilot
+            // Inicio código generado por GitHub Copilot
             private decimal ValorTotal
             {
                 get
@@ -588,7 +588,8 @@ namespace portalAdministrativoSISEC.Pages.GestionarPin
                     return infoPin.Entidad.CuotasPactadas > 1 ? totalCuotas : infoPin.Entidad.ValorTransaccion;
                 }
             }
-            // Fin cÃ³digo generado por GitHub Copilot
+            // Fin código generado por GitHub Copilot
 
         }
 }
+

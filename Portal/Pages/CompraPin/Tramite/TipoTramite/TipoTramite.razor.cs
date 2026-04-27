@@ -1,6 +1,6 @@
-Ôªøusing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
 using System;
@@ -29,13 +29,13 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.TipoTramite
         public Dictionary<int, string> DescripcionOpcionTramite { get; set; } =
     new()
     {
-            { 1, "Un solo tr√°mite" },
-            { 2, "Varios tr√°mites (Carro y moto)" }
+            { 1, "Un solo tr·mite" },
+            { 2, "Varios tr·mites (Carro y moto)" }
     };
 
         public Dictionary<EnumTramite, string> DescripcionTramite { get; set; } = new()
         {
-            { EnumTramite.SinDefinir, "Tr√°mite no definido" },
+            { EnumTramite.SinDefinir, "Tr·mite no definido" },
             { EnumTramite.PrimeraVez, "Primera vez o licencia adicional" },
             { EnumTramite.Renovar, "Renovar licencia" },
             { EnumTramite.Recategorizar, "Recategorizar licencia" },
@@ -49,7 +49,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.TipoTramite
         {
             get
             {
-                // Lectura: decide de d√≥nde tomar el valor
+                // Lectura: decide de dÛnde tomar el valor
                 if (pagoPin.PasoCotizacion == PasosCompraPin.TipoTramiteComboMoto
                     || pagoPin.PasoCotizacion == PasosCompraPin.CategoriaComboMoto)
                 {
@@ -67,7 +67,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.TipoTramite
                 {
                     if (pagoPin.TipoTramite2 != value)
                     {
-                        // Reset categor√≠as si cambi√≥ el valor
+                        // Reset categorÌas si cambiÛ el valor
                         pagoPin.Categoria2 = string.Empty;
 
                         pagoPin.TipoTramite2 = value;
@@ -78,7 +78,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.TipoTramite
                 {
                     if (pagoPin.TipoTramite != value)
                     {
-                        // Reset categor√≠as si cambi√≥ el valor
+                        // Reset categorÌas si cambiÛ el valor
                         pagoPin.Categoria = string.Empty;
                         pagoPin.Categoria1 = string.Empty;
 
@@ -177,9 +177,10 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.TipoTramite
             messageStore?.Clear();
             if (TipoTramiteSeleccionado == 0 || TipoTramiteSeleccionado == null)
             {
-                messageStore.Add(() => TipoTramiteSeleccionado, "Debe seleccionar al menos un tipo de tr√°mite");
+                messageStore.Add(() => TipoTramiteSeleccionado, "Debe seleccionar al menos un tipo de tr·mite");
             }
         }
 
     }
 }
+

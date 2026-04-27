@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data.CompraPin.CDA;
+using Microsoft.AspNetCore.Components;
+using portalAdministrativoSISEC.Application.Data.CompraPin.CDA;
 namespace portalAdministrativoSISEC.Pages.CompraPinCDA.SpinProceso
 {
 	public partial class SpinProceso
@@ -10,3 +10,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.SpinProceso
 	}
 
 }
+

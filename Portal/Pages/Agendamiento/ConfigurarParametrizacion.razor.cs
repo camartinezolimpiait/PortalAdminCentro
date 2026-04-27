@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Politica;
-using portalAdministrativoSISEC.Services.Agendamiento;
-using portalAdministrativoSISEC.Services.Agendamiento.HorarioAtencion;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Horario;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.HorarioAtencion;
 
 namespace portalAdministrativoSISEC.Pages.Agendamiento
 {
@@ -69,11 +69,11 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento
             }
             catch (ApplicationException ae)
             {
-                ToastService.ShowWarning(ae.Message.ToString(), "InformaciÃ³n");
+                ToastService.ShowWarning(ae.Message.ToString(), "Información");
             }
             catch (Exception ex)
             {
-                ToastService.ShowWarning(ex.Message.ToString(), "InformaciÃ³n");
+                ToastService.ShowWarning(ex.Message.ToString(), "Información");
             }
             IsLoading = false;
             await base.OnParametersSetAsync();
@@ -164,3 +164,5 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento
         #endregion Metodos
     }
 }
+
+

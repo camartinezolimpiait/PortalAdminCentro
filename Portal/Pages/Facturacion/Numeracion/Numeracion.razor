@@ -1,8 +1,8 @@
-锘緻page "/configuracion/configurarFacturacion/numeracion"
+@page "/configuracion/configurarFacturacion/numeracion"
 @inherits LayoutComponentBase
 @layout Configuracion
 
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.Common;
 @using portalAdministrativoSISEC.Pages.Agendamiento;
 @using portalAdministrativoSISEC.Pages.CompraPin
@@ -32,14 +32,14 @@
         <EditForm EditContext="@EditContext" id="ConfigurarFacturacion">
         	<DataAnnotationsValidator />
 
-            <h4>N煤mero de resoluci贸n, prefijo y consecutivo</h4>
+            <h4>N鷐ero de resoluci髇, prefijo y consecutivo</h4>
             <p class="paragraph mw-max">
-                Aseg煤rese de que la siguiente configuraci贸n coincida exactamente con la informaci贸n establecida en el portal del proveedor tecnol贸gico.
+                Aseg鷕ese de que la siguiente configuraci髇 coincida exactamente con la informaci髇 establecida en el portal del proveedor tecnol骻ico.
             </p>
 
             <div class="flex-container">
                 <div class="flex-item">
-                    <label for="prefijo">N煤mero de resoluci贸n</label>
+                    <label for="prefijo">N鷐ero de resoluci髇</label>
                     <input class="mb-0" type="text" id="resolucion" maxlength="20" autocomplete="given-name" @bind-value:event="oninput" @bind-value="ConfigurarNumeracionModel.NumeroResolucion" 
                         @onchange="@((ChangeEventArgs e) => HandleInputChange("numeroResolucion", e))" />
                     <ValidationMessage For="@(() => ConfigurarNumeracionModel.NumeroResolucion)" />
@@ -104,9 +104,10 @@
             }
 
             <div class="div-btn">
-                <a class="btn-guardar boton-primario" @onclick="() => GuardarDatos()">Guardar configuraci贸n</a>
+                <a class="btn-guardar boton-primario" @onclick="() => GuardarDatos()">Guardar configuraci髇</a>
             </div>
 
         </EditForm>
     </ContentTemplate>
 </SpinLoader>
+

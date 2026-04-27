@@ -1,16 +1,16 @@
-锘縰sing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Entidades.Common;
 using portalAdministrativoSISEC.Entidades.Devolucion;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
-using portalAdministrativoSISEC.Services.MiLicencia.PortalAdministrativo;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
+using portalAdministrativoSISEC.Application.PortalAdministrativo;
 using portalAdministrativoSISEC.Util;
 using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 using portalAdministrativoSISEC.Util.Extension;
@@ -96,22 +96,24 @@ namespace portalAdministrativoSISEC.Pages.Pines.Devoluciones
                 [
                     new() { NameColumn = "Canal de venta", Value = PagoPinConst.DescripcionCanalVenta[(EnumOrigenCotizacion)x.CanalVenta]},
                     new() { NameColumn = "Pin", Value = x.Pin},
-                    new() { NameColumn = "C贸digo de transacci贸n", Value = (!string.IsNullOrEmpty(x.NUTVenta) ? x.NUTVenta : "No aplica") },
-                    new() { NameColumn = "N煤mero Documento", Value = x.NumeroIdentificacion },
+                    new() { NameColumn = "C骴igo de transacci髇", Value = (!string.IsNullOrEmpty(x.NUTVenta) ? x.NUTVenta : "No aplica") },
+                    new() { NameColumn = "N鷐ero Documento", Value = x.NumeroIdentificacion },
                     new() { NameColumn = "Nombre Completo", Value = x.NombreCompleto },
                     new() { NameColumn = "Fecha Registro", Value =  x.FechaRegistro == new DateTime() ? "" : x.FechaRegistro?.ToString("dd-MM-yyyy") },
-                    new() { NameColumn = "Fecha Devoluci贸n", Value = x.FechaDevolucion == new DateTime() ? "" : x.FechaDevolucion?.ToString("dd-MM-yyyy") },
-                    new() { NameColumn = "Tipo Devoluci贸n", Value = x.TipoDevolucion },
+                    new() { NameColumn = "Fecha Devoluci髇", Value = x.FechaDevolucion == new DateTime() ? "" : x.FechaDevolucion?.ToString("dd-MM-yyyy") },
+                    new() { NameColumn = "Tipo Devoluci髇", Value = x.TipoDevolucion },
                     new() { NameColumn = "Banco", Value = x.Banco },
                     new() { NameColumn = "Cuenta Banco", Value = x.CuentaBanco },
                     new() { NameColumn = "Correo", Value = x.Correo },
                     new() { NameColumn = "Valor a Devolver", Value = valorDevolver.FormatAsCurrency() },
-                    new() { NameColumn = "Estado Devoluci贸n", Value = x.EstadoDevolucion },
+                    new() { NameColumn = "Estado Devoluci髇", Value = x.EstadoDevolucion },
                     new() { NameColumn = "Novedad", Value = x.NovedadDevolucion },
-                    new() { NameColumn = "Agente Dispersi贸n", Value = x.AgenteDispersion },
+                    new() { NameColumn = "Agente Dispersi髇", Value = x.AgenteDispersion },
                     new() { NameColumn = "Pines Asociados", Value = "No encontrado" }, // comentado mientras se llega a entregaa certficacion
 					//new() { NameColumn = "Cuotas", Value = (!string.IsNullOrEmpty(x.Cuotas) ? x.Cuotas : "0") },
-                    new() { NameColumn = "Comprobante Devoluci贸n", Value = x.Pin  ??""}
+                    new() { NameColumn = "Comprobante Devoluci髇", Value = x.Pin  ??"" },
+                    new() {NameColumn = "Convenio Empresa", Value = x.ConvenioEmpresa ?? ""},
+                    new() { NameColumn = "Empresa", Value = x.Empresa ?? "" },
                 ];
 
                 rows.Add(new RowList() { Row = row });
@@ -159,7 +161,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Devoluciones
                 else
                 {
                     await LoadQuickGridData(Listado);
-                    await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, $"{result.Respuesta ?? "No se encontro informaci贸n asociada a los filtros"}");
+                    await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, $"{result.Respuesta ?? "No se encontro informaci髇 asociada a los filtros"}");
                 }
             }
             else
@@ -198,12 +200,12 @@ namespace portalAdministrativoSISEC.Pages.Pines.Devoluciones
                             }
                             else
                             {
-                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "No se ha encontrado informaci贸n para la descarga.");
+                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "No se ha encontrado informaci髇 para la descarga.");
                             }
                         }
                         else
                         {
-                            await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "No se ha encontrado informaci贸n para la descarga.");
+                            await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "No se ha encontrado informaci髇 para la descarga.");
                         }
                     }
                     catch (Exception ex)
@@ -322,48 +324,48 @@ namespace portalAdministrativoSISEC.Pages.Pines.Devoluciones
             List<ColumnList> colums = rowList.Row;
 
             EnumOrigenCotizacion origenCotizacion = GetKeyFromValue(PagoPinConst.DescripcionCanalVenta, colums[0].Value);
-            string tipoDevolucion = colums.FirstOrDefault(x => x.NameColumn == "Tipo Devoluci贸n")?.Value;
-            string estadoDevolucion = colums.FirstOrDefault(x => x.NameColumn == "Estado Devoluci贸n")?.Value;
+            string tipoDevolucion = colums.FirstOrDefault(x => x.NameColumn == "Tipo Devoluci髇")?.Value;
+            string estadoDevolucion = colums.FirstOrDefault(x => x.NameColumn == "Estado Devoluci髇")?.Value;
 
             if (origenCotizacion == EnumOrigenCotizacion.Centro)
             {
                 if (tipoDevolucion == "Transferencia")
                 {
-                    if (estadoDevolucion == "Devoluci贸n Efectuada")
+                    if (estadoDevolucion == "Devoluci髇 Efectuada")
                     {
                         string pin = colums.FirstOrDefault(x => x.NameColumn == "Pin")?.Value;
 
                         FileBase64 fileResult = await MiLicenciaService.ConsultarComprobanteDevolucion(new ConsultaComprobanteDevolucionRequest()
                         {
                             Pin = pin,
-                            NumeroIdentificacion = colums.FirstOrDefault(x => x.NameColumn == "N煤mero Documento")?.Value,
+                            NumeroIdentificacion = colums.FirstOrDefault(x => x.NameColumn == "N鷐ero Documento")?.Value,
                             IdOrigenCotizacion = (int)EnumOrigenCotizacion.Centro
                         });
 
                         if (string.IsNullOrEmpty(fileResult?.Base64))
-                            await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "Devoluci贸n efectuada. Comprobante de pago en proceso de carga. Por favor, consulte nuevamente");
+                            await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "Devoluci髇 efectuada. Comprobante de pago en proceso de carga. Por favor, consulte nuevamente");
                         else
                         {
                             await JS.InvokeVoidAsync("saveAsFile", $"DEVOL_{pin}.pdf", fileResult?.Base64);
                         }
                     }
-                    else if (estadoDevolucion == "En Tr谩mite")
-                        await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "La devoluci贸n se encuentra en tr谩mite. Por favor, consulte nuevamente");
+                    else if (estadoDevolucion == "En Tr醡ite")
+                        await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "La devoluci髇 se encuentra en tr醡ite. Por favor, consulte nuevamente");
                     else
-                        await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "El pin consultado no tiene un estado de devoluci贸n valido");
+                        await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "El pin consultado no tiene un estado de devoluci髇 valido");
                 }
                 else if (tipoDevolucion == "Efectivo")
                 {
-                    if (estadoDevolucion == "Devoluci贸n Efectuada")
-                        await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "Devoluci贸n realizada en efectivo. Comprobante de pago no disponible");
-                    else if (estadoDevolucion == "En Tr谩mite")
-                        await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "La devoluci贸n se encuentra en tr谩mite. Por favor, consulte nuevamente");
+                    if (estadoDevolucion == "Devoluci髇 Efectuada")
+                        await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "Devoluci髇 realizada en efectivo. Comprobante de pago no disponible");
+                    else if (estadoDevolucion == "En Tr醡ite")
+                        await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "La devoluci髇 se encuentra en tr醡ite. Por favor, consulte nuevamente");
                 }
                 else
-                    await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "El pin consultado no tiene un tipo de devoluci贸n valido");
+                    await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "El pin consultado no tiene un tipo de devoluci髇 valido");
             }
             else if (origenCotizacion == EnumOrigenCotizacion.MiLicencia)
-                await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "Por razones de seguridad, no podemos mostrar el comprobante de pago debido a que contiene informaci贸n personal del usuario");
+                await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, "Por razones de seguridad, no podemos mostrar el comprobante de pago debido a que contiene informaci髇 personal del usuario");
             else
                 await MiLicenciaService.ShowNotificacion(NotificationStatus.Info, $"No se puede generar el comprobante para el origen de cotizacion del pin {PagoPinConst.DescripcionCanalVenta[origenCotizacion]}");
         }
@@ -377,3 +379,5 @@ namespace portalAdministrativoSISEC.Pages.Pines.Devoluciones
         #endregion Methods
     }
 }
+
+

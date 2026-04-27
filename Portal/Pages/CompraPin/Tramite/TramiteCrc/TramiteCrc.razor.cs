@@ -1,6 +1,6 @@
-Ôªøusing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Enum.CompraPin;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
@@ -42,13 +42,13 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.TramiteCrc
         public Dictionary<int, string> DescripcionOpcionTramite { get; set; } =
             new()
             {
-            { 1, "Un solo tr√°mite" },
-            { 2, "Varios tr√°mites (Carro y moto)" }
+            { 1, "Un solo tr·mite" },
+            { 2, "Varios tr·mites (Carro y moto)" }
             };
 
         public Dictionary<EnumTramite, string> DescripcionTramite { get; set; } = new()
         {
-            { EnumTramite.SinDefinir, "Tr√°mite no definido" },
+            { EnumTramite.SinDefinir, "Tr·mite no definido" },
             { EnumTramite.PrimeraVez, "Primera vez o licencia adicional" },
             { EnumTramite.Renovar, "Renovar licencia" },
             { EnumTramite.Recategorizar, "Recategorizar licencia" },
@@ -144,4 +144,5 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Tramite.TramiteCrc
         }
     }
 }
+
 

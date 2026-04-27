@@ -1,6 +1,6 @@
-ï»¿@page "/compradepincda/confirmacioncompra"
+@page "/compradepincda/confirmacioncompra"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
 @using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
@@ -15,15 +15,15 @@
 @inject NavigationManager NavManager
 
 @if(!MostrarResumenCompra ){
-	<h2>ConfirmaciÃ³n de compra</h2>
+	<h2>Confirmación de compra</h2>
 
 	<div class="columnas">
 		<ResumenCDA PagoPinCda="PagoPin" PasosCompraPin="PasosCompraPin" OnNavegarResumen="NavegarResumen"/>
 
 		<div class="instrucciones">
 			<p>
-				Verifica que tu informaciÃ³n estÃ© correcta. Enviaremos la confirmaciÃ³n de la compra al correo
-				electrÃ³nico aquÃ­ registrado.
+				Verifica que tu información esté correcta. Enviaremos la confirmación de la compra al correo
+				electrónico aquí registrado.
 			</p>
 			<slot />
 			<a class="boton-secundario" @onclick="()=> Volver()">Atras</a>

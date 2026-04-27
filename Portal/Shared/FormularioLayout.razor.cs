@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using System.Threading.Tasks;
 
 namespace portalAdministrativoSISEC.Shared
@@ -45,3 +45,4 @@ namespace portalAdministrativoSISEC.Shared
         }
     }
 }
+

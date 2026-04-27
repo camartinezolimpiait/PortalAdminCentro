@@ -1,6 +1,6 @@
-Ôªø@page "/compradepin/tramite-crc"
+@page "/compradepin/tramite-crc"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Tramite.TipoTramite
 @inject NavigationManager NavManager
@@ -16,14 +16,14 @@
     <ContentTemplate>
         @if (componentePrincipal)
         {
-            <h3>Cantidad de tr√°mites</h3>
+            <h3>Cantidad de tr·mites</h3>
 
             <p style="margin-top:5px">
-                Pagando un 50% adicional, el examen m√©dico puede ser usado para dos
-                tr√°mites a la vez.
+                Pagando un 50% adicional, el examen mÈdico puede ser usado para dos
+                tr·mites a la vez.
             </p>
             <p>
-                De lo contrario, escoge <strong>un solo tr√°mite</strong> para continuar.
+                De lo contrario, escoge <strong>un solo tr·mite</strong> para continuar.
             </p>
 
             <div style="margin-bottom:10px">
@@ -43,7 +43,7 @@
                     <ValidationMessage For="@(() => cantidadModel.Cantidad)" />
                     <div class="flex items-center mt-3 space-x-3">
                         <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">
-                            Atr√°s
+                            Atr·s
                         </button>
                         <button type="submit" class="boton-primario"> Siguiente </button>
                     </div>

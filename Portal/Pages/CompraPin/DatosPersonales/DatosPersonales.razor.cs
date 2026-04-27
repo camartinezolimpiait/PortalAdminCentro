@@ -1,10 +1,10 @@
-ï»¿using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data.CompraPin;
+using Microsoft.AspNetCore.Components;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using System.ComponentModel.DataAnnotations;
 using System;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Threading.Tasks;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using Blazored.Toast.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using portalAdministrativoSISEC.Util.Extension;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using System.Diagnostics;
 using portalAdministrativoSISEC.Entidades.Common;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 
@@ -86,44 +86,44 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
 
             switch (DatosPersonalesModel.TipoDocumento)
             {
-                case 1: // CÃ©dula de CiudadanÃ­a
-                    pattern = @"^[0-9]{6,10}$"; // 6 a 10 dÃ­gitos
-                    mensaje = "La CÃ©dula de CiudadanÃ­a debe tener entre 6 y 10 dÃ­gitos y solo acepta nÃºmeros.";
+                case 1: // Cédula de Ciudadanía
+                    pattern = @"^[0-9]{6,10}$"; // 6 a 10 dígitos
+                    mensaje = "La Cédula de Ciudadanía debe tener entre 6 y 10 dígitos y solo acepta números.";
                     break;
 
-                case 2: // CÃ©dula de ExtranjerÃ­a
-                    pattern = @"^[0-9]{6,10}$"; // 6 a 10 dÃ­gitos
-                    mensaje = "La CÃ©dula de ExtranjerÃ­a debe tener  6 dÃ­gitos y solo acepta nÃºmeros.";
+                case 2: // Cédula de Extranjería
+                    pattern = @"^[0-9]{6,10}$"; // 6 a 10 dígitos
+                    mensaje = "La Cédula de Extranjería debe tener  6 dígitos y solo acepta números.";
                     break;
 
                 case 3: // Tarjeta de Identidad
-                    pattern = @"^[0-9]{6,11}$"; // Hasta 11 dÃ­gitos
-                    mensaje = "La Tarjeta de Identidad debe tener entre 6 y 11 dÃ­gitos y solo acepta nÃºmeros.";
+                    pattern = @"^[0-9]{6,11}$"; // Hasta 11 dígitos
+                    mensaje = "La Tarjeta de Identidad debe tener entre 6 y 11 dígitos y solo acepta números.";
                     break;
 
                 case 4: // Nit
-                    pattern = @"^[0-9]{6,10}$"; // 6 o mÃ¡s dÃ­gitos
-                    mensaje = "El NIT debe tener al menos 6 dÃ­gitos y solo acepta nÃºmeros.";
+                    pattern = @"^[0-9]{6,10}$"; // 6 o más dígitos
+                    mensaje = "El NIT debe tener al menos 6 dígitos y solo acepta números.";
                     break;
 
                 case 5: // Pasaporte
-                    pattern = @"^[0-9a-zA-Z]{1,24}$"; // 6 o mÃ¡s caracteres alfanumÃ©ricos
+                    pattern = @"^[0-9a-zA-Z]{1,24}$"; // 6 o más caracteres alfanuméricos
                     mensaje = "El pasaporte debe tener hasta 24 caracteres";
                     break;
 
-                case 10: // ContraseÃ±a CÃ©dula de CiudadanÃ­a
-                    pattern = @"^[0-9]{6,10}$"; // 6 a 10 dÃ­gitos
-                    mensaje = "La ContraseÃ±a de la CÃ©dula de CiudadanÃ­a debe tener entre 6 y 10 dÃ­gitos y solo acepta nÃºmeros.";
+                case 10: // Contraseña Cédula de Ciudadanía
+                    pattern = @"^[0-9]{6,10}$"; // 6 a 10 dígitos
+                    mensaje = "La Contraseña de la Cédula de Ciudadanía debe tener entre 6 y 10 dígitos y solo acepta números.";
                     break;
 
-                case 11: // ContraseÃ±a CÃ©dula de ExtranjerÃ­a
-                    pattern = @"^[0-9]{6,10}$"; // 6 a 10 dÃ­gitos
-                    mensaje = "La ContraseÃ±a de la CÃ©dula de ExtranjerÃ­a debe tener entre 6 y 10 dÃ­gitos y solo acepta nÃºmeros.";
+                case 11: // Contraseña Cédula de Extranjería
+                    pattern = @"^[0-9]{6,10}$"; // 6 a 10 dígitos
+                    mensaje = "La Contraseña de la Cédula de Extranjería debe tener entre 6 y 10 dígitos y solo acepta números.";
                     break;
 
-                case 13: // Permiso ProtecciÃ³n Temporal (PPT)
-                    pattern = @"^[0-9]{6,7}$"; // 6 a 7 dÃ­gitos
-                    mensaje = "El Permiso por ProtecciÃ³n Temporal debe tener entre 6 y 7 dÃ­gitos y solo acepta nÃºmeros.";
+                case 13: // Permiso Protección Temporal (PPT)
+                    pattern = @"^[0-9]{6,7}$"; // 6 a 7 dígitos
+                    mensaje = "El Permiso por Protección Temporal debe tener entre 6 y 7 dígitos y solo acepta números.";
                     break;
 
                 default:
@@ -142,7 +142,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
         {
             if (PagoPin.Usuario == null)
             {
-                PagoPin.Usuario = new portalAdministrativoSISEC.Data.CompraPin.DatosBasicos();
+                PagoPin.Usuario = new portalAdministrativoSISEC.Application.Data.CompraPin.DatosBasicos();
             }
 
             await obtenerDescripcionTipoDoc();
@@ -187,9 +187,9 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
             
             // Codigo para filtrar los documentos no aceptados por colpatria
            ListaDocumentos= FilterDocumentsAviable.FilterDocumentsTypes(ListaDocumentos);
-            // Inicio cÃ³digo generado por GitHub Copilot
+            // Inicio código generado por GitHub Copilot
             PagoPin.TiposDeDocumento = ListaDocumentos;
-            // Fin cÃ³digo generado por GitHub Copilot
+            // Fin código generado por GitHub Copilot
 
             var tiposPermitidos = ListaDocumentos.Select(doc => doc.IdTipoSisec).ToList();
             if (!tiposPermitidos.Contains(PagoPin.Usuario.TipoDocumento?.ToString()) && PagoPin.Usuario.TipoDocumento != 0)
@@ -218,21 +218,21 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
             }
         }
 
-        // Inicio cÃ³digo generado por GitHub Copilot
+        // Inicio código generado por GitHub Copilot
         private string ObtenerMomentoFacturacionMensaje()
         {
             return PagoPin.MomentoFacturacion == (int)EnumEventoFacturacion.RecaudoPIN
                 ? "se recaude"
                 : "se enrole";
         }
-        // Fin cÃ³digo generado por GitHub Copilot
+        // Fin código generado por GitHub Copilot
 
-        // Inicio cÃ³digo generado por GitHub Copilot
+        // Inicio código generado por GitHub Copilot
         private void SetEmisionOtraPersona(bool value)
         {
             DatosPersonalesModel.EmisionOtraPersona = value;
         }
-        // Fin cÃ³digo generado por GitHub Copilot
+        // Fin código generado por GitHub Copilot
 
         private async Task Retroceder()
         {
@@ -242,3 +242,5 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosPersonales
         #endregion Metodos
     }
 }
+
+

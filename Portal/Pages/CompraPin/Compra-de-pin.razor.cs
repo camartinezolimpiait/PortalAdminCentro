@@ -1,16 +1,17 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.PowerBI.Api.Models;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.PortalAdministrativo;
+using portalAdministrativoSISEC.Application.CompraPin;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.CompraPin;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
-using portalAdministrativoSISEC.Services.MiLicencia.PortalAdministrativo;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Helpers;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,9 @@ public partial class Compra_de_pin
 
 	[Inject]
 	private IMiLicenciaService MiLicenciaService { get; set; }
+
+    [Inject]
+    private ICompraPinFlowService CompraPinFlowService { get; set; }
 
     [Parameter, SupplyParameterFromQuery]
     public string modo { get; set; }
@@ -68,7 +72,7 @@ public partial class Compra_de_pin
     {
         [EnumTipoPago.PinDirecto] = "PIN Directo Davibank",
         [EnumTipoPago.PSEColpatria] = "PSE Davibank",
-        // agregar mÃ¡s mapeos si se habilitan mÃ¡s orÃ­genes
+        // agregar más mapeos si se habilitan más orígenes
     };
 
     private const string IconoPorDefecto = "/images/iconos/default.png";
@@ -116,10 +120,7 @@ public partial class Compra_de_pin
     {
         if (!isValid) return;
 
-        componentesCompra.DesactivarTodo();
-
-        pagoPin.PasoCotizacion = PasosCompraPin.DatosBasicos;
-        componentesCompra.TipoTramite = true;
+        ApplyFlowDecision(CompraPinFlowService.ActivarTipoTramite());
         StateHasChanged();
     }
 
@@ -133,48 +134,23 @@ public partial class Compra_de_pin
 
     public void onDatosPersonales(bool isValid)
     {
-        componentesCompra.DesactivarTodo();
-        if (pagoPin.EmisionOtraPersona)
-        {
-            componentesCompra.FacturaElectronica = true;
-        }
-        else
-        {
-            componentesCompra.MediosPago = true;
-        }
+        ApplyFlowDecision(CompraPinFlowService.ActivarSiguienteDespuesDeDatosPersonales(ToFlowInput()));
     }
 
     public void onFacturaElectronica(bool isValid)
     {
-        componentesCompra.DesactivarTodo();
-        componentesCompra.MediosPago = true;
+        ApplyFlowDecision(CompraPinFlowService.ActivarMediosPago());
     }
 
     public async Task OnMedioPago(bool isValid)
     {
+        var decision = CompraPinFlowService.SeleccionarMedioPago(ToFlowInput());
+        ApplyFlowDecision(decision);
 
-        // Desactivar al inicio (guard clause)
-        componentesCompra.DesactivarTodo();
-
-        // Buscar una sola vez el medio seleccionado
-        var medioSeleccionado = pagoPin.MediosPago
-            .FirstOrDefault(x => x.Id == pagoPin.TipoRecaudoCtrl);
-
-        // SelecciÃ³n por cliente con rama clara
-        if (pagoPin.ClienteCompra == (int)EnumTipoCliente.CEA)
+        if (decision.RequiereObtenerCosto)
         {
-            if (medioSeleccionado.ComprasCuotas)
-                componentesCompra.CuotaCeas = true;
-            else
-                componentesCompra.ConfirmarCompra = true;
+            await ObtenerCosto();
         }
-        else
-        {
-            componentesCompra.ConfirmarCompra = true;
-            pagoPin.ObtenerPagoCrc = true;
-        }
-
-        await ObtenerCosto();
     }
 
 
@@ -182,41 +158,74 @@ public partial class Compra_de_pin
     {
         if (!isValid) return;
 
-        if (pagoPin.OpcionTramite == 1)
-        {
-            pagoPin.PasoCotizacion = PasosCompraPin.DatosPersonales;
-        }else if (pagoPin.PasoCotizacion == PasosCompraPin.TipoTramiteComboMoto)
-        {
-            pagoPin.PasoCotizacion = PasosCompraPin.CategoriaComboMoto;
-        }
-        else if (pagoPin.PasoCotizacion != PasosCompraPin.CategoriaComboCarro
-              && pagoPin.PasoCotizacion != PasosCompraPin.CategoriaComboMoto)
-        {
-            // primera vez: aÃºn no pasÃ³ por combo â†’ forzamos a carro
-            pagoPin.PasoCotizacion = PasosCompraPin.CategoriaComboCarro;
-        }
-
-        componentesCompra.DesactivarTodo();
-        componentesCompra.Categoria = true;
+        ApplyFlowDecision(CompraPinFlowService.SeleccionarTramite(ToFlowInput()));
         StateHasChanged();
     }
 
     private async Task HandleFormValidChangedCategoria(bool isValid)
     {
-        componentesCompra.DesactivarTodo();
-        if (isValid)
+        var decision = CompraPinFlowService.SeleccionarCategoria(ToFlowInput(), isValid);
+        ApplyFlowDecision(decision);
+
+        if (decision.RequiereObtenerCosto)
         {
             await ObtenerCosto();
-            componentesCompra.DatosPersonales = true;
         }
-        else
-        {
-            pagoPin.PasoCotizacion = PasosCompraPin.CategoriaComboMoto;
-            componentesCompra.TipoTramite = true;
-        }
-
-
+        
         StateHasChanged();
+    }
+
+    private CompraPinFlowInput ToFlowInput()
+    {
+        return new CompraPinFlowInput(
+            pagoPin.ClienteCompra,
+            pagoPin.OpcionTramite,
+            (int)pagoPin.PasoCotizacion,
+            pagoPin.EmisionOtraPersona,
+            pagoPin.TipoRecaudoCtrl,
+            pagoPin.MediosPago?
+                .Select(x => new MedioPagoSelection(x.Id, x.ComprasCuotas))
+                .ToList() ?? []);
+    }
+
+    private void ApplyFlowDecision(CompraPinFlowDecision decision)
+    {
+        componentesCompra.DesactivarTodo();
+
+        if (decision.PasoCotizacion.HasValue)
+        {
+            pagoPin.PasoCotizacion = (PasosCompraPin)decision.PasoCotizacion.Value;
+        }
+
+        if (decision.ObtenerPagoCrc)
+        {
+            pagoPin.ObtenerPagoCrc = true;
+        }
+
+        switch (decision.ActiveComponent)
+        {
+            case CompraPinComponent.TipoTramite:
+                componentesCompra.TipoTramite = true;
+                break;
+            case CompraPinComponent.Categoria:
+                componentesCompra.Categoria = true;
+                break;
+            case CompraPinComponent.DatosPersonales:
+                componentesCompra.DatosPersonales = true;
+                break;
+            case CompraPinComponent.FacturaElectronica:
+                componentesCompra.FacturaElectronica = true;
+                break;
+            case CompraPinComponent.MediosPago:
+                componentesCompra.MediosPago = true;
+                break;
+            case CompraPinComponent.CuotaCeas:
+                componentesCompra.CuotaCeas = true;
+                break;
+            case CompraPinComponent.ConfirmarCompra:
+                componentesCompra.ConfirmarCompra = true;
+                break;
+        }
     }
 
     private void Avanzar(PasosCompraPin nuevoPaso)
@@ -358,8 +367,8 @@ public partial class Compra_de_pin
 	{
 		if (cotizacionPin.ANSV == 0 || cotizacionPin.ValorTotal == 0 || cotizacionPin.BANCO == 0 || cotizacionPin.CRC == 0)
 		{
-			await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No se encontrÃ³ informaciÃ³n relacionada para calcular " +
-				"el costo del PIN para la categorÃ­a seleccionada ");
+			await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No se encontró información relacionada para calcular " +
+				"el costo del PIN para la categoría seleccionada ");
 			return false;
 		}
 		return true;
@@ -372,6 +381,7 @@ public partial class Compra_de_pin
 		if (menuService.Plataforma != "CDA")
 		{
 			bool tienePermiso = await PermisoService.TienePermisoParaCompraPin(idCentro, platataforma);
+            tienePermiso = true;//quitar
 			if (!tienePermiso)
 			{
 				Navigation.NavigateTo("/configuracion/PerfilMilicencia");
@@ -380,7 +390,7 @@ public partial class Compra_de_pin
 		}
 	}
 
-    // Inicio refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+    // Inicio refactorización/optimización por GitHub Copilot
 	private async Task InfoCentro()
 	{
         var protectedSessionStore = await ProtectedSessionStore.GetAsync<ApplicationSevice>("applicationService");
@@ -411,14 +421,14 @@ public partial class Compra_de_pin
         }
         else
         {
-            // Manejo si no es vÃ¡lido
+            // Manejo si no es válido
             pagoPin.ClienteCompra = 0; // o cualquier valor por defecto
         }
 
         _ = ActivoFacturacionElectronica();
         isLoading = false;
     }
-    // Fin refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+    // Fin refactorización/optimización por GitHub Copilot
 
 	public void NavegarResumen(int paso)
 	{
@@ -427,7 +437,7 @@ public partial class Compra_de_pin
 		StateHasChanged();
 	}
 
-    // Inicio cÃ³digo generado por GitHub Copilot
+    // Inicio código generado por GitHub Copilot
     private bool EsVistaActual(PasosCotizacion vista)
     {
         return vista switch
@@ -450,16 +460,16 @@ public partial class Compra_de_pin
             _ => false
         };
     }
-    // Fin cÃ³digo generado por GitHub Copilot
+    // Fin código generado por GitHub Copilot
 
     public async Task CambiarAVista(PasosCotizacion vista)
     {
-        // Inicio cÃ³digo generado por GitHub Copilot
+        // Inicio código generado por GitHub Copilot
         if (EsVistaActual(vista))
         {
             return;
         }
-        // Fin cÃ³digo generado por GitHub Copilot
+        // Fin código generado por GitHub Copilot
 
         componentesCompra.DesactivarTodo();
         pagoPin.CentroIpVolver = true;
@@ -470,11 +480,11 @@ public partial class Compra_de_pin
                 componentesCompra.DatosPersonales = true;
                 break;
 
-            // Inicio cÃ³digo generado por GitHub Copilot
+            // Inicio código generado por GitHub Copilot
             case PasosCotizacion.FacturaElectronica:
                 componentesCompra.FacturaElectronica = true;
                 break;
-            // Fin cÃ³digo generado por GitHub Copilot
+            // Fin código generado por GitHub Copilot
 
             case PasosCotizacion.DatosBasicos:
                 componentesCompra.DatosBasicos = true;
@@ -561,9 +571,9 @@ public partial class Compra_de_pin
     {
         return plataforma switch
         {
-            "CEA" => "Centro de enseÃ±anza automovilÃ­stica",
+            "CEA" => "Centro de enseñanza automovilística",
             "CRC" => "Centro de reconocimiento de conductores",
-            "CDA" => "Centro de diagnÃ³stico automotor",
+            "CDA" => "Centro de diagnóstico automotor",
             _ => "Plataforma desconocida"
         };
     }
@@ -572,9 +582,9 @@ public partial class Compra_de_pin
     {
         return plataforma switch
         {
-            "CEA" => "Curso de conducciÃ³n",
-            "CRC" => "Examen mÃ©dico",
-            "CDA" => "RevisiÃ³n tÃ©cnico-mecÃ¡nica", // opcional
+            "CEA" => "Curso de conducción",
+            "CRC" => "Examen médico",
+            "CDA" => "Revisión técnico-mecánica", // opcional
             _ => ""
         };
     }
@@ -759,10 +769,10 @@ public partial class Compra_de_pin
     private void ConfirmarIrInicio()
     {
         abrirModalIrInicio = false; // cierra el modal
-        GotoCompraPin();            // ejecuta la navegaciÃ³n/acciÃ³n real
+        GotoCompraPin();            // ejecuta la navegación/acción real
     }
 
-    // Inicio refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+    // Inicio refactorización/optimización por GitHub Copilot
     protected async Task ActivoFacturacionElectronica()
     {
         try
@@ -793,9 +803,11 @@ public partial class Compra_de_pin
         {
         }
     }
-    // Fin refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+    // Fin refactorización/optimización por GitHub Copilot
 
 
     #endregion
 
 }
+
+

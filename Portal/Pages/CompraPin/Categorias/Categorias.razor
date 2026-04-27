@@ -1,6 +1,6 @@
-ï»¿@page "/compradepin/categorias"
+@page "/compradepin/categorias"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
 @using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
@@ -21,13 +21,13 @@
         {
             if (PagoPin.TramiteInstructor)
             {
-                <h3>CategorÃ­a de la certificaciÃ³n</h3>
-                <h4>Seleccione la categorÃ­a de certificaciÃ³n a la que va a optar</h4>
+                <h3>Categoría de la certificación</h3>
+                <h4>Seleccione la categoría de certificación a la que va a optar</h4>
             }
             else
             {
-                <h3>CategorÃ­as</h3>
-                <h4>Seleccione la categorÃ­a a la que va a optar</h4>
+                <h3>Categorías</h3>
+                <h4>Seleccione la categoría a la que va a optar</h4>
             }
 
         }
@@ -35,13 +35,13 @@
         {
             if (PagoPin.TramiteInstructor)
             {
-                <h3>CategorÃ­a de la certificaciÃ³n</h3>
-                <h4>Seleccione la categorÃ­a de certificaciÃ³n a la que va a Recategorizar</h4>
+                <h3>Categoría de la certificación</h3>
+                <h4>Seleccione la categoría de certificación a la que va a Recategorizar</h4>
             }
             else
             {
                 <h3>Categorias</h3>
-                <h4>Seleccione la categorÃ­a actual</h4>
+                <h4>Seleccione la categoría actual</h4>
             }
 
         }
@@ -101,7 +101,7 @@
         {
             @if (listadoCategoriasAutoPublico.Count > 0)
             {
-                <h4>Servicio pÃºblico</h4>
+                <h4>Servicio público</h4>
 
                 <div class="grid_categoria mb-2 grid gap-3">
 

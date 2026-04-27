@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
@@ -7,12 +7,12 @@ using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.Agendamiento;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.Agendamiento;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.Agendamiento.Agenda;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Agenda;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Helpers;
 
 namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
@@ -102,12 +102,12 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 				{
                     this.sendRescheduleMail();
                     OptionAppoiment.ScheduleForm = ScheduleForms.None;
-                    toastService.ShowSuccess(@"Se reprogramÃ³ la cita correctamente", "Reprogramar cita");
+                    toastService.ShowSuccess(@"Se reprogramó la cita correctamente", "Reprogramar cita");
 					await ReScheduleAppoimentCallback.InvokeAsync(OptionAppoiment);
 				}
 				else
 				{
-					toastService.ShowWarning(@"No fue posible reprogramar la cita", "InformaciÃ³n");
+					toastService.ShowWarning(@"No fue posible reprogramar la cita", "Información");
 				}
 			}
 			catch (Exception ex)
@@ -187,18 +187,20 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
                     Day = DateTimeTransformations.FormatDay(OptionAppoiment.ScheduleDay.Value),// Sabado 
                     Year = DateTimeTransformations.FormatYear(OptionAppoiment.ScheduleDay.Value),// 2025
                     CenterName = !string.IsNullOrEmpty(getCentroResponse.Nombre) ? getCentroResponse.Nombre : "No se pudo obtener",// nombre debe aceptar espacios, un guion, # , acentos, numeros,  
-                    CenterAddress = !string.IsNullOrEmpty(getCentroResponse.Direccion) ? getCentroResponse.Direccion : "Sin direcciÃ³n",//// nombre debe aceptar espacios, un guion, # , acentos, numeros,  
+                    CenterAddress = !string.IsNullOrEmpty(getCentroResponse.Direccion) ? getCentroResponse.Direccion : "Sin dirección",//// nombre debe aceptar espacios, un guion, # , acentos, numeros,  
                     CenterPhone = !string.IsNullOrEmpty(getCentroResponse.Fijo) ? getCentroResponse.Fijo : "Sin registro",// // Solo numeros
                     Email = AgendaDTO.DatosPersonaDTO.Email
                 };
                 var result = await MiLicenciaService.SendRescheduleNotification(datos);
-                toastService.ShowInfo(@"NotificaciÃ³n enviada exitosamente", "InformaciÃ³n");
+                toastService.ShowInfo(@"Notificación enviada exitosamente", "Información");
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-                toastService.ShowWarning(@"No se pudo enviar la notificaciÃ³n.", "InformaciÃ³n");
+                toastService.ShowWarning(@"No se pudo enviar la notificación.", "Información");
             }
         }
     }
 }
+
+

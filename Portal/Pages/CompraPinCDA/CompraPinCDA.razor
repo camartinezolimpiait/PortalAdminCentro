@@ -1,6 +1,6 @@
-Ôªø@page "/comprapincda"
+@page "/comprapincda"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin.CDA
+@using portalAdministrativoSISEC.Application.Data.CompraPin.CDA
 @using portalAdministrativoSISEC.Pages.CompraPinCDA
 @using portalAdministrativoSISEC.Pages.CompraPinCDA.CategoriasCDA
 @using portalAdministrativoSISEC.Pages.CompraPinCDA.ComfirmacionCompraCDA
@@ -29,7 +29,7 @@
                             <p class="cda">@getCentroResponse.Nombre</p>
                             <p class="direccion">@getCentroResponse.Direccion</p>
                         </div>
-                        <p class="clase_centro">Centro de Diagn√≥stico Automotor</p>
+                        <p class="clase_centro">Centro de DiagnÛstico Automotor</p>
                     </div>
                 </header>
                 <div class="wrapper margen_general">
@@ -43,17 +43,17 @@
                                     <h3>Pagos</h3>
                                     <a class="boton-primario" @onclick="()=> GetIsCliked(1)">Comprar PIN</a>
                                    @*<h3>Otras Operaciones</h3>
-                                    <a>Devoluci√≥n de Dinero</a> *@
+                                    <a>DevoluciÛn de Dinero</a> *@
                                 </div>
                             </div>
                             <div class="menus" style="margin-top:10px;">
 
                                 <div class="acciones-down">
-                                    <h3 class="colorletras">Canales de atenci√≥n</h3>
+                                    <h3 class="colorletras">Canales de atenciÛn</h3>
                                     <a class="linksmenusecundario">WhatsApp</a><br />
                                     <a class="linksmenusecundario">Soporte SISEC CDA</a><br />
                                     <a class="linksmenusecundario">Servicio al cliente SISEC</a><br />
-                                    <a class="linksmenusecundario">Linea de atencion √∫nica</a><br />
+                                    <a class="linksmenusecundario">Linea de atencion ˙nica</a><br />
                                 </div>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                                 <CategoriasCDA PagoPinCda="pagoPinCda" OnFormValidChanged="HandleFormValidChanged" PagoPinCdaChanged="PinHasChanged" CostoHasChanged="CostoHasChanged" />
                                 @if (pagoPinCda.IsLoadingTemp == false)
                                 {
-                                    <a class="boton-primario" @onclick="()=> GetIsCliked(0)">Atr√°s</a>
+                                    <a class="boton-primario" @onclick="()=> GetIsCliked(0)">Atr·s</a>
                                 }
                                 @if (isFormValid)
                                 {
@@ -94,7 +94,7 @@
                             <!-- Datos Personales-->
                             <div>
                                 <DatosPersonalesCDA PagoPinCda="pagoPinCda" OnFormValidChanged="HandleFormValidChanged" PagoPinChanged="PinHasChanged" />
-                                <a class="boton-primario" @onclick="()=> GetIsCliked(1)">Atr√°s</a>
+                                <a class="boton-primario" @onclick="()=> GetIsCliked(1)">Atr·s</a>
                                 @if (isFormValid)
                                 {
                                     <a class="boton-primario" style="margin-left:5px;" @onclick="()=> OnSiguienteClicked()">Siguiente</a>
@@ -108,7 +108,7 @@
                             <div>
                                 <ConfirmacionCompraCDA PagoPin="pagoPinCda" PasosCompraPin="pasosCompraPin" PagoPinChanged="PinHasChanged"
                                                        VolverDatosPersonales="VolverDatosPersonales" PasosCompraPinChanged="PasosCompraPinChanged" />
-                                <!--<<a class="boton-primario" @onclick="()=> GetIsCliked(2)">Atr√°s</a>-->
+                                <!--<<a class="boton-primario" @onclick="()=> GetIsCliked(2)">Atr·s</a>-->
                             </div>
                         }
                     </div>
@@ -127,3 +127,4 @@
         </section>
     </ContentTemplate>
 </SpinLoader>
+

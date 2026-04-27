@@ -1,4 +1,4 @@
-ï»¿using Microsoft.AspNetCore.Components.QuickGrid;
+using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
@@ -6,11 +6,11 @@ using System;
 using portalAdministrativoSISEC.Entidades.Common;
 using System.Collections.Generic;
 using System.Linq;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using Blazored.Toast.Services;
 using System.Globalization;
 using portalAdministrativoSISEC.Util.Extension;
@@ -100,7 +100,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.PinesAsociados
             }
             else
             {
-                // Agregar solo los encabezados si la lista es nula o estÃ¡ vacÃ­a
+                // Agregar solo los encabezados si la lista es nula o está vacía
                 List<ColumnList> headers = PagoPinConst.InicializarColumnasAsociados();
 
                 rows.Add(new RowList { Row = headers });
@@ -206,7 +206,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.PinesAsociados
                     Listado = new();
                     await CargarDatagridView(Listado);
 
-                    _toastService.ShowInfo($"Actualmente no hay pines asociados. Por favor, realiza el pago de una cuota en la secciÃ³n 'Pago de Cuotas' para visualizar la informaciÃ³n - \n{result.Respuesta}", "InformaciÃ³n");
+                    _toastService.ShowInfo($"Actualmente no hay pines asociados. Por favor, realiza el pago de una cuota en la sección 'Pago de Cuotas' para visualizar la información - \n{result.Respuesta}", "Información");
                 }
             }
             else
@@ -269,11 +269,11 @@ namespace portalAdministrativoSISEC.Pages.Pines.PinesAsociados
             [
                 new() { NameColumn = "Pin", Value = (!string.IsNullOrEmpty(pinesAsociados.Pin) ? pinesAsociados.Pin : "No encontrado")},
                 new() { NameColumn = "Tipo Documento", Value = (!string.IsNullOrEmpty(pinesAsociados.TipoIdentificacion) ? pinesAsociados.TipoIdentificacion : "No encontrado") },
-                new() { NameColumn = "NÃºmero Documento", Value = (!string.IsNullOrEmpty(pinesAsociados.NumeroIdentificacion) ? pinesAsociados.NumeroIdentificacion : "No encontrado") },
+                new() { NameColumn = "Número Documento", Value = (!string.IsNullOrEmpty(pinesAsociados.NumeroIdentificacion) ? pinesAsociados.NumeroIdentificacion : "No encontrado") },
                 new() { NameColumn = "Valor Pin", Value = (!string.IsNullOrEmpty(pinesAsociados.ValorTransaccion.ToString())? ValorTransaccion : "No encontrado") },
                 new() { NameColumn = "Valor Actor", Value = (!string.IsNullOrEmpty(pinesAsociados.ValorActor.ToString()) ? ValorActor : "No encontrado") },
                 new() { NameColumn = "Valor Aliado", Value = (!string.IsNullOrEmpty(pinesAsociados.ValorAliado.ToString()) ? ValorAliado : "No encontrado") },
-                new() { NameColumn = "Agente DispersiÃ³n", Value = (!string.IsNullOrEmpty(pinesAsociados.AgenteDispersion) ? pinesAsociados.AgenteDispersion : "No encontrado") },
+                new() { NameColumn = "Agente Dispersión", Value = (!string.IsNullOrEmpty(pinesAsociados.AgenteDispersion) ? pinesAsociados.AgenteDispersion : "No encontrado") },
 
             ];
 
@@ -285,12 +285,12 @@ namespace portalAdministrativoSISEC.Pages.Pines.PinesAsociados
                 [
                     new() { NameColumn = "Valor ANSV", Value = (!string.IsNullOrEmpty(pinesAsociados.ValorAns.ToString()) ? ValorAns : "No encontrado") },
                     new() { NameColumn = "Valor Sicov", Value = (!string.IsNullOrEmpty(pinesAsociados.ValosSicov.ToString()) ? ValosSicov : "No encontrado") },
-                    new() { NameColumn = "Fecha OperaciÃ³n", Value = (!string.IsNullOrEmpty(pinesAsociados.FechaRegistro.ToString()) ? pinesAsociados.FechaRegistro.ToString() : "No encontrado") },
-                    new() { NameColumn = "Fecha DispersiÃ³n", Value = (!string.IsNullOrEmpty(pinesAsociados.FechaDispersion.ToString()) ? pinesAsociados.FechaDispersion.ToString() : "No encontrado") },
-                    new() { NameColumn = "Banco DispersiÃ³n", Value = (!string.IsNullOrEmpty(pinesAsociados?.Banco) ? pinesAsociados?.Banco : "No encontrado") },
-                    new() { NameColumn = "Cuenta DispersiÃ³n", Value = (!string.IsNullOrEmpty(pinesAsociados?.CtaDispersion) ? pinesAsociados?.CtaDispersion : "No encontrado") },
-                    new() { NameColumn = "Valor DispersiÃ³n", Value = (!string.IsNullOrEmpty(pinesAsociados.ValorTransaccion.ToString()) ? ValorTransaccion : "No encontrado") },
-                    new() { NameColumn = "RazÃ³n Social", Value = (!string.IsNullOrEmpty(pinesAsociados.RazonSocial) ? pinesAsociados.RazonSocial : "No encontrado") },
+                    new() { NameColumn = "Fecha Operación", Value = (!string.IsNullOrEmpty(pinesAsociados.FechaRegistro.ToString()) ? pinesAsociados.FechaRegistro.ToString() : "No encontrado") },
+                    new() { NameColumn = "Fecha Dispersión", Value = (!string.IsNullOrEmpty(pinesAsociados.FechaDispersion.ToString()) ? pinesAsociados.FechaDispersion.ToString() : "No encontrado") },
+                    new() { NameColumn = "Banco Dispersión", Value = (!string.IsNullOrEmpty(pinesAsociados?.Banco) ? pinesAsociados?.Banco : "No encontrado") },
+                    new() { NameColumn = "Cuenta Dispersión", Value = (!string.IsNullOrEmpty(pinesAsociados?.CtaDispersion) ? pinesAsociados?.CtaDispersion : "No encontrado") },
+                    new() { NameColumn = "Valor Dispersión", Value = (!string.IsNullOrEmpty(pinesAsociados.ValorTransaccion.ToString()) ? ValorTransaccion : "No encontrado") },
+                    new() { NameColumn = "Razón Social", Value = (!string.IsNullOrEmpty(pinesAsociados.RazonSocial) ? pinesAsociados.RazonSocial : "No encontrado") },
                     new() { NameColumn = "Tipo Pin", Value = (!string.IsNullOrEmpty(pinesAsociados.TipoPin) ? pinesAsociados.TipoPin : "No encontrado") }
                 ]);
             }
@@ -301,3 +301,4 @@ namespace portalAdministrativoSISEC.Pages.Pines.PinesAsociados
         #endregion Metodos
     }
 }
+

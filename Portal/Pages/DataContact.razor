@@ -1,6 +1,7 @@
 ﻿@page "/configuracion/dataContact"
 @inject HttpClient Http
 @using Microsoft.Extensions.Configuration
+@using portalAdministrativoSISEC.Application.Data
 @using portalAdministrativoSISEC.Util.Helpers
 
 @inject IConfiguration Configuration
@@ -78,7 +79,7 @@
 
 @code {
 
-    Data.DataContact data = new Data.DataContact();
+    portalAdministrativoSISEC.Application.Data.DataContact data = new portalAdministrativoSISEC.Application.Data.DataContact();
 
     //public int idCentro { get; set; } = 1023; //CRC
     public int idCentro { get; set; } = 2; //CEA

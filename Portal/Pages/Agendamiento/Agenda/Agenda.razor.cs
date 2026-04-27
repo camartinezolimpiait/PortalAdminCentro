@@ -1,17 +1,17 @@
-锘縰sing Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data;
+using Microsoft.AspNetCore.Components;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.Agendamiento.Agenda;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Agenda;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using portalAdministrativoSISEC.Entidades.Agendamiento.HorarioAtencion;
-using portalAdministrativoSISEC.Services.Agendamiento.HorarioAtencion;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Politica;
-using portalAdministrativoSISEC.Services.Agendamiento;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Horario;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -161,21 +161,21 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda
             return await _agendaService.GetScheduleCentro(idPerfil, fromDate, toDate);//hacer el metodo con fechas
         }
 
-        // Inicio c贸digo generado por GitHub Copilot
-        // M茅todo generado por GitHub Copilot: c谩lculo del n煤mero de semana ISO
+        // Inicio c骴igo generado por GitHub Copilot
+        // M閠odo generado por GitHub Copilot: c醠culo del n鷐ero de semana ISO
         public static int GetIso8601WeekOfYear(DateTime time)
         {
-            // Usar la implementaci贸n integrada para obtener la semana ISO
+            // Usar la implementaci髇 integrada para obtener la semana ISO
             return System.Globalization.ISOWeek.GetWeekOfYear(time);
         }
-        // Fin c贸digo generado por GitHub Copilot
+        // Fin c骴igo generado por GitHub Copilot
 
-        // Inicio c贸digo generado por GitHub Copilot
-        // M茅todo generado por GitHub Copilot: calcular la fecha base (domingo) de una semana ISO
+        // Inicio c骴igo generado por GitHub Copilot
+        // M閠odo generado por GitHub Copilot: calcular la fecha base (domingo) de una semana ISO
         public static DateTime FirstDateOfWeek(int year, int weekOfYear, System.Globalization.CultureInfo ci)
         {
             // Calcular el lunes de la semana ISO (la semana 1 contiene el 4 de enero)
-            // Luego devolver el d铆a anterior (domingo) para mantener compatibilidad
+            // Luego devolver el d韆 anterior (domingo) para mantener compatibilidad
             DateTime jan4 = new DateTime(year, 1, 4);
             int jan4Day = (int)jan4.DayOfWeek;
             int jan4IsoDay = jan4Day == 0 ? 7 : jan4Day; // convertir Domingo(0) a 7
@@ -184,23 +184,23 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda
             DateTime sundayBefore = desiredMonday.AddDays(-1);
             return sundayBefore;
         }
-        // Fin c贸digo generado por GitHub Copilot
+        // Fin c骴igo generado por GitHub Copilot
 
-        // Inicio c贸digo generado por GitHub Copilot
-        // M茅todo generado por GitHub Copilot: establece el rango de la semana mostrado en la UI
+        // Inicio c骴igo generado por GitHub Copilot
+        // M閠odo generado por GitHub Copilot: establece el rango de la semana mostrado en la UI
         string SetWeekRange(DateTime fecha)
         {
             var numberWeek = GetIso8601WeekOfYear(fecha);
-            // Determinar el a帽o ISO correspondiente a la semana (puede pertenecer al a帽o anterior o siguiente)
+            // Determinar el a駉 ISO correspondiente a la semana (puede pertenecer al a駉 anterior o siguiente)
             int yearForWeek = fecha.Year;
             if (fecha.Month == 1 && numberWeek >= 52)
             {
-                // Enero que pertenece a la 煤ltima semana del a帽o anterior
+                // Enero que pertenece a la 鷏tima semana del a駉 anterior
                 yearForWeek = fecha.Year - 1;
             }
             else if (fecha.Month == 12 && numberWeek == 1)
             {
-                // Diciembre que pertenece a la primera semana del a帽o siguiente
+                // Diciembre que pertenece a la primera semana del a駉 siguiente
                 yearForWeek = fecha.Year + 1;
             }
 
@@ -212,7 +212,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda
 
             return TitleDate();
         }
-        // Fin c贸digo generado por GitHub Copilot
+        // Fin c骴igo generado por GitHub Copilot
 
         string TitleDate()
         {
@@ -349,7 +349,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda
                     else
                     {
                         parametrizationAgenda = null;
-                        toastService.ShowWarning("No es posible mostrar la agenda porque falta configuraci贸n en la parametrizaci贸n de horario", "Informaci贸n");
+                        toastService.ShowWarning("No es posible mostrar la agenda porque falta configuraci髇 en la parametrizaci髇 de horario", "Informaci髇");
                     }
                     parametrizationAgendaTemp = parametrizationAgenda;
                 }
@@ -825,3 +825,6 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda
         #endregion
     }
 }
+
+
+

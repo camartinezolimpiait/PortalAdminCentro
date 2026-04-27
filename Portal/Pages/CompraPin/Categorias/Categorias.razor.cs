@@ -1,8 +1,8 @@
-Ôªøusing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -163,7 +163,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             PagoPin.Categoria1 = "";
                             PagoPin.CategoriaSeleccionada = SeleccionTramite;
                             await PagoPinChanged.InvokeAsync(PagoPin);
-                            await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categor√≠a.");
+                            await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categorÌa.");
                         }
                         else
                         {
@@ -186,7 +186,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             {
                                 //Carga las categorias iniciales
                                 await SeleccionCategoria(PagoPin.CategoriaSeleccionada);
-                                //Crea una instancia independiente de categoria para marca la que est√° preseleccionada
+                                //Crea una instancia independiente de categoria para marca la que est· preseleccionada
                                 CategoriaSeleccionada = GuardarCategoriaSeleccionada(PagoPin.CategoriaSeleccionada);
                                 RecategorizacionSeleccionada = GuardarRecategorizacionSeleccionada(PagoPin.Categoria1);
                             }
@@ -222,7 +222,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             {
                                 //Carga las categorias iniciales
                                 await SeleccionCategoria(PagoPin.CategoriaSeleccionada);
-                                //Crea una instancia independiente de categoria para marca la que est√° preseleccionada
+                                //Crea una instancia independiente de categoria para marca la que est· preseleccionada
                                 CategoriaSeleccionada = GuardarCategoriaSeleccionada(PagoPin.CategoriaSeleccionada);
                                 RecategorizacionSeleccionada = GuardarRecategorizacionSeleccionada(PagoPin.Categoria1);
                             }
@@ -265,7 +265,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             {
                                 //Carga las categorias iniciales
                                 await SeleccionCategoria(PagoPin.CategoriaSeleccionada);
-                                //Crea una instancia independiente de categoria para marca la que est√° preseleccionada
+                                //Crea una instancia independiente de categoria para marca la que est· preseleccionada
                                 CategoriaSeleccionada = GuardarCategoriaSeleccionada(PagoPin.CategoriaSeleccionada);
                                 RecategorizacionSeleccionada = GuardarRecategorizacionSeleccionada(PagoPin.Categoria1);
                             }
@@ -279,7 +279,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                                 PagoPin.Categoria1 = "";
                                 PagoPin.CategoriaSeleccionada = SeleccionTramite;
                                 await PagoPinChanged.InvokeAsync(PagoPin);
-                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categor√≠a");
+                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categorÌa");
                             }
                         }
                         else
@@ -302,7 +302,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             {
                                 //Carga las categorias iniciales
                                 await SeleccionCategoria(PagoPin.CategoriaSeleccionada);
-                                //Crea una instancia independiente de categoria para marca la que est√° preseleccionada
+                                //Crea una instancia independiente de categoria para marca la que est· preseleccionada
                                 CategoriaSeleccionada = GuardarCategoriaSeleccionada(PagoPin.CategoriaSeleccionada);
                                 RecategorizacionSeleccionada = GuardarRecategorizacionSeleccionada(PagoPin.Categoria1);
                             }
@@ -334,7 +334,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             {
                                 //Carga las categorias iniciales
                                 await SeleccionCategoria(PagoPin.CategoriaSeleccionada);
-                                //Crea una instancia independiente de categoria para marca la que est√° preseleccionada
+                                //Crea una instancia independiente de categoria para marca la que est· preseleccionada
                                 CategoriaSeleccionada = GuardarCategoriaSeleccionada(PagoPin.CategoriaSeleccionada);
                                 RecategorizacionSeleccionada = GuardarRecategorizacionSeleccionada(PagoPin.Categoria1);
                             }
@@ -349,7 +349,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                                 PagoPin.CategoriaSeleccionada = SeleccionTramite;
                                 RecategorizacionSeleccionada.Seleccionada = false;
                                 await PagoPinChanged.InvokeAsync(PagoPin);
-                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categor√≠a");
+                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categorÌa");
                             }
                         }
                         else
@@ -378,7 +378,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             {
                                 //Carga las categorias iniciales
                                 await SeleccionCategoria(PagoPin.CategoriaSeleccionada);
-                                //Crea una instancia independiente de categoria para marca la que est√° preseleccionada
+                                //Crea una instancia independiente de categoria para marca la que est· preseleccionada
                                 CategoriaSeleccionada = GuardarCategoriaSeleccionada(PagoPin.CategoriaSeleccionada);
                                 RecategorizacionSeleccionada = GuardarRecategorizacionSeleccionada(PagoPin.Categoria1);
                             }
@@ -393,7 +393,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                                 PagoPin.CategoriaSeleccionada = SeleccionTramite;
                                 RecategorizacionSeleccionada.Seleccionada = false;
                                 await PagoPinChanged.InvokeAsync(PagoPin);
-                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categor√≠a");
+                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categorÌa");
                             }
                         }
                         else
@@ -421,7 +421,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             {
                                 //Carga las categorias iniciales
                                 await SeleccionCategoria(PagoPin.CategoriaSeleccionada);
-                                //Crea una instancia independiente de categoria para marca la que est√° preseleccionada
+                                //Crea una instancia independiente de categoria para marca la que est· preseleccionada
                                 CategoriaSeleccionada = GuardarCategoriaSeleccionada(PagoPin.CategoriaSeleccionada);
                                 RecategorizacionSeleccionada = GuardarRecategorizacionSeleccionada(PagoPin.Categoria1);
                             }
@@ -435,7 +435,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                                 PagoPin.Categoria1 = "";
                                 PagoPin.CategoriaSeleccionada = SeleccionTramite;
                                 await PagoPinChanged.InvokeAsync(PagoPin);
-                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categor√≠a");
+                                await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categorÌa");
                             }
                         }
                         else
@@ -446,7 +446,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
                             CategoriaSeleccionada = GuardarCategoriaSeleccionada(PagoPin.CategoriaSeleccionada);
                             await PagoPinChanged.InvokeAsync(PagoPin);
                             await GeneracionCosto();
-                            await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categor√≠a");
+                            await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, @"Seleccione la siguiente categorÌa");
                         }
                         break;
 
@@ -895,3 +895,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Categorias
         }
     }
 }
+

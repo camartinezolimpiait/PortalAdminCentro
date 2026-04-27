@@ -1,8 +1,8 @@
-锘縰sing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Services.SuperTransporte;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
+using portalAdministrativoSISEC.Application.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Collections.Generic;
@@ -71,11 +71,11 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                     var data = await _superTransporteService.GetCentroCEA(applicationShared.IdCentroStrappi, "propietarios");
                     if (data.data.attributes.propietarios != null)
                     {
-                        toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                        toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                     }
                     else
                     {
-                        toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                        toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                         Navigation.NavigateTo("/supertransporte/centro-cea", false);
                     }   
                 }
@@ -99,17 +99,17 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                         var data = await _superTransporteService.GetCentroCEA(applicationShared.IdCentroStrappi, "propietarios");
                         if (data.data.attributes.propietarios != null)
                         {
-                            toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                            toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                         }
                         else
                         {
-                            toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                            toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                             Navigation.NavigateTo("/supertransporte/centro-cea", false);
                         }
                     }
                 }
                 else {
-                    toastService.ShowError(@"El propietario seleccionado ya se encuentra registrado.", "Informaci贸n");
+                    toastService.ShowError(@"El propietario seleccionado ya se encuentra registrado.", "Informaci髇");
                 }
 				
 			}
@@ -129,11 +129,11 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                 var data = await _superTransporteService.GetCentroCEA(applicationShared.IdCentroStrappi, "propietarios");
                 if (data.data.attributes.propietarios != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                 }
                 else
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                     Navigation.NavigateTo("/supertransporte/centro-cea", false);
                 }
             }
@@ -150,3 +150,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
         }
     }
 }
+
+

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -94,7 +94,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.CuotasCeas
 
             if (CuotaSeleccionada.NumeroCuotas == 0 || CuotaSeleccionada.PrimeraCuota == 0 || CuotaSeleccionada.ValorTotal == 0)
 			{
-				await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "Se debe seleccionar opción de cuota para pagar");
+				await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "Se debe seleccionar opci�n de cuota para pagar");
 				await PagoPinChanged.InvokeAsync(PagoPin);
 				return await Task.FromResult(false);
 			}
@@ -122,3 +122,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.CuotasCeas
         }
     }
 }
+

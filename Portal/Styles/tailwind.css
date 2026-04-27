@@ -6,265 +6,255 @@
 @plugin "@tailwindcss/forms";
 
 @plugin "daisyui" {
-  themes: milicencia;
+    themes: milicencia;
 }
 
 @plugin "daisyui/theme" {
-  name: "milicencia";
-  default: true;
-  prefersdark: false;
-  color-scheme: light;
-  --color-base-100: oklch(100% 0 0);
-  --color-base-200: var(--color-neutral-50);
-  --color-base-300: var(--color-neutral-100);
-  --color-base-content: oklch(21% 0.006 56.043);
-  --color-primary: var(--color-azul-500);
-  --color-primary-content: oklch(97% 0.014 254.604);
-  --color-secondary: var(--color-azul-900);
-  --color-secondary-content: oklch(97% 0.014 254.604);
-  --color-accent: var(--color-amarillo-200);
-  --color-accent-content: var(--color-amarillo-900);
-  --color-neutral: oklch(14% 0.004 49.25);
-  --color-neutral-content: oklch(98% 0.001 106.423);
-  --color-info: var(--color-azul-200);
-  --color-info-content: oklch(29% 0.066 243.157);
-  --color-success: var(--color-verde-200);
-  --color-success-content: oklch(39% 0.095 152.535);
-  --color-warning: var(--color-naranja-200);
-  --color-warning-content: oklch(41% 0.112 45.904);
-  --color-error: var(--color-rojo-500);
-  --color-error-content: oklch(97% 0.013 17.38);
-  --radius-selector: 0.25rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.25rem;
-  --border: 1px;
-  --depth: 1;
-  --noise: 0;
+    name: "milicencia";
+    default: true;
+    prefersdark: false;
+    color-scheme: light;
+    --color-base-100: oklch(100% 0 0);
+    --color-base-200: var(--color-neutral-50);
+    --color-base-300: var(--color-neutral-100);
+    --color-base-content: oklch(21% 0.006 56.043);
+    --color-primary: var(--color-azul-500);
+    --color-primary-content: oklch(97% 0.014 254.604);
+    --color-secondary: var(--color-azul-900);
+    --color-secondary-content: oklch(97% 0.014 254.604);
+    --color-accent: var(--color-amarillo-200);
+    --color-accent-content: var(--color-amarillo-900);
+    --color-neutral: oklch(14% 0.004 49.25);
+    --color-neutral-content: oklch(98% 0.001 106.423);
+    --color-info: var(--color-azul-200);
+    --color-info-content: oklch(29% 0.066 243.157);
+    --color-success: var(--color-verde-200);
+    --color-success-content: oklch(39% 0.095 152.535);
+    --color-warning: var(--color-naranja-200);
+    --color-warning-content: oklch(41% 0.112 45.904);
+    --color-error: var(--color-rojo-500);
+    --color-error-content: oklch(97% 0.013 17.38);
+    --radius-selector: 0.25rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.5rem;
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
 }
 
 @theme {
-  /* Colores Azul */
-  --color-azul-900: oklch(0.2855 0.1365 262.43);
-  --color-azul-800: oklch(0.354 0.1465 260.26);
-  --color-azul-700: oklch(0.4263 0.154951 257.5737);
-  --color-azul-600: oklch(0.4997 0.1637 254.85);
-  --color-azul-500: oklch(0.5526 0.167 253.36);
-  --color-azul-400: oklch(0.6648 0.164 257.22);
-  --color-azul-300: oklch(0.7453 0.1316 259.21);
-  --color-azul-200: oklch(0.827 0.0865 259.3);
-  --color-azul-100: oklch(0.9098 0.044 256.79);
-
-  /* Colores Amarillo */
-  --color-amarillo-900: oklch(0.2484 0.0914 33.11);
-  --color-amarillo-800: oklch(0.3219 0.0931 44.34);
-  --color-amarillo-700: oklch(0.4032 0.101254 53.8492);
-  --color-amarillo-600: oklch(0.4888 0.113581 60.9592);
-  --color-amarillo-500: oklch(0.573 0.1277 65.85);
-  --color-amarillo-400: oklch(0.6594 0.142491 70.4098);
-  --color-amarillo-300: oklch(0.7436 0.1563 73.52);
-  --color-amarillo-200: oklch(0.8231 0.159 76.22);
-  --color-amarillo-100: oklch(0.8782 0.151 88.92);
-
-  /* Colores Naranja */
-  --color-naranja-900: oklch(0.2777 0.113962 29.2339);
-  --color-naranja-800: oklch(0.3336 0.1369 29.23);
-  --color-naranja-700: oklch(0.4098 0.147 34.09);
-  --color-naranja-600: oklch(0.4946 0.1545 40.22);
-  --color-naranja-500: oklch(0.5796 0.1624 46.2);
-  --color-naranja-400: oklch(0.6655 0.1728 50.21);
-  --color-naranja-300: oklch(0.7441 0.1742 52.27);
-  --color-naranja-200: oklch(0.7924 0.1503 61.99);
-  --color-naranja-100: oklch(0.8456 0.1319 74.52);
-
-  /* Colores Rojo */
-  --color-rojo-900: oklch(0.3292 0.1351 29.23);
-  --color-rojo-800: oklch(0.3915 0.1606 29.23);
-  --color-rojo-700: oklch(0.4554 0.186861 29.2339);
-  --color-rojo-600: oklch(0.5171 0.2122 29.23);
-  --color-rojo-500: oklch(0.5887 0.2305 29.05);
-  --color-rojo-400: oklch(0.6612 0.2262 30.88);
-  --color-rojo-300: oklch(0.6971 0.1953 33.43);
-  --color-rojo-200: oklch(0.7456 0.1547 30.6);
-  --color-rojo-100: oklch(0.7971 0.1176 32.6);
-
-  /* Colores Verde */
-  --color-verde-900: oklch(0.247 0.084 142.5);
-  --color-verde-800: oklch(0.3161 0.1006 144.61);
-  --color-verde-700: oklch(0.3985 0.1141 148.41);
-  --color-verde-600: oklch(0.4773 0.126373 151.7117);
-  --color-verde-500: oklch(0.5564 0.1374 155.05);
-  --color-verde-400: oklch(0.6374 0.1469 156.98);
-  --color-verde-300: oklch(0.7241 0.1485 156.8);
-  --color-verde-200: oklch(0.8119 0.1493 156.95);
-  --color-verde-100: oklch(0.9 0.1493 156.95);
-  --color-verde-50: oklch(0.92 0.1146 160);
-
-  /* Colores Gris */
-  --color-gris-900: oklch(0.2216 0 86.34);
-  --color-gris-800: oklch(0.3096 0 81.36);
-  --color-gris-700: oklch(0.395 0 80.41);
-  --color-gris-600: oklch(0.4822 0 81.99);
-  --color-gris-500: oklch(0.5691 0 83.36);
-  --color-gris-400: oklch(0.6539 0 81.06);
-  --color-gris-300: oklch(0.7446 0 82.36);
-  --color-gris-200: oklch(0.8275 0 80.23);
-  --color-gris-100: oklch(0.9262 0 75.4);
-  --color-gris-50: oklch(0.9738 0 78.3);
-
-  /* Tipografía */
-  --font-sans: proxima-nova, -apple-system, BlinkMacSystemFont, system-ui,
-    sans-serif;
-  --font-condensed: proxima-nova-condensed;
-
-  --text-root: 1rem;
-  --text-md: 1.125rem;
-  --text-lg: 1.333rem;
-  --text-xl: 1.777rem;
-  --text-2xl: 2.369rem;
-  --text-3xl: 3.157rem;
-  --text-4xl: 4.209rem;
-  --text-5xl: 5.61rem;
+    /* Colores Azul */
+    --color-azul-900: oklch(0.2855 0.1365 262.43);
+    --color-azul-800: oklch(0.354 0.1465 260.26);
+    --color-azul-700: oklch(0.4263 0.154951 257.5737);
+    --color-azul-600: oklch(0.4997 0.1637 254.85);
+    --color-azul-500: oklch(0.5526 0.167 253.36);
+    --color-azul-400: oklch(0.6648 0.164 257.22);
+    --color-azul-300: oklch(0.7453 0.1316 259.21);
+    --color-azul-200: oklch(0.827 0.0865 259.3);
+    --color-azul-100: oklch(0.9098 0.044 256.79);
+    /* Colores Amarillo */
+    --color-amarillo-900: oklch(0.2484 0.0914 33.11);
+    --color-amarillo-800: oklch(0.3219 0.0931 44.34);
+    --color-amarillo-700: oklch(0.4032 0.101254 53.8492);
+    --color-amarillo-600: oklch(0.4888 0.113581 60.9592);
+    --color-amarillo-500: oklch(0.573 0.1277 65.85);
+    --color-amarillo-400: oklch(0.6594 0.142491 70.4098);
+    --color-amarillo-300: oklch(0.7436 0.1563 73.52);
+    --color-amarillo-200: oklch(0.8231 0.159 76.22);
+    --color-amarillo-100: oklch(0.8782 0.151 88.92);
+    /* Colores Naranja */
+    --color-naranja-900: oklch(0.2777 0.113962 29.2339);
+    --color-naranja-800: oklch(0.3336 0.1369 29.23);
+    --color-naranja-700: oklch(0.4098 0.147 34.09);
+    --color-naranja-600: oklch(0.4946 0.1545 40.22);
+    --color-naranja-500: oklch(0.5796 0.1624 46.2);
+    --color-naranja-400: oklch(0.6655 0.1728 50.21);
+    --color-naranja-300: oklch(0.7441 0.1742 52.27);
+    --color-naranja-200: oklch(0.7924 0.1503 61.99);
+    --color-naranja-100: oklch(0.8456 0.1319 74.52);
+    /* Colores Rojo */
+    --color-rojo-900: oklch(0.3292 0.1351 29.23);
+    --color-rojo-800: oklch(0.3915 0.1606 29.23);
+    --color-rojo-700: oklch(0.4554 0.186861 29.2339);
+    --color-rojo-600: oklch(0.5171 0.2122 29.23);
+    --color-rojo-500: oklch(0.5887 0.2305 29.05);
+    --color-rojo-400: oklch(0.6612 0.2262 30.88);
+    --color-rojo-300: oklch(0.6971 0.1953 33.43);
+    --color-rojo-200: oklch(0.7456 0.1547 30.6);
+    --color-rojo-100: oklch(0.7971 0.1176 32.6);
+    /* Colores Verde */
+    --color-verde-900: oklch(0.247 0.084 142.5);
+    --color-verde-800: oklch(0.3161 0.1006 144.61);
+    --color-verde-700: oklch(0.3985 0.1141 148.41);
+    --color-verde-600: oklch(0.4773 0.126373 151.7117);
+    --color-verde-500: oklch(0.5564 0.1374 155.05);
+    --color-verde-400: oklch(0.6374 0.1469 156.98);
+    --color-verde-300: oklch(0.7241 0.1485 156.8);
+    --color-verde-200: oklch(0.8119 0.1493 156.95);
+    --color-verde-100: oklch(0.9 0.1493 156.95);
+    --color-verde-50: oklch(0.92 0.1146 160);
+    /* Colores Gris */
+    --color-gris-900: oklch(0.2216 0 86.34);
+    --color-gris-800: oklch(0.3096 0 81.36);
+    --color-gris-700: oklch(0.395 0 80.41);
+    --color-gris-600: oklch(0.4822 0 81.99);
+    --color-gris-500: oklch(0.5691 0 83.36);
+    --color-gris-400: oklch(0.6539 0 81.06);
+    --color-gris-300: oklch(0.7446 0 82.36);
+    --color-gris-200: oklch(0.8275 0 80.23);
+    --color-gris-100: oklch(0.9262 0 75.4);
+    --color-gris-50: oklch(0.9738 0 78.3);
+    /* Tipografía */
+    --font-sans: proxima-nova, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-condensed: proxima-nova-condensed;
+    --text-root: 1rem;
+    --text-md: 1.125rem;
+    --text-lg: 1.333rem;
+    --text-xl: 1.777rem;
+    --text-2xl: 2.369rem;
+    --text-3xl: 3.157rem;
+    --text-4xl: 4.209rem;
+    --text-5xl: 5.61rem;
 }
 
 @layer base {
 
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentcolor);
+    }
 
-  p {
-    max-width: 70ch;
-  }
+    p {
+        max-width: 70ch;
+    }
 
-  a {
-    @apply text-azul-700 underline visited:text-azul-900 hover:text-azul-500 active:text-amarillo-300;
-  }
+    a {
+        @apply text-azul-700 underline visited:text-azul-900 hover:text-azul-500 active:text-amarillo-300;
+    }
 
-  label {
-    @apply block font-medium;
-  }
+    label {
+        @apply block font-medium;
+    }
 
-  :where(input[type="radio"], input[type="checkbox"])+label {
-    @apply inline;
-  }
+    :where(input[type="radio"], input[type="checkbox"]) + label {
+        @apply inline;
+    }
 
-  input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="button"]):not([type="file"]),
-  select:not([size]),
-  textarea,
-  form textarea {
-    @apply border-gris-200 block w-full max-w-lg rounded-sm bg-white py-1.5 tabular-nums focus:border-amarillo-200 focus:ring-amarillo-200 focus:ring-2;
-  }
+    input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="button"]):not([type="file"]),
+    select:not([size]),
+    textarea,
+    form textarea {
+        @apply border-gris-200 block w-full max-w-lg rounded-sm bg-white py-1.5 tabular-nums focus:border-amarillo-200 focus:ring-amarillo-200 focus:ring-2;
+    }
 
-  textarea,
-  form textarea {
-    resize: none;
-    width: 100%;
-  }
+    textarea,
+    form textarea {
+        resize: none;
+        width: 100%;
+    }
 
-  input[type="radio"],
-  input[type="checkbox"] {
-    @apply text-root me-2 size-5 border-gris-200 bg-neutral-50 text-amarillo-200 accent-amarillo-200 shadow-sm ring-amarillo-200 hover:ring-2 focus:ring-2;
-  }
+    input[type="radio"],
+    input[type="checkbox"] {
+        @apply text-root me-2 size-5 border-gris-200 bg-neutral-50 text-amarillo-200 accent-amarillo-200 shadow-sm ring-amarillo-200 hover:ring-2 focus:ring-2;
+    }
 
-  input[type="checkbox"] {
-    @apply rounded-sm;
-  }
+    input[type="checkbox"] {
+        @apply rounded-sm;
+    }
 
-  input[type="file"] {
-    margin-bottom: 24px;
-    width: 100%;
-    max-width: 60ch;
-  }
+    input[type="file"] {
+        margin-bottom: 24px;
+        width: 100%;
+        max-width: 60ch;
+    }
 
-  .boton-primario>.feather,
-  .boton-verde>.feather,
-  .boton-secundario>.feather {
-    width: 1rem;
-    height: 1rem;
-    transform: translateY(2px);
-    stroke-width: 2;
-    margin-right: 6px;
-  }
+    .boton-primario > .feather,
+    .boton-verde > .feather,
+    .boton-secundario > .feather {
+        width: 1rem;
+        height: 1rem;
+        transform: translateY(2px);
+        stroke-width: 2;
+        margin-right: 6px;
+    }
 
-  .boton-primario,
-  .boton-verde,
-  .boton-secundario {
-    @apply btn text-root mb-1.5 no-underline;
-  }
+    .boton-primario,
+    .boton-verde,
+    .boton-secundario {
+        @apply btn text-root mb-1.5 no-underline;
+    }
 
-  .boton-verde {
-    @apply btn-success;
-  }
+    .boton-verde {
+        @apply btn-success;
+    }
 
-  .boton-primario {
-    @apply btn-primary;
-  }
+    .boton-primario {
+        @apply btn-primary;
+    }
 
-  a.boton-primario:hover {
-    color: white;
-  }
+    a.boton-primario:hover {
+        color: white;
+    }
 
-  .boton-secundario {
-    @apply btn-outline btn-primary;
-  }
+    .boton-secundario {
+        @apply btn-outline btn-primary;
+    }
 
-  .boton-texto {
-    @apply btn btn-link;
-  }
+    .boton-texto {
+        @apply btn btn-link;
+    }
 
-  form .boton-primario,
-  form .boton-verde,
-  form .boton-secundario,
-  form input[type="submit"] {
-    display: block;
-  }
+    form .boton-primario,
+    form .boton-verde,
+    form .boton-secundario,
+    form input[type="submit"] {
+        display: block;
+    }
 }
 
 @utility margen_general {
-  margin: 0 auto;
-  width: 90%;
-  max-inline-size: 70rem;
+    margin: 0 auto;
+    width: 90%;
+    max-inline-size: 70rem;
 }
 
 @utility feather {
-  /* Este sitio usa Feather Icons como sprites de SVG. Esta es la clase para los íconos
+    /* Este sitio usa Feather Icons como sprites de SVG. Esta es la clase para los íconos
       Para conocer más: https://github.com/feathericons/feather#svg-sprite
       Los íconos están en wwwroot/assets/feather-sprite.svg */
-  width: 24px;
-  height: 24px;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
 }
 
 @utility hide-spin-button {
-
-  /* Chrome, Safari, Edge, Opera */
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  /* Firefox */
-  &[type="number"] {
-    -moz-appearance: textfield;
-  }
+    /* Chrome, Safari, Edge, Opera */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    /* Firefox */
+    &[type="number"] {
+        -moz-appearance: textfield;
+    }
 }
 
 @layer components {
 
-  :where(textarea, select, input):user-invalid,
-  :where(textarea, select, input).invalid,
-  [aria-invalid="true"] {
-    @apply border-rojo-600 ring-rojo-600 ring-1;
-  }
+    :where(textarea, select, input):user-invalid,
+    :where(textarea, select, input).invalid,
+    [aria-invalid="true"] {
+        @apply border-rojo-600 ring-rojo-600 ring-1;
+    }
 }

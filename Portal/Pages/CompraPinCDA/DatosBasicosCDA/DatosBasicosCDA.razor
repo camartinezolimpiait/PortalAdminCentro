@@ -1,6 +1,6 @@
-ï»¿@page "/compradepincda/datosBasicosCDA"
+@page "/compradepincda/datosBasicosCDA"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 @using System.ComponentModel.DataAnnotations
 @using portalAdministrativoSISEC.Pages.CompraPin
@@ -11,7 +11,7 @@
 	<div>
 		<h3>Sexo y fecha de nacimiento</h3>
 		<p>
-			El costo del curso de conducciÃ³n se calcula a partir de la edad y sexo como aparecen en el
+			El costo del curso de conducción se calcula a partir de la edad y sexo como aparecen en el
 			documento de identidad
 		</p>
 
@@ -57,7 +57,7 @@
 					   @bind-value="DatosBasicosModel.Mes" @bind-value:event="oninput" @onchange="@((ChangeEventArgs e) => HandleInputChange("Mes", e))" />
 			</div>
 			<div>
-				<label for="year">AÃ±o</label>
+				<label for="year">Año</label>
 				<input maxlength="4"
 					   type="text"
 					   pattern="[0-9]*"

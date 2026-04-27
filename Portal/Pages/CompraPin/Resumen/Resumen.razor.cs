@@ -1,24 +1,30 @@
-锘縰sing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Enum.CompraPin;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using System;
 using System.Collections.Generic;
-// Inicio c贸digo generado por GitHub Copilot
+
+// Inicio c骴igo generado por GitHub Copilot
 using System.Linq;
-// Fin c贸digo generado por GitHub Copilot
+
+// Fin c骴igo generado por GitHub Copilot
 using System.Threading.Tasks;
 
 namespace portalAdministrativoSISEC.Pages.CompraPin.Resumen
 {
-	public partial class Resumen
-	{
-		#region Variables
+    public partial class Resumen
+    {
+        #region Variables
 
-		[Parameter]
-		public PagoPin pagoPin { get; set; }
+        private bool MostrarDetalle = false;
+
+        private ApplicationSevice menuService = new();
+
+        [Parameter]
+        public PagoPin PagoPin { get; set; }
 
         [Parameter]
         public bool EsConfirmacion { get; set; }
@@ -26,31 +32,33 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Resumen
         [Parameter]
         public bool EsModificacion { get; set; }
 
-        // Inicio c贸digo generado por GitHub Copilot
+        // Inicio c骴igo generado por GitHub Copilot
         [Parameter]
         public bool MostrarNotaRecaudo { get; set; }
-        // Fin c贸digo generado por GitHub Copilot
+
+        // Fin c骴igo generado por GitHub Copilot
 
         [Parameter]
-		public EventCallback<PasosCotizacion> OnNavegarResumen { get; set; }
+        public EventCallback<PasosCotizacion> OnNavegarResumen { get; set; }
 
-
-        private bool MostrarDetalle = false; 
         public bool datosPersonales { get; set; } = false;
-
-        private ApplicationSevice menuService = new();
 
         #endregion Variables
 
         #region Metodos
 
+        public async Task cambiarAVista(PasosCotizacion vista)
+        {
+            await OnNavegarResumen.InvokeAsync(vista);
+        }
+
         protected override void OnInitialized()
         {
-            if (!string.IsNullOrEmpty(pagoPin.Usuario.Nombre) && !string.IsNullOrEmpty(pagoPin.Usuario.Apellido)
-                && pagoPin.Usuario.Celular != null
-                && !string.IsNullOrEmpty(pagoPin.Usuario.Correo)
-                && !string.IsNullOrEmpty(pagoPin.Usuario.NumDocumento)
-                && pagoPin.Usuario.TipoDocumento != null
+            if (!string.IsNullOrEmpty(PagoPin.Usuario.Nombre) && !string.IsNullOrEmpty(PagoPin.Usuario.Apellido)
+                && PagoPin.Usuario.Celular != null
+                && !string.IsNullOrEmpty(PagoPin.Usuario.Correo)
+                && !string.IsNullOrEmpty(PagoPin.Usuario.NumDocumento)
+                && PagoPin.Usuario.TipoDocumento != null
             )
             {
                 datosPersonales = true;
@@ -59,20 +67,15 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Resumen
 
         protected override void OnParametersSet()
         {
-            if (!string.IsNullOrEmpty(pagoPin.Usuario.Nombre) && !string.IsNullOrEmpty(pagoPin.Usuario.Apellido)
-                && pagoPin.Usuario.Celular != null
-                && !string.IsNullOrEmpty(pagoPin.Usuario.Correo)
-                && !string.IsNullOrEmpty(pagoPin.Usuario.NumDocumento)
-                && pagoPin.Usuario.TipoDocumento != null
+            if (!string.IsNullOrEmpty(PagoPin.Usuario.Nombre) && !string.IsNullOrEmpty(PagoPin.Usuario.Apellido)
+                && PagoPin.Usuario.Celular != null
+                && !string.IsNullOrEmpty(PagoPin.Usuario.Correo)
+                && !string.IsNullOrEmpty(PagoPin.Usuario.NumDocumento)
+                && PagoPin.Usuario.TipoDocumento != null
 )
             {
                 datosPersonales = true;
             }
-        }
-
-        public async Task cambiarAVista(PasosCotizacion vista)
-        {
-            await OnNavegarResumen.InvokeAsync(vista);
         }
 
         private string ToTitleCase(string text)
@@ -83,67 +86,73 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Resumen
 
         private string ObtenerTipoCentro()
         {
-            return pagoPin.ClienteCompra switch
+            return PagoPin.ClienteCompra switch
             {
-                (int)EnumTipoCliente.CEA => "Centro de ense帽anza",
+                (int)EnumTipoCliente.CEA => "Centro de ense馻nza",
                 (int)EnumTipoCliente.CRC => "Centro de reconocimiento",
-                (int)EnumTipoCliente.CDA => "Centro de diagn贸stico", 
+                (int)EnumTipoCliente.CDA => "Centro de diagn髎tico",
                 _ => "Centro"
             };
         }
 
-        // Inicio c贸digo generado por GitHub Copilot
+        // Inicio c骴igo generado por GitHub Copilot
         private bool MostrarDatosFacturaElectronica()
         {
-            return pagoPin?.FacturacionActiva == true
-                && pagoPin.EmisionOtraPersona
-                && pagoPin.DatosFacturacion != null
+            return PagoPin?.FacturacionActiva == true
+                && PagoPin.EmisionOtraPersona
+                && PagoPin.DatosFacturacion != null
                 && !string.IsNullOrWhiteSpace(ObtenerNombreFacturaElectronica())
-                && !string.IsNullOrWhiteSpace(pagoPin.DatosFacturacion.CorreoFacturacion);
+                && !string.IsNullOrWhiteSpace(PagoPin.DatosFacturacion.CorreoFacturacion);
         }
 
         private string ObtenerTipoPersonaFacturaElectronica()
         {
-            return pagoPin?.TiposPersonaFacturacion?
-                .FirstOrDefault(tipo => tipo.Codigo == pagoPin?.DatosFacturacion?.TipoPersonaFacturacion.ToString())
+            return PagoPin?.TiposPersonaFacturacion?
+                .FirstOrDefault(tipo => tipo.Codigo == PagoPin?.DatosFacturacion?.TipoPersonaFacturacion.ToString())
                 ?.Nombre ?? string.Empty;
         }
 
         private string ObtenerNombreFacturaElectronica()
         {
-            if (pagoPin?.DatosFacturacion == null)
+            if (PagoPin?.DatosFacturacion == null)
             {
                 return string.Empty;
             }
 
-            return pagoPin.DatosFacturacion.TipoPersonaFacturacion == 1
-                ? (!string.IsNullOrWhiteSpace(pagoPin.DatosFacturacion.RazonSocialFacturacion)
-                    ? pagoPin.DatosFacturacion.RazonSocialFacturacion
-                    : pagoPin.DatosFacturacion.NombreComercialFacturacion)
-                : $"{ToTitleCase(pagoPin.DatosFacturacion.NombresFacturacion)} {ToTitleCase(pagoPin.DatosFacturacion.ApellidosFacturacion)}".Trim();
+            return PagoPin.DatosFacturacion.TipoPersonaFacturacion == 1
+                ? (!string.IsNullOrWhiteSpace(PagoPin.DatosFacturacion.RazonSocialFacturacion)
+                    ? PagoPin.DatosFacturacion.RazonSocialFacturacion
+                    : PagoPin.DatosFacturacion.NombreComercialFacturacion)
+                : $"{ToTitleCase(PagoPin.DatosFacturacion.NombresFacturacion)} {ToTitleCase(PagoPin.DatosFacturacion.ApellidosFacturacion)}".Trim();
         }
 
         private string ObtenerDocumentoFacturaElectronica()
         {
-            if (pagoPin?.DatosFacturacion == null)
+            if (PagoPin?.DatosFacturacion == null)
             {
                 return string.Empty;
             }
 
-            string tipoDocumento = ObtenerTipoDocumentoFacturacion(pagoPin.DatosFacturacion.TipoIdentificacionFacturacion);
+            string tipoDocumento = ObtenerTipoDocumentoFacturacion(PagoPin.DatosFacturacion.TipoIdentificacionFacturacion);
             return string.IsNullOrWhiteSpace(tipoDocumento)
-                ? pagoPin.DatosFacturacion.NumeroIdentificacionFacturacion
-                : $"{tipoDocumento} {pagoPin.DatosFacturacion.NumeroIdentificacionFacturacion}".Trim();
+                ? PagoPin.DatosFacturacion.NumeroIdentificacionFacturacion
+                : $"{tipoDocumento} {PagoPin.DatosFacturacion.NumeroIdentificacionFacturacion}".Trim();
         }
 
         private string ObtenerTipoDocumentoFacturacion(int tipoDocumento)
         {
-            return pagoPin?.TiposDeDocumento?
+            return PagoPin?.TiposDeDocumento?
                 .FirstOrDefault(doc => doc.IdTipoSisec == tipoDocumento.ToString())
                 ?.CodigoACH ?? string.Empty;
         }
-        // Fin c贸digo generado por GitHub Copilot
 
+        // Fin c骴igo generado por GitHub Copilot
+
+        private void RemoveConvenio()
+        {
+            PagoPin.EmpresaConvenio = null;
+            PagoPin.CodigoConvenio = null;
+        }
 
         #endregion Metodos
     }

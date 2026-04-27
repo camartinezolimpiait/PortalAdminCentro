@@ -1,13 +1,13 @@
-ï»¿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
-using portalAdministrativoSISEC.Data.CompraPin.CDA;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.CDA;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Pages.CompraPinCDA.Models;
 
 namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
@@ -105,18 +105,18 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
 			MessageStore.Clear(fieldIdentifier);
 			switch (DatosPersonalesModel.TipoDocumento)
 			{
-				case 1: // CÃ©dula de CiudadanÃ­a
+				case 1: // Cédula de Ciudadanía
 					if (DatosPersonalesModel.Documento.Length < 6 || !DatosPersonalesModel.Documento.All(char.IsDigit))
 					{
-						MensajeErrorDocumento = "La CÃ©dula de CiudadanÃ­a debe tener mÃ­nimo 6 dÃ­gitos y solo acepta nÃºmeros.";
+						MensajeErrorDocumento = "La Cédula de Ciudadanía debe tener mínimo 6 dígitos y solo acepta números.";
 						MessageStore.Add(fieldIdentifier, MensajeErrorDocumento);
 					}
 					break;
 
-				case 2: // CÃ©dula de ExtranjerÃ­a
+				case 2: // Cédula de Extranjería
 					if (DatosPersonalesModel.Documento.Length < 6 || !DatosPersonalesModel.Documento.All(char.IsDigit))
 					{
-						MensajeErrorDocumento = "La CÃ©dula de ExtranjerÃ­a debe tener mÃ­nimo 6 dÃ­gitos y solo acepta nÃºmeros.";
+						MensajeErrorDocumento = "La Cédula de Extranjería debe tener mínimo 6 dígitos y solo acepta números.";
 						MessageStore.Add(fieldIdentifier, MensajeErrorDocumento);
 					}
 					break;
@@ -124,7 +124,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
 				case 3: // Tarjeta de Identidad
 					if (DatosPersonalesModel.Documento.Length < 6 || !DatosPersonalesModel.Documento.All(char.IsDigit))
 					{
-						MensajeErrorDocumento = "La Tarjeta de Identidad debe tener mÃ­nimo 6 dÃ­gitos y solo acepta nÃºmeros.";
+						MensajeErrorDocumento = "La Tarjeta de Identidad debe tener mínimo 6 dígitos y solo acepta números.";
 						MessageStore.Add(fieldIdentifier, MensajeErrorDocumento);
 					}
 					break;
@@ -132,7 +132,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
 				case 4: // Nit
 					if (DatosPersonalesModel.Documento.Length < 6 || !DatosPersonalesModel.Documento.All(char.IsDigit))
 					{
-						MensajeErrorDocumento = "El NIT debe tener mÃ­nimo 6 dÃ­gitos y solo acepta nÃºmeros.";
+						MensajeErrorDocumento = "El NIT debe tener mínimo 6 dígitos y solo acepta números.";
 						MessageStore.Add(fieldIdentifier, MensajeErrorDocumento);
 					}
 					break;
@@ -140,23 +140,23 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
 				case 5: // Pasaporte
 					if (DatosPersonalesModel.Documento.Length < 6 || !DatosPersonalesModel.Documento.All(char.IsLetterOrDigit))
 					{
-						MensajeErrorDocumento = "El Pasaporte debe tener mÃ­nimo 6 caracteres y acepta letras y nÃºmeros.";
+						MensajeErrorDocumento = "El Pasaporte debe tener mínimo 6 caracteres y acepta letras y números.";
 						MessageStore.Add(fieldIdentifier, MensajeErrorDocumento);
 					}
 					break;
 
-				case 10: // ContraseÃ±a CÃ©dula de CiudadanÃ­a
+				case 10: // Contraseña Cédula de Ciudadanía
 					if (DatosPersonalesModel.Documento.Length < 6 || !DatosPersonalesModel.Documento.All(char.IsDigit))
 					{
-						MensajeErrorDocumento = "La ContraseÃ±a de la CÃ©dula de CiudadanÃ­a debe tener mÃ­nimo 6 dÃ­gitos y solo acepta nÃºmeros.";
+						MensajeErrorDocumento = "La Contraseña de la Cédula de Ciudadanía debe tener mínimo 6 dígitos y solo acepta números.";
 						MessageStore.Add(fieldIdentifier, MensajeErrorDocumento);
 					}
 					break;
 
-				case 11: // ContraseÃ±a CÃ©dula de ExtranjerÃ­a
+				case 11: // Contraseña Cédula de Extranjería
 					if (DatosPersonalesModel.Documento.Length < 6 || !DatosPersonalesModel.Documento.All(char.IsDigit))
 					{
-						MensajeErrorDocumento = "La ContraseÃ±a de la CÃ©dula de ExtranjerÃ­a debe tener mÃ­nimo 6 dÃ­gitos y solo acepta nÃºmeros.";
+						MensajeErrorDocumento = "La Contraseña de la Cédula de Extranjería debe tener mínimo 6 dígitos y solo acepta números.";
 						MessageStore.Add(fieldIdentifier, MensajeErrorDocumento);
 					}
 					break;
@@ -171,7 +171,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
 
 		private async Task NotifyValidationStateChanged()
 		{
-			var isValid = editContext.Validate(); // Esto valida el contexto de ediciÃ³n y devuelve true si es vÃ¡lido.
+			var isValid = editContext.Validate(); // Esto valida el contexto de edición y devuelve true si es válido.
 			await OnFormValidChanged.InvokeAsync(isValid);
 			StateHasChanged();
 			if (isValid)
@@ -185,7 +185,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
 		{
 			if (PagoPinCda.Usuario == null)
 			{
-				PagoPinCda.Usuario = new portalAdministrativoSISEC.Data.CompraPin.CDA.DatosBasicosCDA();
+				PagoPinCda.Usuario = new portalAdministrativoSISEC.Application.Data.CompraPin.CDA.DatosBasicosCDA();
 			}
 			await obtenerDescripcionTipoDoc();
 			PagoPinCda.Usuario.Nombre = DatosPersonalesModel.Nombre;
@@ -283,3 +283,5 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.DatosPersonalesCDA
 		#endregion
 	}
 }
+
+

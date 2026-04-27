@@ -1,9 +1,9 @@
-锘縰sing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Services.SuperTransporte;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
 using System.Threading.Tasks;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components.Forms;
@@ -28,7 +28,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
 
         private LoaderEventSubmit _loader = new LoaderEventSubmit();
         /// <summary>
-        /// Entidad con la informaci贸n del centro
+        /// Entidad con la informaci髇 del centro
         /// </summary>
         private ApplicationShared applicationShared = new ApplicationShared();
 
@@ -91,7 +91,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                 var resultado = await _superTransporteService.PutCentro(new { instructores = _instructoresCeaDtoReq }, applicationShared.IdCentroStrappi);
                 if (resultado != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la informaci贸n correctamente.", "Informaci贸n");
+                    toastService.ShowSuccess(@"Se ha guardado la informaci髇 correctamente.", "Informaci髇");
                     //Navigation.NavigateTo("/supertransporte/centro-cea", false);
                 }
             }
@@ -104,7 +104,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
         }
 
         /// <summary>
-        /// M茅todo para agregar un instructor al listado
+        /// M閠odo para agregar un instructor al listado
         /// </summary>
         /// <param name="context"></param>
         private async Task AddInstructorCea(EditContext context, InstructorDtoCEA<IBrowserFile> instructor)
@@ -147,7 +147,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                             }
                             else
                             {
-                                toastService.ShowError(@"Ha ocurrido un error al subir los archivos, intente nuevamente", "Informaci贸n");
+                                toastService.ShowError(@"Ha ocurrido un error al subir los archivos, intente nuevamente", "Informaci髇");
                                 return;
                             }
                         }
@@ -159,7 +159,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                     }
                     else
                     {
-                        toastService.ShowError(@"El instructor ya se encuentra en la lista. Para continuar quite al registrado.", "Informaci贸n");
+                        toastService.ShowError(@"El instructor ya se encuentra en la lista. Para continuar quite al registrado.", "Informaci髇");
                     }
                 }
 
@@ -167,7 +167,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
         }
 
         /// <summary>
-        /// M茅todo para quitar del listado un instructor
+        /// M閠odo para quitar del listado un instructor
         /// </summary>
         /// <param name="instructor"></param>
         private async Task RemoveInstructor(InstructorDtoCEA<GetFile> instructor)
@@ -182,7 +182,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                     {
                         if (!await _superTransporteService.DeleteFile(instructor.licencia_instructor.data.id))
                         {
-                            toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci贸n");
+                            toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci髇");
                             return;
                         }
                     }
@@ -196,14 +196,14 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                     var resultado = await _superTransporteService.PutCentro(new { instructores = Array.Empty<List<InstructorDtoCEA<int>>>() }, applicationShared.IdCentroStrappi);
                     if (resultado != null)
                     {
-                        toastService.ShowSuccess(@"Se ha guardado la informaci贸n correctamente.", "Informaci贸n");
+                        toastService.ShowSuccess(@"Se ha guardado la informaci髇 correctamente.", "Informaci髇");
                     }
                 }
                
             }
             catch (Exception ex)
             {
-                toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci贸n");
+                toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci髇");
                 return;
             }
         }
@@ -256,7 +256,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
             }
             catch (Exception ex)
             {
-                toastService.ShowError(@"Ha ocurrido un error al descargar el adjunto, intente nuevamente", "Informaci贸n");
+                toastService.ShowError(@"Ha ocurrido un error al descargar el adjunto, intente nuevamente", "Informaci髇");
                 return;
             }
             
@@ -279,3 +279,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
         }
     }
 }
+
+

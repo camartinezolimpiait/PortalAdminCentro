@@ -2,13 +2,13 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Entidades.Devolucion;
 using portalAdministrativoSISEC.Entidades.Devolucion.ConsultaInfoPin;
 using portalAdministrativoSISEC.Entidades.Recaptcha;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util;
 using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 using System;
@@ -362,3 +362,4 @@ namespace portalAdministrativoSISEC.Pages.Devolucion
         #endregion Metodos
     }
 }
+

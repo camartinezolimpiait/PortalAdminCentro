@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,12 +6,12 @@ using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.Agendamiento;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.Agendamiento;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.Agendamiento.Agenda;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Agenda;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Helpers;
 
 namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
@@ -52,14 +52,14 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
                 if (result)
                 {
                     OptionAppoiment.ScheduleForm = ScheduleForms.None;
-                    toastService.ShowInfo(@"Se cancelÃ³ la cita correctamente", "Cancelar cita");
+                    toastService.ShowInfo(@"Se canceló la cita correctamente", "Cancelar cita");
                     await SendCancelationMail();
                     // Incluir el envio del correo 
                     await CancelScheduleCallback.InvokeAsync(OptionAppoiment);
                 }
                 else
                 {
-                    toastService.ShowWarning(@"No se pudo cancelar la cita por favor intentelo nuevamente mas tarde", "InformaciÃ³n");
+                    toastService.ShowWarning(@"No se pudo cancelar la cita por favor intentelo nuevamente mas tarde", "Información");
                 }
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
                     Day = DateTimeTransformations.FormatDay(AgendaDTO.FechaAgenda),// Sabado 
                     Year = DateTimeTransformations.FormatYear(AgendaDTO.FechaAgenda),// 2025
                     CenterName = !string.IsNullOrEmpty(getCentroResponse.Nombre) ? getCentroResponse.Nombre : "No se pudo obtener",// nombre debe aceptar espacios, un guion, # , acentos, numeros,  
-                    CenterAddress = !string.IsNullOrEmpty(getCentroResponse.Direccion) ? getCentroResponse.Direccion : "Sin direcciÃ³n",//// nombre debe aceptar espacios, un guion, # , acentos, numeros,  
+                    CenterAddress = !string.IsNullOrEmpty(getCentroResponse.Direccion) ? getCentroResponse.Direccion : "Sin dirección",//// nombre debe aceptar espacios, un guion, # , acentos, numeros,  
 					CenterPhone = !string.IsNullOrEmpty(getCentroResponse.Fijo) ? getCentroResponse.Fijo : "Sin registro",// // Solo numeros
                     Email=AgendaDTO.DatosPersonaDTO.Email
                 };
@@ -96,10 +96,12 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
             catch (Exception ex)
             {
 
-                toastService.ShowWarning(@"No se pudo enviar la notificaciÃ³n.", "InformaciÃ³n");
+                toastService.ShowWarning(@"No se pudo enviar la notificación.", "Información");
 
             }
 
         }
     }
 }
+
+

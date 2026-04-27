@@ -1,6 +1,6 @@
-Ôªø@page "/compradepin/confirmacioncompra"
+@page "/compradepin/confirmacioncompra"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.Common
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
@@ -24,11 +24,11 @@
 
         <div class="instrucciones">
             <p class="text-md mb-3">
-                Verifica que tu informaci√≥n este correcta. Enviaremos la confirmaci√≥n de la compra al correo electr√≥nico registrado. Adem√°s los datos ser√°n usados por el usuario para gestionar su PIN
+                Verifica que tu informaciÛn este correcta. Enviaremos la confirmaciÛn de la compra al correo electrÛnico registrado. Adem·s los datos ser·n usados por el usuario para gestionar su PIN
             </p>
             <slot />
             <div class="flex gap-2">
-                <button class="boton-secundario" @onclick="() => Volver()">Atr√°s</button>
+                <button class="boton-secundario" @onclick="() => Volver()">Atr·s</button>
                 <button class="boton-primario" @onclick="() => PagarReferenciaPinDirecto()">Continuar con el pago</button>
             </div>
         </div>
@@ -52,3 +52,4 @@
 {
     <ResumenCompra PagoPin="PagoPin" transactionInfo="transactionInfo"></ResumenCompra>
 }
+

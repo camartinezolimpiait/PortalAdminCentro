@@ -1,6 +1,6 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using portalAdministrativoSISEC.Entidades.Facturacion;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System;
 using System.Threading.Tasks;
 
@@ -8,12 +8,12 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Estado
 {
     public partial class Estado
     {
-        #region InyecciÃ³n Dependencias
+        #region Inyección Dependencias
 
         [Inject]
         private IMiLicenciaService MiLicenciaService { get; set; }
 
-        #endregion InyecciÃ³n Dependencias
+        #endregion Inyección Dependencias
 
         #region Properties
 
@@ -37,7 +37,7 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Estado
 
         #region Protected Methods
 
-        // Inicio refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+        // Inicio refactorización/optimización por GitHub Copilot
         protected override async Task OnInitializedAsync()
         {
             try
@@ -46,7 +46,7 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Estado
             }
             catch (Exception ex)
             {
-                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Error, $"OcurriÃ³ un error al consultar el estado: {ex.Message}");
+                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Error, $"Ocurrió un error al consultar el estado: {ex.Message}");
             }
             finally
             {
@@ -54,13 +54,13 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Estado
             }
         }
 
-        // Fin refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+        // Fin refactorización/optimización por GitHub Copilot
 
         #endregion Protected Methods
 
         #region Private Methods
 
-        // Inicio refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+        // Inicio refactorización/optimización por GitHub Copilot
         private async Task GetInfoStatus()
         {
             IsLoading = true;
@@ -89,7 +89,7 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Estado
             }
         }
 
-        // Fin refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+        // Fin refactorización/optimización por GitHub Copilot
 
         private async Task UpdateStatus() => await GetInfoStatus();
 

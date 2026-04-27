@@ -1,8 +1,8 @@
-ï»¿using Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Services.SuperTransporte;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
+using portalAdministrativoSISEC.Application.Data;
 using System.Threading.Tasks;
 using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
 using Microsoft.AspNetCore.Components.Forms;
@@ -126,7 +126,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
                 }, applicationShared.IdCentroStrappi);
                 if (resultado != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraciÃ³n correctamente.", "InformaciÃ³n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuración correctamente.", "Información");
                     Navigation.NavigateTo("/supertransporte/centro", false);
                 }
             }
@@ -173,14 +173,14 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
         }
         private void CambioSeleccion(ChangeEventArgs e, int id)
         {
-            string mensaje = string.IsNullOrEmpty(e.Value.ToString()) ? "El campo no puede estar vacÃ­o." : "";
+            string mensaje = string.IsNullOrEmpty(e.Value.ToString()) ? "El campo no puede estar vacío." : "";
             cambioMensajeError(mensaje, id);
         }
         private void ActivarSeleccion(ChangeEventArgs e, int id)
         {
             if (e.Value.ToString().ToUpper() == "TRUE")
             {
-                cambioMensajeError("El campo no puede estar vacÃ­o.", id);
+                cambioMensajeError("El campo no puede estar vacío.", id);
             }
             else
             {
@@ -269,3 +269,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
         }
     }
 }
+
+

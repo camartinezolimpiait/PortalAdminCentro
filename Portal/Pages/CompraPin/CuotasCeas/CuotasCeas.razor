@@ -1,6 +1,6 @@
-ï»¿@page "/compradepin/cuotasCeas"
+@page "/compradepin/cuotasCeas"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 @using System.ComponentModel.DataAnnotations
 @using portalAdministrativoSISEC.Pages.CompraPin
@@ -36,12 +36,12 @@
 							<span class="leading-snug">
 								@if (cuota.NumeroCuotas == 1)
 								{
-									<span>Pago Ãºnico de <span class="valor_cuota font-bold">$ @cuota.PrimeraCuota.ToString("N0")</span></span>
+									<span>Pago único de <span class="valor_cuota font-bold">$ @cuota.PrimeraCuota.ToString("N0")</span></span>
 								}
 								else
 								{
 									<span>
-											Pago inicial de <span class="valor_cuota font-bold">$ @cuota.PrimeraCuota.ToString("N0")</span> mÃ¡s @(cuota.NumeroCuotas - 1)
+											Pago inicial de <span class="valor_cuota font-bold">$ @cuota.PrimeraCuota.ToString("N0")</span> más @(cuota.NumeroCuotas - 1)
 										@(cuota.NumeroCuotas - 1 > 1 ? "cuotas" : "cuota") de
 											<span class="valor_cuota font-bold">$ @cuota.ValorCuota.ToString("N0")</span>
 									</span>
@@ -54,7 +54,7 @@
 
 					<div class="mx-auto max-w-3xl rounded-md border-2 border-[#4CACFF] pt-[15px] pr-[20px] pb-[15px] pl-[20px]">
 						<div class="flex items-center gap-4">
-							<!-- Imagen/ilustraciÃ³n -->
+							<!-- Imagen/ilustración -->
 							<img src="/img/iconos/moto-mi-licencia 1@2x.jpg" alt="" class="h-20 w-20 shrink-0 rounded-full object-cover" />
 							<!-- Texto -->
 							<div class="text-neutral-800">
@@ -75,7 +75,7 @@
 
 			<div class="flex items-center mt-5 space-x-3">
 				<button type="button" class="boton-secundario mr-2" @onclick="Retroceder">
-					AtrÃ¡s
+					Atrás
 				</button>
 				<button type="submit" class="boton-primario"> Siguiente </button>
 			</div>
@@ -84,3 +84,4 @@
     </ContentTemplate>
 
 </SpinLoader>
+

@@ -1,10 +1,10 @@
-锘縰sing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.Agendamiento.HorarioAtencion;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Util;
 using System;
 using System.Collections.Generic;
@@ -66,12 +66,12 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.HorarioAtencion
             catch (ApplicationException ae)
             {
                 isLoading = false;
-                toastService.ShowWarning(ae.Message.ToString(), "Informaci贸n");
+                toastService.ShowWarning(ae.Message.ToString(), "Informaci髇");
             }
             catch (Exception ex)
             {
                 isLoading = false;
-                toastService.ShowWarning(ex.Message.ToString(), "Informaci贸n");
+                toastService.ShowWarning(ex.Message.ToString(), "Informaci髇");
             }
 
             isLoading = false;
@@ -221,17 +221,17 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.HorarioAtencion
 
                 if (await _horarioAtencionService.GetEstadoPeticion())
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                     await OnParametersSetAsync();
                 }
                 else
                 {
-                    toastService.ShowWarning(@"Ha ocurrido un error, intente nuevamente.", "Informaci贸n");
+                    toastService.ShowWarning(@"Ha ocurrido un error, intente nuevamente.", "Informaci髇");
                 }
             }
             else
             {
-                toastService.ShowWarning(@"La configuracion no cumple con los horarios.", "Informaci贸n");
+                toastService.ShowWarning(@"La configuracion no cumple con los horarios.", "Informaci髇");
             }
             isLoading = false;
         }
@@ -428,7 +428,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.HorarioAtencion
             else
             {
                 mostarGuardar = false;
-                toastService.ShowWarning(@"No se puedo cargar el horario", "Informaci贸n");
+                toastService.ShowWarning(@"No se puedo cargar el horario", "Informaci髇");
             }
             // isLoading = false;
         }
@@ -436,3 +436,5 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.HorarioAtencion
         #endregion
     }
 }
+
+

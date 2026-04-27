@@ -1,12 +1,12 @@
-ï»¿@using portalAdministrativoSISEC.Data.Pines
-@using portalAdministrativoSISEC.Services.MiLicencia
+@using portalAdministrativoSISEC.Application.Data.Pines
+@using portalAdministrativoSISEC.Application.Contracts.MiLicencia
 @using System.Globalization
 @inject IJSRuntime JS
 @inject IMiLicenciaService MiLicenciaService
 
 <dialog id="modal_pines_asociados" class="modal">
     <div class="modal-box bg-gris-50 p-4 text-left">
-        @* Inicio cÃ³digo generado por GitHub Copilot *@
+        @* Inicio código generado por GitHub Copilot *@
         <form method="dialog">
             <button class="btn btn-sm btn-circle btn-ghost absolute top-4 right-4 text-neutral-600"
                     aria-label="Cerrar modal">
@@ -15,12 +15,12 @@
                 </svg>
             </button>
         </form>
-        @* Fin cÃ³digo generado por GitHub Copilot *@
-        @* Inicio cÃ³digo generado por GitHub Copilot *@
+        @* Fin código generado por GitHub Copilot *@
+        @* Inicio código generado por GitHub Copilot *@
         <h4 class="mt-0 mb-4 text-lg font-bold text-azul-800 tabular-nums">
             Pin padre: @pinPadre
         </h4>
-        @* Fin cÃ³digo generado por GitHub Copilot *@
+        @* Fin código generado por GitHub Copilot *@
         @if (isLoading)
         {
             <div class="flex h-32 items-center justify-center">
@@ -44,21 +44,21 @@
                             <path d="M8.25049 12.7499H9.75049V8.24985H8.25049V12.7499ZM9.00049 6.74985C9.21299 6.74985 9.39111 6.67798 9.53486 6.53423C9.67861 6.39048 9.75049 6.21235 9.75049 5.99985C9.75049 5.78735 9.67861 5.60923 9.53486 5.46548C9.39111 5.32173 9.21299 5.24985 9.00049 5.24985C8.78799 5.24985 8.60986 5.32173 8.46611 5.46548C8.32236 5.60923 8.25049 5.78735 8.25049 5.99985C8.25049 6.21235 8.32236 6.39048 8.46611 6.53423C8.60986 6.67798 8.78799 6.74985 9.00049 6.74985ZM9.00049 16.4999C7.96299 16.4999 6.98799 16.303 6.07549 15.9092C5.16299 15.5155 4.36924 14.9811 3.69424 14.3061C3.01924 13.6311 2.48486 12.8374 2.09111 11.9249C1.69736 11.0124 1.50049 10.0374 1.50049 8.99985C1.50049 7.96235 1.69736 6.98735 2.09111 6.07485C2.48486 5.16235 3.01924 4.3686 3.69424 3.6936C4.36924 3.0186 5.16299 2.48423 6.07549 2.09048C6.98799 1.69673 7.96299 1.49986 9.00049 1.49986C10.038 1.49986 11.013 1.69673 11.9255 2.09048C12.838 2.48423 13.6317 3.0186 14.3067 3.6936C14.9817 4.3686 15.5161 5.16235 15.9099 6.07485C16.3036 6.98735 16.5005 7.96235 16.5005 8.99985C16.5005 10.0374 16.3036 11.0124 15.9099 11.9249C15.5161 12.8374 14.9817 13.6311 14.3067 14.3061C13.6317 14.9811 12.838 15.5155 11.9255 15.9092C11.013 16.303 10.038 16.4999 9.00049 16.4999ZM9.00049 14.9999C10.6755 14.9999 12.0942 14.4186 13.2567 13.2561C14.4192 12.0936 15.0005 10.6749 15.0005 8.99985C15.0005 7.32485 14.4192 5.90611 13.2567 4.7436C12.0942 3.5811 10.6755 2.99985 9.00049 2.99985C7.32549 2.99985 5.90674 3.5811 4.74424 4.7436C3.58174 5.90611 3.00049 7.32485 3.00049 8.99985C3.00049 10.6749 3.58174 12.0936 4.74424 13.2561C5.90674 14.4186 7.32549 14.9999 9.00049 14.9999Z" fill="#5E5E5E" />
                         </g>
                     </svg>
-                    @* Inicio refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot *@
+                    @* Inicio refactorización/optimización por GitHub Copilot *@
                     <p class="max-w-full text-gray-700 mb-0">
                         @((string.Equals(AgenteDispersion, "BANCOLOMBIA", StringComparison.OrdinalIgnoreCase)
                             || pinesAsociados?.Any(p => string.Equals(p.AgenteDispersion, "BANCOLOMBIA", StringComparison.OrdinalIgnoreCase)) == true)
                             ? "Estos pines incluyen los pagados como los pendientes por pagar."
                             : "Los siguientes pines representan las cuotas pagadas hasta ahora.")
                     </p>
-                    @* Fin refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot *@
+                    @* Fin refactorización/optimización por GitHub Copilot *@
                 </div>
-                @* Inicio cÃ³digo generado por GitHub Copilot *@
+                @* Inicio código generado por GitHub Copilot *@
                 <table class="table-zebra table-sm table mb-0 border border-gris-100 tabla-pines">
                     <thead class="bg-white border-b border-gris-300 tabla-pines-header">
                         <tr>
                             <th class="bg-white text-gris-900 font-semibold text-base">Cuota</th>
-                            <th class="bg-white text-gris-900 font-semibold text-base">NÃºmero de PIN</th>
+                            <th class="bg-white text-gris-900 font-semibold text-base">Número de PIN</th>
                             <th class="bg-white text-gris-900 font-semibold text-base">Fecha de pago de cuota</th>
                             <th class="bg-white text-gris-900 font-semibold text-base">Valor del centro</th>
                             <th class="bg-white text-gris-900 font-semibold text-base">Costo del recaudo</th>
@@ -66,7 +66,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @* Inicio cÃ³digo generado por GitHub Copilot *@
+                        @* Inicio código generado por GitHub Copilot *@
                         @foreach (var pin in pinesAsociados.Select((value, index) => new { value, index }))
                         {
                             <tr>
@@ -87,10 +87,10 @@
                                 <td class="text-gris-800 font-normal text-base">@pin.value.ValorTransaccion?.ToString("C0", CultureInfo.GetCultureInfo("es-CO"))</td>
                             </tr>
                         }
-                        @* Fin cÃ³digo generado por GitHub Copilot *@
+                        @* Fin código generado por GitHub Copilot *@
                     </tbody>
                 </table>
-                @* Fin cÃ³digo generado por GitHub Copilot *@
+                @* Fin código generado por GitHub Copilot *@
             </div>
         }
         else
@@ -112,7 +112,7 @@
         height: auto;
     }
 
-    @* Inicio cÃ³digo generado por GitHub Copilot *@
+    @* Inicio código generado por GitHub Copilot *@
     .tabla-pines {
         border: 1px solid #E5E7EB;
         border-radius: 4px;
@@ -158,7 +158,7 @@
         min-height: 40px;
         max-height: 40px;
     }
-    @* Fin cÃ³digo generado por GitHub Copilot *@
+    @* Fin código generado por GitHub Copilot *@
 </style>
 
 @code {
@@ -167,12 +167,12 @@
     private string error;
     private string pinPadre = string.Empty;
     
-    // Inicio cÃ³digo generado por GitHub Copilot
+    // Inicio código generado por GitHub Copilot
     private string? AgenteDispersion { get; set; }
-    // Fin cÃ³digo generado por GitHub Copilot
+    // Fin código generado por GitHub Copilot
 
-    // Este mÃ©todo lo llamas desde el padre pasando el PIN
-    // Inicio refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+    // Este método lo llamas desde el padre pasando el PIN
+    // Inicio refactorización/optimización por GitHub Copilot
     public async Task ShowWithPin(string pin, string? agenteDispersion = null)
     {
         pinPadre = pin;
@@ -184,7 +184,7 @@
         await ConsultarPinesAsociados(pin);
         StateHasChanged();
     }
-    // Fin refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+    // Fin refactorización/optimización por GitHub Copilot
 
     private async Task ShowModal(string id)
     {
@@ -202,7 +202,7 @@
             // Llama al servicio y obtiene la respuesta
             var resultado = await MiLicenciaService.ConsultarPinesAsociados(pin, view);
 
-            // Si el resultado es nulo o la lista estÃ¡ vacÃ­a, muestra mensaje
+            // Si el resultado es nulo o la lista está vacía, muestra mensaje
             if (resultado == null)
             {
                 error = "No se encontraron pines asociados para el PIN proporcionado.";
@@ -223,3 +223,5 @@
         }
     }
 }
+
+

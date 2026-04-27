@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data.CompraPin.CDA;
+using Microsoft.AspNetCore.Components;
+using portalAdministrativoSISEC.Application.Data.CompraPin.CDA;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
@@ -45,3 +45,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.ResumenCDA
 		#endregion Metodos
 	}
 }
+

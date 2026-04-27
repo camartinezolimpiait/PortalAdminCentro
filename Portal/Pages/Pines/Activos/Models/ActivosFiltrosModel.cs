@@ -30,6 +30,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos.Models
         public int CanalVenta { get; set; }
         public int EstadoPin { get; set; }
         public int? AliadoRecaudo { get; set; }
+        public string? Empresa { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

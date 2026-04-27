@@ -1,6 +1,6 @@
-锘緻page "/compradepin"
+@page "/compradepin"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
 @using portalAdministrativoSISEC.Pages.CompraPin.ComfirmacionCompra
@@ -50,11 +50,11 @@
                                     <h3>Pagos</h3>
                                     <a class="boton-primario" @onclick="() => GotoDatosBasicos()">Comprar PIN</a>
                                     <h3>Otras operaciones</h3>
-                                    <a class="linksmenusecundario cursor-pointer" @onclick="() => FormularioGestionPin()">Consulta y devoluci贸n de PIN</a><br>
+                                    <a class="linksmenusecundario cursor-pointer" @onclick="() => FormularioGestionPin()">Consulta y devoluci髇 de PIN</a><br>
                                 </div>
 
-                                <div class="acciones canales_de_atenci贸n">
-                                    <h3 class="mb-1">Canales de atenci贸n</h3>
+                                <div class="acciones canales_de_atenci髇">
+                                    <h3 class="mb-1">Canales de atenci髇</h3>
                                     <div class="flex flex-col gap-1.5">
                                         <a class="linksmenusecundario" href="https://wa.me/573112074439" target="_blank">
                                             <svg class="feather">
@@ -90,7 +90,7 @@
                                             <svg class="feather">
                                                 <use xlink:href="assets/feather-sprite.svg#phone-call"></use>
                                             </svg>
-                                            <span class="leading-tight">L铆nea de atenci贸n 煤nica <span class="font-medium whitespace-nowrap">(601) 744-1000</span></span>
+                                            <span class="leading-tight">L韓ea de atenci髇 鷑ica <span class="font-medium whitespace-nowrap">(601) 744-1000</span></span>
                                         </a>
                                     </div>
                                 </div>
@@ -190,13 +190,13 @@
                     {
                         <!-- Resumen AQUI-->
                         <div class="col-span-1">
-                            @* // Inicio c贸digo generado por GitHub Copilot *@
+                            @* // Inicio c骴igo generado por GitHub Copilot *@
                             <Resumen EsConfirmacion="false"
                                      pagoPin="pagoPin"
                                      EsModificacion="esModificacion"
                                      MostrarNotaRecaudo="@(componentesCompra.DatosPersonales || componentesCompra.FacturaElectronica)"
                                      OnNavegarResumen="CambiarAVista" />
-                            @* // Fin c贸digo generado por GitHub Copilot *@
+                            @* // Fin c骴igo generado por GitHub Copilot *@
                         </div>
 
 
@@ -210,3 +210,4 @@
 
     </ContentTemplate>
 </SpinLoader>
+

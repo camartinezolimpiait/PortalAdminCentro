@@ -1,17 +1,17 @@
-锘縰sing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using portalAdministrativoSISEC.Entidades.Agendamiento.InicioAgendamiento;
-using portalAdministrativoSISEC.Services.Agendamiento.InicioAgendamiento;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.InicioAgendamiento;
 using System;
 using portalAdministrativoSISEC.Enum;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using portalAdministrativoSISEC.Services.Agendamiento.HorarioAtencion;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Entidades.Agendamiento.HorarioAtencion;
 using System.Globalization;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Politica;
-using portalAdministrativoSISEC.Services.Agendamiento;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Horario;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using portalAdministrativoSISEC.Util;
@@ -75,12 +75,12 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.InicioAgendamiento
             catch (ApplicationException ae)
             {
                 isLoading = false;
-                ToastService.ShowWarning(ae.Message.ToString(), "Informaci贸n");
+                ToastService.ShowWarning(ae.Message.ToString(), "Informaci髇");
             }
             catch (Exception ex)
             {
                 isLoading = false;
-                ToastService.ShowWarning(ex.Message.ToString(), "Informaci贸n");
+                ToastService.ShowWarning(ex.Message.ToString(), "Informaci髇");
             }
             isLoading = false;
             return base.OnParametersSetAsync();
@@ -194,7 +194,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.InicioAgendamiento
             {
                 if (!_listIntervalos.Contains(ParametrizacionHorario.Intervalo))
                 {
-                    ToastService.ShowWarning(@"El valor del intervalo de citas no corresponde a los permitidos", "Informaci贸n");
+                    ToastService.ShowWarning(@"El valor del intervalo de citas no corresponde a los permitidos", "Informaci髇");
                     return;
                 }
 
@@ -241,12 +241,12 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.InicioAgendamiento
                     }
                     else
                     {
-                        ToastService.ShowWarning(@"Ha ocurrido un error, intente nuevamente.", "Informaci贸n");
+                        ToastService.ShowWarning(@"Ha ocurrido un error, intente nuevamente.", "Informaci髇");
                     }
                 }
                 else
                 {
-                    ToastService.ShowWarning(@"Ha ocurrido un error, intente nuevamente.", "Informaci贸n");
+                    ToastService.ShowWarning(@"Ha ocurrido un error, intente nuevamente.", "Informaci髇");
                 }
                 
 
@@ -256,7 +256,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.InicioAgendamiento
             }
             else
             {
-                ToastService.ShowWarning(@"Valide que la configuraci贸n de los horarios de las citas estan  dentro del horario de atenci贸n.", "Informaci贸n");
+                ToastService.ShowWarning(@"Valide que la configuraci髇 de los horarios de las citas estan  dentro del horario de atenci髇.", "Informaci髇");
             }
             isLoading = false;
         }
@@ -427,10 +427,13 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.InicioAgendamiento
             else
             {
                 mostarGuardar = false;
-                ToastService.ShowWarning(@"No se puedo cargar el horario", "Informaci贸n");
+                ToastService.ShowWarning(@"No se puedo cargar el horario", "Informaci髇");
             }
         }
 
         #endregion
     }
 }
+
+
+

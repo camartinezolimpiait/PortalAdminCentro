@@ -1,8 +1,8 @@
-ï»¿@page "/compradepin/gestionarPin"
+@page "/compradepin/gestionarPin"
 @inherits LayoutComponentBase
 
 @using System.Globalization
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.Common;
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
@@ -52,7 +52,7 @@
                             @if (!DevolucionRealizada)
                             {
                                 <h3>Consulta de estado de PIN</h3>
-                                <p class="w-full max-w-full">Ingresa el nÃºmero de PIN, selecciona el tipo de documento e introduce tu nÃºmero de documento para conocer el estado y realizar las gestiones disponibles.</p>
+                                <p class="w-full max-w-full">Ingresa el número de PIN, selecciona el tipo de documento e introduce tu número de documento para conocer el estado y realizar las gestiones disponibles.</p>
 
                                 <ConsultaInfoPin IdRunt="@(CentroSeleccionado.CodigoRUNT?.ToString() ?? "")"
                                                 ConsultaDevolucionesChanged="ConsultaDevolucionesChanged"
@@ -75,14 +75,14 @@
                                 {
                                     @if (DevolucionRealizada)
                                     {
-                                        <h3>Â¡OperaciÃ³n completada exitosamente!</h3>
+                                        <h3>¡Operación completada exitosamente!</h3>
 
                                         @if (infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PinDirecto).ToString())
                                         {
                                             <p>
                                                 El PIN <span class="font-semibold">@infoPin.Entidad.Pin</span> ha sido anulado.
                                                 <br />
-                                                La devoluciÃ³n se ha procesado exitosamente. El monto serÃ¡ abonado a la cuenta registrada.
+                                                La devolución se ha procesado exitosamente. El monto será abonado a la cuenta registrada.
                                             </p>
                                         }
                                         else if (infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PseColpatria).ToString())
@@ -100,17 +100,17 @@
 
                                                 <!-- Texto explicativo -->
                                                 <div class="mt-4">
-                                                    <p class="font-semibold text-gray-800 mb-4">Â¿QuÃ© sigue?</p>
+                                                    <p class="font-semibold text-gray-800 mb-4">¿Qué sigue?</p>
                                                     <ol class="list-decimal list-inside text-gray-700 space-y-1">
-                                                        <li>Acceda al canal PQR en lÃ­nea de Scotiabank Colpatria.</li>
-                                                        <li>Tenga en cuenta el nÃºmero de referencia de devoluciÃ³n que aparece abajo.</li>
-                                                        <li>Revise su correo para la confirmaciÃ³n.</li>
+                                                        <li>Acceda al canal PQR en línea de Scotiabank Colpatria.</li>
+                                                        <li>Tenga en cuenta el número de referencia de devolución que aparece abajo.</li>
+                                                        <li>Revise su correo para la confirmación.</li>
                                                     </ol>
                                                 </div>
 
                                                 <div class="w-full bg-blue-50 border border-blue-200 rounded-md p-2">
                                                     <h5 class="text-base font-semibold text-gray-800 m-0">
-                                                        NÃºmero de referencia para solicitar reembolso:
+                                                        Número de referencia para solicitar reembolso:
                                                     </h5>
                                                     <h4 class="text-lg font-bold text-gray-800 m-0">
                                                         @infoPin.Entidad.NUT
@@ -126,17 +126,17 @@
                                         <div class="border border-azul-700 rounded-lg px-4 py-5 bg-white w-full mb-5">
                                             <div class="flex items-center justify-between">
                                                 <div class="flex items-center space-x-2">
-                                                    <!-- Icono (reemplÃ¡zalo con tu SVG) -->
+                                                    <!-- Icono (reemplázalo con tu SVG) -->
                                                     <div class="flex items-center justify-center bg-azul-700 rounded-full w-[36px] h-[36px]">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 14 18" fill="none">
                                                             <path d="M3.66732 15.666H10.334V13.166C10.334 12.2493 10.0076 11.4646 9.35482 10.8118C8.70204 10.1591 7.91732 9.83268 7.00065 9.83268C6.08398 9.83268 5.29926 10.1591 4.64648 10.8118C3.99371 11.4646 3.66732 12.2493 3.66732 13.166V15.666ZM0.333984 17.3327V15.666H2.00065V13.166C2.00065 12.3188 2.19857 11.5237 2.5944 10.7806C2.99023 10.0375 3.54232 9.44379 4.25065 8.99935C3.54232 8.5549 2.99023 7.96115 2.5944 7.2181C2.19857 6.47504 2.00065 5.6799 2.00065 4.83268V2.33268H0.333984V0.666016H13.6673V2.33268H12.0007V4.83268C12.0007 5.6799 11.8027 6.47504 11.4069 7.2181C11.0111 7.96115 10.459 8.5549 9.75065 8.99935C10.459 9.44379 11.0111 10.0375 11.4069 10.7806C11.8027 11.5237 12.0007 12.3188 12.0007 13.166V15.666H13.6673V17.3327H0.333984Z" fill="#E6E6E6" />
                                                         </svg>
                                                     </div>
 
-                                                    <h2 class="text-azul-700 font-semibold text-[20px] m-0">TransacciÃ³n en proceso...</h2>
+                                                    <h2 class="text-azul-700 font-semibold text-[20px] m-0">Transacción en proceso...</h2>
                                                 </div>
 
-                                                <!-- BotÃ³n -->
+                                                <!-- Botón -->
                                                 <button class="@ButtonClass"
                                                         @onclick="ActualizarManualAsync"
                                                         disabled="@IsUpdating">
@@ -148,23 +148,23 @@
                                                 </button>
                                             </div>
 
-                                            <!-- LÃ­nea inferior -->
+                                            <!-- Línea inferior -->
 
                                             <p class="text-gris-600 text-base mt-2 p-0 mb-0">
                                                 @if (IsUpdating)
                                                 {
-                                                    <span>PrÃ³xima actualizaciÃ³n disponible en: @CountdownDisplay</span>
+                                                    <span>Próxima actualización disponible en: @CountdownDisplay</span>
                                                 }
                                                 else
                                                 {
-                                                    <span>Ãšltima actualizaciÃ³n: Hace @LastUpdateDisplay</span>
+                                                    <span>Última actualización: Hace @LastUpdateDisplay</span>
                                                 }
                                             </p>
                                         </div>
                                     }
 
                                     
-                                    // Inicio cÃ³digo generado por GitHub Copilot
+                                    // Inicio código generado por GitHub Copilot
                                     @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Anulado && infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PseColpatria).ToString())
                                     {
                                         <div class="info-box w-full flex items-start gap-3" style="margin-bottom:1rem">
@@ -172,14 +172,14 @@
                                                 <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
                                             </svg>
                                             <div class="info-text flex-1" style="font-size:14px">
-                                                <p class="mb-0 max-w-full">Para realizar o consultar el estado de su devoluciÃ³n de dinero, comunÃ­quese a travÃ©s de los <a href="https://canalvirtual.scotiabankcolpatria.com/app/colpatria/empresas/pyme/ask" target="_blank" rel="noopener noreferrer" class="text-blue-800 underline font-bold">canales de PQR en lÃ­nea de Scotiabank Colpatria</a>.</p>
-                                                <p class="mb-0">Recuerde tener a la mano el nÃºmero de referencia de la devoluciÃ³n: <strong>@infoPin.Entidad.NUT</strong>.</p>
+                                                <p class="mb-0 max-w-full">Para realizar o consultar el estado de su devolución de dinero, comuníquese a través de los <a href="https://canalvirtual.scotiabankcolpatria.com/app/colpatria/empresas/pyme/ask" target="_blank" rel="noopener noreferrer" class="text-blue-800 underline font-bold">canales de PQR en línea de Scotiabank Colpatria</a>.</p>
+                                                <p class="mb-0">Recuerde tener a la mano el número de referencia de la devolución: <strong>@infoPin.Entidad.NUT</strong>.</p>
                                             </div>
                                         </div>
                                     }
-                                    // Fin cÃ³digo generado por GitHub Copilot
+                                    // Fin código generado por GitHub Copilot
 
-                                    // Inicio cÃ³digo generado por GitHub Copilot
+                                    // Inicio código generado por GitHub Copilot
                                     @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Usado)
                                     {
                                         <div class="info-box w-full flex items-start gap-3" style="margin-bottom:1rem">
@@ -187,11 +187,11 @@
                                                 <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
                                             </svg>
                                             <div class="info-text flex-1" style="font-size:14px">
-                                                <p class="mb-0">El PIN <strong>@infoPin.Entidad.Pin</strong> se encuentra usado. No puede gestionarse devoluciÃ³n.</p>
+                                                <p class="mb-0">El PIN <strong>@infoPin.Entidad.Pin</strong> se encuentra usado. No puede gestionarse devolución.</p>
                                             </div>
                                         </div>
                                     }
-                                    // Fin cÃ³digo generado por GitHub Copilot
+                                    // Fin código generado por GitHub Copilot
 
                                     <div class="flex flex-col items-center justify-center h-auto w-full bg-neutral-100 rounded-md border border-neutral-300 p-4">
                                     <div class="flex justify-between items-center w-full mb-4">
@@ -237,7 +237,7 @@
                                                             Documento
                                                         </span>
                                                         <br>
-                                                        @* Inicio cÃ³digo generado por GitHub Copilot *@
+                                                        @* Inicio código generado por GitHub Copilot *@
                                                     @{
                                                         var documentoSeleccionado = ListaDocumentos.FirstOrDefault(x => x.IdTipoSisec == infoPin.Entidad.TipoDocumento.ToString());
                                                         var esPpt = documentoSeleccionado != null && Enum.TryParse<EnumTipoDocumento>(documentoSeleccionado.IdTipoSisec, out var tipoDocumento) && tipoDocumento == EnumTipoDocumento.PermisoPorProteccionTemporal;
@@ -246,11 +246,11 @@
                                                     <span class="font-medium text-base text-gray-800">
                                                         @descripcionDocumento @infoPin.Entidad.NumeroDocumento
                                                     </span>
-                                                    @* Fin cÃ³digo generado por GitHub Copilot *@
+                                                    @* Fin código generado por GitHub Copilot *@
                                                     </p>
                                                     <p class="mt-2 mb-0">
                                                         <span class="font-normal text-base tracking-normal align-middle text-gris-600">
-                                                            TelÃ©fono
+                                                            Teléfono
                                                         </span>
                                                         <br>
                                                         <span class="font-medium text-base text-gray-800">@infoPin.Entidad.Telefono</span>
@@ -260,7 +260,7 @@
                                         </div>
 
                                         <div class="w-full bg-white rounded border border-neutral-300 p-4 mb-3 gap-4">
-                                            <h3 class="font-semibold text-base mb-2 text-azul-700">Datos del trÃ¡mite</h3>
+                                            <h3 class="font-semibold text-base mb-2 text-azul-700">Datos del trámite</h3>
                                             @{
                                                 var tramiteSecundario = (EnumTramite)infoPin.Entidad.TipoTramite2;
                                                 var tieneTramiteSecundario = !string.IsNullOrWhiteSpace(infoPin.Entidad.Categoria2);
@@ -272,7 +272,7 @@
                                                 <div>
                                                     <p class="mb-0">
                                                         <span class="font-normal text-base tracking-normal align-middle text-gris-600">
-                                                            TrÃ¡mite y categorÃ­a principal
+                                                            Trámite y categoría principal
                                                         </span>
                                                         <br>
                                                         <span class="font-medium text-base text-gray-800">@DescripcionesTramite.Descripcion[(EnumTramite)infoPin.Entidad.TipoTramite] - @infoPin.Entidad.Categoria</span>
@@ -298,26 +298,26 @@
                                                         <br>
                                                         <span class="font-medium text-base text-gray-800">@infoPin.Entidad.NUT</span>
                                                     </p>
-                                                    @* Inicio cÃ³digo generado por GitHub Copilot *@
+                                                    @* Inicio código generado por GitHub Copilot *@
                                                     @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Anulado)
                                                     {
                                                         <p class="mt-2 mb-0">
                                                             <span class="font-normal text-base tracking-normal align-middle text-gris-600">
-                                                                Referencia de devoluciÃ³n
+                                                                Referencia de devolución
 
                                                             </span>
                                                             <br>
                                                             <span class="font-medium text-base text-gray-800">@infoPin.Entidad.NUT</span>
                                                         </p>
                                                     }
-                                                    @* Fin cÃ³digo generado por GitHub Copilot *@
+                                                    @* Fin código generado por GitHub Copilot *@
                                                 </div>
                                                 <div>
                                                     @if (tieneTramiteSecundario)
                                                     {
                                                         <p class="mb-0">
                                                             <span class="font-normal text-base tracking-normal align-middle text-gris-600">
-                                                                TrÃ¡mite y categorÃ­a secundario
+                                                                Trámite y categoría secundario
                                                             </span>
                                                             <br>
                                                             <span class="font-medium text-base text-gray-800">
@@ -330,13 +330,13 @@
                                                             Fecha de compra
                                                         </span>
                                                         <br>
-                                                        @* Inicio cÃ³digo generado por GitHub Copilot *@
+                                                        @* Inicio código generado por GitHub Copilot *@
                                                         <span class="font-medium text-base text-gray-800">
                                                             @((infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Referencia
                                                                 ? infoPin.Entidad.FechaReferencia
                                                                 : infoPin.Entidad.FechaRecaudo).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture))
                                                         </span>
-                                                        @* Fin cÃ³digo generado por GitHub Copilot *@
+                                                        @* Fin código generado por GitHub Copilot *@
 
                                                     </p>
 
@@ -345,26 +345,26 @@
                                                             Valor total
                                                         </span>
                                                         <br>
-                                                        @* Inicio cÃ³digo generado por GitHub Copilot *@
+                                                        @* Inicio código generado por GitHub Copilot *@
                                                         <span class="font-medium text-base text-gray-800">
                                                             @(infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Referencia
                                                                 ? "Pago pendiente"
                                                                 : ValorTotal.ToString("C0", new CultureInfo("es-CO")))
                                                         </span>
-                                                        @* Fin cÃ³digo generado por GitHub Copilot *@
+                                                        @* Fin código generado por GitHub Copilot *@
                                                     </p>
-                                                    @* Inicio cÃ³digo generado por GitHub Copilot *@
+                                                    @* Inicio código generado por GitHub Copilot *@
                                                     @if (infoPin.Entidad.EstadoPin == (int)EnumEstadoPin.Anulado)
                                                     {
                                                     <p class="mt-2 mb-0">
                                                         <span class="font-normal text-base tracking-normal align-middle text-gris-600">
-                                                            Fecha de devoluciÃ³n
+                                                            Fecha de devolución
                                                         </span>
                                                         <br>
                                                             <span class="font-medium text-base text-gray-800">@infoPin.Entidad.FechaAnulacion.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)</span>
                                                     </p>
                                                     }
-                                                    @* Fin cÃ³digo generado por GitHub Copilot *@
+                                                    @* Fin código generado por GitHub Copilot *@
                                                 </div>
                                             </div>
                                         </div>
@@ -373,7 +373,7 @@
                                         {
                                             <div class="w-full flex justify-end">
                                                 <button class="boton-primario" @onclick="AbrirConfirmacionDevolucion">
-                                                    Realizar devoluciÃ³n
+                                                    Realizar devolución
                                                 </button>
                                             </div>
 
@@ -398,7 +398,7 @@
                                             else if (infoPin.Entidad.IdMedioRecaudo == ((int)EnumOrigenPin.PseColpatria).ToString())
                                             {
                                                 <div class="flex items-center justify-between w-full mt-1">
-                                                    <!-- BotÃ³n a la izquierda -->
+                                                    <!-- Botón a la izquierda -->
                                                     <a href="/compradepin" class="text-base underline hover:text-blue-800">
                                                         Ir al inicio
                                                     </a>
@@ -444,7 +444,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <p class="text-gray-600 mb-0">NÃºmero de cuotas</p>
+                                                        <p class="text-gray-600 mb-0">Número de cuotas</p>
                                                         <p class="font-semibold text-gray-900">
                                                             @(@infoPin.Entidad.CuotasPactadas - @infoPin.Entidad.CuotasPendientes) de @infoPin.Entidad.CuotasPactadas
                                                         </p>
@@ -465,7 +465,7 @@
                                                                 <use xlink:href="assets/feather-sprite.svg#info" b-fp1le71s23=""></use>
                                                             </svg>
                                                             <div class="info-text text-base" style="">
-                                                                <p class="mb-0">El costo de la transacciÃ³n no estÃ¡ incluido en cada pago o abono.</p>
+                                                                <p class="mb-0">El costo de la transacción no está incluido en cada pago o abono.</p>
                                                             </div>
                                                         </div>
 
@@ -556,3 +556,4 @@
 
 	</ContentTemplate>
 </SpinLoader>
+

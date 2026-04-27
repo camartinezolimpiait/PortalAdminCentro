@@ -1,6 +1,6 @@
-锘緻page "/compradepin/transactionprogress"
+@page "/compradepin/transactionprogress"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Enum.PortalAdministrativo
 @using portalAdministrativoSISEC.Pages.Common
 @using portalAdministrativoSISEC.Pages.CompraPin
@@ -33,11 +33,11 @@
                     <div class="border border-azul-700 rounded-lg px-4 py-2 bg-white w-full max-w-2xl mb-3">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-2">
-                                <span class="font-semibold">NUT (N煤mero de autorizaci贸n):</span>
+                                <span class="font-semibold">NUT (N鷐ero de autorizaci髇):</span>
                                 <span class="text-azul-700 font-semibold">@PagoPin.Nut</span>
                             </div>
 
-                            <!-- Bot贸n -->
+                            <!-- Bot髇 -->
                             <button class="@($"flex items-center text-white text-sm font-medium px-3 py-1.5 rounded-md transition-colors duration-150 cursor-pointer {(mensajeCopiado is not null ? "bg-green-600 hover:bg-green-700" : "bg-azul-700 hover:bg-azul-800")}")"
                                     @onclick="CopiarNUT">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,17 +54,17 @@
                 <div class="border border-azul-700 rounded-lg px-4 py-5 bg-white w-full max-w-2xl">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <!-- Icono (reempl谩zalo con tu SVG) -->
+                            <!-- Icono (reempl醶alo con tu SVG) -->
                             <div class="flex items-center justify-center bg-azul-700 rounded-full w-[36px] h-[36px]">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 14 18" fill="none">
                                     <path d="M3.66732 15.666H10.334V13.166C10.334 12.2493 10.0076 11.4646 9.35482 10.8118C8.70204 10.1591 7.91732 9.83268 7.00065 9.83268C6.08398 9.83268 5.29926 10.1591 4.64648 10.8118C3.99371 11.4646 3.66732 12.2493 3.66732 13.166V15.666ZM0.333984 17.3327V15.666H2.00065V13.166C2.00065 12.3188 2.19857 11.5237 2.5944 10.7806C2.99023 10.0375 3.54232 9.44379 4.25065 8.99935C3.54232 8.5549 2.99023 7.96115 2.5944 7.2181C2.19857 6.47504 2.00065 5.6799 2.00065 4.83268V2.33268H0.333984V0.666016H13.6673V2.33268H12.0007V4.83268C12.0007 5.6799 11.8027 6.47504 11.4069 7.2181C11.0111 7.96115 10.459 8.5549 9.75065 8.99935C10.459 9.44379 11.0111 10.0375 11.4069 10.7806C11.8027 11.5237 12.0007 12.3188 12.0007 13.166V15.666H13.6673V17.3327H0.333984Z" fill="#E6E6E6" />
                                 </svg>
                             </div>
 
-                            <h2 class="text-azul-700 font-semibold text-[20px] m-0">Transacci贸n en proceso...</h2>
+                            <h2 class="text-azul-700 font-semibold text-[20px] m-0">Transacci髇 en proceso...</h2>
                         </div>
 
-                        <!-- Bot贸n -->
+                        <!-- Bot髇 -->
                         <button class="@ButtonClass"
                                 @onclick="ActualizarManualAsync"
                                 disabled="@IsUpdating">
@@ -76,21 +76,21 @@
                         </button>
                     </div>
 
-                    <!-- L铆nea inferior -->
+                    <!-- L韓ea inferior -->
 
                     <p class="text-gris-600 text-base mt-2 p-0 mb-0">
                         @if (IsUpdating)
                         {
-                            <span>Pr贸xima actualizaci贸n disponible en: @CountdownDisplay</span>
+                            <span>Pr髕ima actualizaci髇 disponible en: @CountdownDisplay</span>
                         }
                         else
                         {
-                            <span>脷ltima actualizaci贸n: Hace @LastUpdateDisplay</span>
+                            <span>趌tima actualizaci髇: Hace @LastUpdateDisplay</span>
                         }
                     </p>
                 </div>
                 <div class="border border-gris-400 rounded-lg mt-5 px-4 py-5 bg-white w-full max-w-2xl">
-                    <h3 class="text-[18px]">Informaci贸n de la compra</h3>
+                    <h3 class="text-[18px]">Informaci髇 de la compra</h3>
                     <div class="grid grid-cols-2 gap-y-1 text-sm">
                         <div class="font-medium font-semibold text-gris-600">PIN:</div>
                         <div class="text-gris-500">@PagoPin.PinGenerado</div>
@@ -98,12 +98,12 @@
                         <div class="font-medium font-semibold text-gris-600">NUT:</div>
                         <div class="text-gris-500">@PagoPin.Nut</div>
 
-                        <div class="font-medium font-semibold text-gris-600">Descripci贸n:</div>
+                        <div class="font-medium font-semibold text-gris-600">Descripci髇:</div>
                         <div class="text-gris-500">@if (PagoPin.ClienteCompra == (int)EnumTipoCliente.CEA)
                             {
-                                <p class="mb-0">Curso de conducci贸n</p>
+                                <p class="mb-0">Curso de conducci髇</p>
                             }else{
-                                <p class="mb-0">Examen M茅dico</p>
+                                <p class="mb-0">Examen M閐ico</p>
                             }
                             </div>
 
@@ -133,7 +133,7 @@
                             }
                         </div>
 
-                        <div class="font-medium font-semibold text-gris-600">Fecha de la transacci贸n:</div>
+                        <div class="font-medium font-semibold text-gris-600">Fecha de la transacci髇:</div>
                         <div class ="text-gris-500">@PagoPin.FechaPago</div>
 
                     </div>
@@ -145,11 +145,11 @@
                     </svg>
                     <div class="">
                         <p class="mb-0">
-                            El estado no se actualiza autom谩ticamente, haz clic en Actualizar estado
+                            El estado no se actualiza autom醫icamente, haz clic en Actualizar estado
                             para verificarlo.
                         </p>
                         <p class="mt-1 mb-0">
-                            Si sales de la p谩gina, recibir谩s la confirmaci贸n por correo cuando el banco procese tu pago.
+                            Si sales de la p醙ina, recibir醩 la confirmaci髇 por correo cuando el banco procese tu pago.
                         </p>
                     </div>
                 </div>
@@ -168,4 +168,5 @@
         </div>
     </ContentTemplate>
 </SpinLoader>
+
 

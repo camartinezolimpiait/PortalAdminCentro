@@ -1,17 +1,17 @@
-Ôªøusing Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Entidades.Pago.Wompi;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using System.Linq;
 using System.Globalization;
 using OfficeOpenXml;
@@ -118,7 +118,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
                 }
                 else
                 {
-                    await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "El rango de fechas de descarga no puede ser mayor a 30 d√≠as");
+                    await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "El rango de fechas de descarga no puede ser mayor a 30 dÌas");
                 }
             }
 		}
@@ -183,7 +183,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 						break;
 
 					default:
-						await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No hay filtros v√°lidos para la consulta");
+						await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No hay filtros v·lidos para la consulta");
 						valido = false;
 						break;
 				}
@@ -194,7 +194,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 
 		private async Task<bool> ValidacionFiltrosVacios()
 		{
-			// Verificar si al menos uno de los campos no es nulo o vac√≠o
+			// Verificar si al menos uno de los campos no es nulo o vacÌo
 			if (!(
 				string.IsNullOrEmpty(busquedaPines.FechaInicial?.ToString()) &&
 				string.IsNullOrEmpty(busquedaPines.FechaFinal?.ToString()) &&
@@ -229,25 +229,25 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 
 						if (diferencia.Value.TotalDays > 90)
 						{
-							await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "El rango de fechas no puede ser mayor a 90 d√≠as");
+							await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "El rango de fechas no puede ser mayor a 90 dÌas");
 							valido = false;
 						}
 					}
 					else
 					{
-						await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "La fecha inicial no es v√°lida");
+						await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "La fecha inicial no es v·lida");
 						valido = false;
 					}
 				}
 				else
 				{
-					await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "La fecha final no es v√°lida");
+					await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "La fecha final no es v·lida");
 					valido = false;
 				}
 			}
 			else
 			{
-				await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "La fecha inicial no es v√°lida");
+				await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "La fecha inicial no es v·lida");
 				valido = false;
 			}
 			return valido;
@@ -343,7 +343,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 			}
 			else
 			{
-				await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No hay filtros v√°lidos para la consulta");
+				await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No hay filtros v·lidos para la consulta");
 			}
 
 			return tipoFiltro;
@@ -357,7 +357,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 			}
 			else
 			{
-				await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "Debe diligenciar el n√∫mero de documento");
+				await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "Debe diligenciar el n˙mero de documento");
 				return false;
 			}
 		}
@@ -395,7 +395,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 						break;
 
 					default:
-						await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No hay filtros v√°lidos para la consulta");
+						await MiLicenciaService.ShowNotificacion(NotificationStatus.Warning, "No hay filtros v·lidos para la consulta");
 						valido = false;
 						break;
 				}
@@ -406,7 +406,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 
 		private async Task<bool> ValidacionFiltrosVaciosDevoluciones()
 		{
-			// Verificar si al menos uno de los campos no es nulo o vac√≠o
+			// Verificar si al menos uno de los campos no es nulo o vacÌo
 			if (!(
 				string.IsNullOrEmpty(busquedaPines?.FechaInicial?.ToString()) &&
 				string.IsNullOrEmpty(busquedaPines?.FechaFinal?.ToString()) &&
@@ -529,7 +529,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 					case EnumTipoInput.SoloLetras:
 						isAllowed = char.IsLetter(e.Key[0]);
 						break;
-						// Puedes agregar m√°s casos seg√∫n sea necesario
+						// Puedes agregar m·s casos seg˙n sea necesario
 				}
 			}
 
@@ -549,7 +549,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 			{
 				busquedaPines.IdTipoDocumento = idTipoDocumento;
 
-				// Aqu√≠ defines la l√≥gica para cambiar el tipo de input seg√∫n el tipo de documento
+				// AquÌ defines la lÛgica para cambiar el tipo de input seg˙n el tipo de documento
 				switch (idTipoDocumento)
 				{
 					case (int)EnumTipoDocumento.Pasaporte:
@@ -569,3 +569,4 @@ namespace portalAdministrativoSISEC.Pages.Pines.Busqueda
 		#endregion Methods
 	}
 }
+

@@ -1,8 +1,8 @@
-﻿using Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Services.PowerBi;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Contracts.PowerBi;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using System.Linq;
@@ -90,8 +90,9 @@ namespace portalAdministrativoSISEC.Pages.PowerBi
 
         private void Error()
         {
-            errorMessage = "Hubo un problema cargando el reporte, intente recargar la página. Si el error persiste, comuniquese con el administrador del sistema.";
+            errorMessage = "Hubo un problema cargando el reporte, intente recargar la p�gina. Si el error persiste, comuniquese con el administrador del sistema.";
             StateHasChanged();
         }
     }
 }
+

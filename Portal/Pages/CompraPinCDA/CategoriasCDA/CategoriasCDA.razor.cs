@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.CompraPin.CDA;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.CDA;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPinCDA.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -170,7 +170,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.CategoriasCDA
         private async Task NotifyValidationStateChanged()
         {
             bool valid = false;
-            bool isValid = editContext.Validate(); // Esto valida el contexto de edición y devuelve true si es válido.
+            bool isValid = editContext.Validate(); // Esto valida el contexto de edici�n y devuelve true si es v�lido.
             placaValidaMoto = IsValidPlaca(datosBasicosMoto.nombrePlacaMoto);
             
 
@@ -248,13 +248,13 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.CategoriasCDA
                 {
                     if (!ValidarEdadVehiculo(edadVehiculo))
                     {
-                        await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La fecha ingresada no es válida");
+                        await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La fecha ingresada no es v�lida");
                         return false;
                     }
                     int edad = await MiLicenciaService.CalcularEdadAspirante(edadVehiculo.ToString("MM-dd-yyyy"));
                     if (edad < 0)
                     {
-                        await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La edad del Vehiculo no es válida");
+                        await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La edad del Vehiculo no es v�lida");
 
                         return false;
                     }
@@ -265,7 +265,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.CategoriasCDA
             }
             else
             {
-                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La fecha ingresada no es válida");
+                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Info, "La fecha ingresada no es v�lida");
                 return false;
             }
 
@@ -358,3 +358,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPinCDA.CategoriasCDA
     }
 
 }
+

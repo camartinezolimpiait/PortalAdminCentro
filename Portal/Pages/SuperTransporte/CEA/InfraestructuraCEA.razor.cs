@@ -1,8 +1,8 @@
-锘縰sing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Services.SuperTransporte;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
+using portalAdministrativoSISEC.Application.Data;
 using System.Threading.Tasks;
 using portalAdministrativoSISEC.Entidades.SuperTransporte.CEA;
 using portalAdministrativoSISEC.Entidades.SuperTransporte;
@@ -153,7 +153,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
 
                 if (resultado != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                     Navigation.NavigateTo("/supertransporte/centro-cea", false);
                 }
             }
@@ -199,7 +199,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                         }
                         else
                         {
-                            toastService.ShowError(@"Ha ocurrido un error al subir los archivos, intente nuevamente", "Informaci贸n");
+                            toastService.ShowError(@"Ha ocurrido un error al subir los archivos, intente nuevamente", "Informaci髇");
                             return;
                         }
                     }
@@ -212,7 +212,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                         }
                         else
                         {
-                            toastService.ShowError(@"Ha ocurrido un error al subir los archivos, intente nuevamente", "Informaci贸n");
+                            toastService.ShowError(@"Ha ocurrido un error al subir los archivos, intente nuevamente", "Informaci髇");
                             return;
                         }
                     }
@@ -221,7 +221,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                 }
                 else
                 {
-                    toastService.ShowError(@"La pista seleccionada ya se encuentra registrada. Para continuar quitar la registrada.", "Informaci贸n");
+                    toastService.ShowError(@"La pista seleccionada ya se encuentra registrada. Para continuar quitar la registrada.", "Informaci髇");
                 }
             }
         }
@@ -236,7 +236,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                 }
                 else
                 {
-                    toastService.ShowError(@"La ubicaci贸n de unidad sanitaria seleccionada ya se encuentra registrada. Para continuar quitar la registrada.", "Informaci贸n");
+                    toastService.ShowError(@"La ubicaci髇 de unidad sanitaria seleccionada ya se encuentra registrada. Para continuar quitar la registrada.", "Informaci髇");
                 }
             }
         }
@@ -254,7 +254,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                 {
                     if (!await _superTransporteService.DeleteFile(pista.contrato_vigente.data.id))
                     {
-                        toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci贸n");
+                        toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci髇");
                         return;
                     }
                 }
@@ -262,7 +262,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
                 {
                     if (!await _superTransporteService.DeleteFile(pista.ctl.data.id))
                     {
-                        toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci贸n");
+                        toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci髇");
                         return;
                     }
                 }
@@ -270,7 +270,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
             }
             catch (Exception ex)
             {
-                toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci贸n");
+                toastService.ShowError(@"Ha ocurrido un error al eliminar el registro, intente nuevamente", "Informaci髇");
                 return;
             }
         }
@@ -298,14 +298,14 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
         }
         private void CambioSeleccion(ChangeEventArgs e, int id)
         {
-            string mensaje = string.IsNullOrEmpty(e.Value.ToString()) ? "El campo no puede estar vac铆o." : "";
+            string mensaje = string.IsNullOrEmpty(e.Value.ToString()) ? "El campo no puede estar vac韔." : "";
             cambioMensajeError(id == 4 ? "" : mensaje, id);
         }
         private void ActivarSeleccion(ChangeEventArgs e, int id)
         {
             if (e.Value.ToString().ToUpper() == "TRUE")
             {
-                cambioMensajeError("El campo no puede estar vac铆o.", id);
+                cambioMensajeError("El campo no puede estar vac韔.", id);
             }
             else
             {
@@ -356,3 +356,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CEA
         }
     }
 }
+
+

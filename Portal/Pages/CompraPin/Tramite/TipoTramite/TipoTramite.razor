@@ -1,6 +1,6 @@
-Ôªø@page "/compradepin/tipotramite"
+@page "/compradepin/tipotramite"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Enum.PortalAdministrativo
 @using portalAdministrativoSISEC.Pages.CompraPin
 @inject NavigationManager NavManager
@@ -17,17 +17,17 @@
         <legend>
             @if (pagoPin.OpcionTramite == DescripcionOpcionTramite.FirstOrDefault(x => x.Key == 1).Key)
             {
-                <h3>Tipo de tr√°mite</h3>
+                <h3>Tipo de tr·mite</h3>
             }
             else if (pagoPin.OpcionTramite == DescripcionOpcionTramite.FirstOrDefault(x => x.Key == 2).Key)
             {
                 <h3>
-                    Tr√°mite para @(pagoPin.PasoCotizacion == PasosCompraPin.TipoTramiteComboCarro ? "Carro" : "Moto")
+                    Tr·mite para @(pagoPin.PasoCotizacion == PasosCompraPin.TipoTramiteComboCarro ? "Carro" : "Moto")
                 </h3>
             }
         </legend>
 
-        <p>Seleccione el tipo de tr√°mite que desea realizar</p>
+        <p>Seleccione el tipo de tr·mite que desea realizar</p>
 
         <EditForm EditContext="@editContext" OnValidSubmit="OnValidSubmit">
             <DataAnnotationsValidator />
@@ -49,7 +49,7 @@
             <ValidationMessage For="@(() => TipoTramiteSeleccionado)" />
 
             <div class="flex items-center mt-5 space-x-3">
-                <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">Atr√°s</button>
+                <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">Atr·s</button>
                 <button type="submit" class="boton-primario">Siguiente</button>
             </div>
         </EditForm>

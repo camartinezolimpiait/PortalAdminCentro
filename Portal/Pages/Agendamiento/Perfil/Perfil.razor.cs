@@ -1,11 +1,11 @@
-锘縰sing Blazored.Toast;
+using Blazored.Toast;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Services.Agendamiento.Perfil;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Perfil;
 using portalAdministrativoSISEC.Util;
 using System;
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Perfil
 
         private ApplicationShared applicationShared = new ApplicationShared();
         private LocalStorage localStorage = new LocalStorage();
-        Data.DataContact data = new Data.DataContact();
+        portalAdministrativoSISEC.Application.Data.DataContact data = new portalAdministrativoSISEC.Application.Data.DataContact();
         public string message = "";
         public string urlMap;
         public bool isLoading = true;
@@ -82,7 +82,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Perfil
             else
             {
                 isLoading = false;
-                toastService.ShowWarning(@"No se encontraron Registros del centro", "Informaci贸n");
+                toastService.ShowWarning(@"No se encontraron Registros del centro", "Informaci髇");
             }
         }
 
@@ -138,15 +138,17 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Perfil
                 {
                     message = centroResponse.RespuestaTexto;
                     isLoading = false;
-                    toastService.ShowSuccess(message, "Informaci贸n");
+                    toastService.ShowSuccess(message, "Informaci髇");
                 }
                 else
                 {
                     isLoading = false;
-                    toastService.ShowWarning(@"Ah ocurrido un error al actualizar la informaci贸n, por favor comuniquese con el admnistrador del sistema.", "Informaci贸n");
+                    toastService.ShowWarning(@"Ah ocurrido un error al actualizar la informaci髇, por favor comuniquese con el admnistrador del sistema.", "Informaci髇");
 
                 }
         }
         #endregion
     }
 }
+
+

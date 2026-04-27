@@ -1,17 +1,17 @@
-Ôªøusing Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Entidades.Pago.Wompi;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using System.Linq;
 using Microsoft.AspNetCore.Components.QuickGrid;
 using portalAdministrativoSISEC.Entidades.Common;
@@ -159,24 +159,26 @@ namespace portalAdministrativoSISEC.Pages.Pines.Usados
                     [
                         new() { NameColumn = "Canal de Venta", Value = (!string.IsNullOrEmpty(x.CanalVenta.ToString()) ? PagoPinConst.DescripcionCanalVenta[(EnumOrigenCotizacion)x.CanalVenta]: "No encontrado")},
                         new() { NameColumn = "Pin", Value = (!string.IsNullOrEmpty(x.Pin) ? x.Pin : "No encontrado")},
-                        new() { NameColumn = "C√≥digo de transacci√≥n", Value = (!string.IsNullOrEmpty(x.NUTVenta) ? x.NUTVenta : "No aplica") },
+                        new() { NameColumn = "CÛdigo de transacciÛn", Value = (!string.IsNullOrEmpty(x.NUTVenta) ? x.NUTVenta : "No aplica") },
                         new() { NameColumn = "Tipo Documento", Value = (!string.IsNullOrEmpty(x.TipoIdentificacion) ? x.TipoIdentificacion : "No encontrado") },
-                        new() { NameColumn = "N√∫mero Documento", Value = (!string.IsNullOrEmpty(x.NumeroIdentificacion) ? x.NumeroIdentificacion : "No encontrado") },
+                        new() { NameColumn = "N˙mero Documento", Value = (!string.IsNullOrEmpty(x.NumeroIdentificacion) ? x.NumeroIdentificacion : "No encontrado") },
                         new() { NameColumn = "Valor Pin", Value = (!string.IsNullOrEmpty(x.ValorTransaccion.ToString())? ValorTransaccion : "No encontrado") },
                         new() { NameColumn = "Valor Actor", Value = (!string.IsNullOrEmpty(x.ValorActor.ToString()) ? ValorActor : "No encontrado") },
                         new() { NameColumn = "Valor ANSV", Value = (!string.IsNullOrEmpty(x.ValorAns.ToString()) ? ValorAns : "No encontrado") },
                         new() { NameColumn = "Valor Aliado", Value = (!string.IsNullOrEmpty(x.ValorAliado.ToString()) ? ValorAliado : "No encontrado") },
                         new() { NameColumn = "Valor Sicov", Value = (!string.IsNullOrEmpty(x.ValosSicov.ToString()) ? ValosSicov : "No encontrado") },
-                        new() { NameColumn = "Fecha Operaci√≥n", Value = (!string.IsNullOrEmpty(x.FechaRegistro.ToString()) ? x.FechaRegistro?.ToString("dd/MM/yyyy") : "No encontrado") },
-                        new() { NameColumn = "IdDispersi√≥n", Value = (x.IdDispersion > 0 ? x.IdDispersion.ToString() : "No encontrado")},
-                        new() { NameColumn = "Fecha Dispersi√≥n", Value = (!string.IsNullOrEmpty(x.FechaDispersion) ? TransformarFecha(x.FechaDispersion) : "No encontrado") },
-                        new() { NameColumn = "Banco Dispersi√≥n", Value = (!string.IsNullOrEmpty(x.Banco) ? x.Banco : "No encontrado") },
-                        new() { NameColumn = "Cuenta Dispersi√≥n", Value = (!string.IsNullOrEmpty(x.CtaDispersion) ? x.CtaDispersion : "No encontrado") },
-                        new() { NameColumn = "Valor Dispersi√≥n", Value = (!string.IsNullOrEmpty(x.ValorDispersado.ToString()) ? ValorDispersado : "No encontrado") },
-                        new() { NameColumn = "Agente Dispersi√≥n", Value = (!string.IsNullOrEmpty(x.AgenteDispersion) ? x.AgenteDispersion : "No encontrado") },
-                        new() { NameColumn = "Raz√≥n Social", Value = (!string.IsNullOrEmpty(x.RazonSocial) ? x.RazonSocial : "No encontrado") },
+                        new() { NameColumn = "Fecha OperaciÛn", Value = (!string.IsNullOrEmpty(x.FechaRegistro.ToString()) ? x.FechaRegistro?.ToString("dd/MM/yyyy") : "No encontrado") },
+                        new() { NameColumn = "IdDispersiÛn", Value = (x.IdDispersion > 0 ? x.IdDispersion.ToString() : "No encontrado")},
+                        new() { NameColumn = "Fecha DispersiÛn", Value = (!string.IsNullOrEmpty(x.FechaDispersion) ? TransformarFecha(x.FechaDispersion) : "No encontrado") },
+                        new() { NameColumn = "Banco DispersiÛn", Value = (!string.IsNullOrEmpty(x.Banco) ? x.Banco : "No encontrado") },
+                        new() { NameColumn = "Cuenta DispersiÛn", Value = (!string.IsNullOrEmpty(x.CtaDispersion) ? x.CtaDispersion : "No encontrado") },
+                        new() { NameColumn = "Valor DispersiÛn", Value = (!string.IsNullOrEmpty(x.ValorDispersado.ToString()) ? ValorDispersado : "No encontrado") },
+                        new() { NameColumn = "Agente DispersiÛn", Value = (!string.IsNullOrEmpty(x.AgenteDispersion) ? x.AgenteDispersion : "No encontrado") },
+                        new() { NameColumn = "RazÛn Social", Value = (!string.IsNullOrEmpty(x.RazonSocial) ? x.RazonSocial : "No encontrado") },
                         new() { NameColumn = "Tipo Pin", Value = (!string.IsNullOrEmpty(x.TipoPin) ? x.TipoPin : "No encontrado") },
                         new() { NameColumn = "Pines Asociados", Value = (x.PagosRealizados > 0 || cuotas > 1) ? x.Pin : "0" },
+                        new() { NameColumn = "Convenio Empresa", Value = x.ConvenioEmpresa ?? "No aplica" },
+                        new() { NameColumn = "Empresa", Value = x.Empresa ?? "No aplica" },
                     ];
 
                     rows.Add(new RowList
@@ -187,7 +189,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Usados
             }
             else
             {
-                // Agregar solo los encabezados si la lista es nula o est√° vac√≠a
+                // Agregar solo los encabezados si la lista es nula o est· vacÌa
                 List<ColumnList> headers = PagoPinConst.InicializarColumnasUsados();
 
                 rows.Add(new RowList { Row = headers });
@@ -259,7 +261,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Usados
                         DatosFiltros.Opcion = 1;
                         DatosFiltros.NumPagina = 1;
                         DatosFiltros.NumRegistros = 5;
-                        _toastService.ShowInfo(result.Respuesta, "Informaci√≥n");
+                        _toastService.ShowInfo(result.Respuesta, "InformaciÛn");
                     }
                 }
                 else
@@ -328,7 +330,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Usados
                         Listado = new();
                         await CargarDatagridView(Listado);
 
-                        _toastService.ShowInfo(result.Respuesta, "Informaci√≥n");
+                        _toastService.ShowInfo(result.Respuesta, "InformaciÛn");
                     }
                 }
                 else
@@ -351,7 +353,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Usados
                 isLoading = false;
                 Listado = new();
                 await CargarDatagridView(Listado);
-                _toastService.ShowWarning("Debe seleccionar el centro para realizar la consulta.", "Informaci√≥n");
+                _toastService.ShowWarning("Debe seleccionar el centro para realizar la consulta.", "InformaciÛn");
             }
         }
 
@@ -455,13 +457,13 @@ namespace portalAdministrativoSISEC.Pages.Pines.Usados
             string fechaFormateada = "";
             if (DateTime.TryParse(fechaString, out DateTime fecha))
             {
-                // La conversi√≥n fue exitosa, puedes usar 'fecha'
+                // La conversiÛn fue exitosa, puedes usar 'fecha'
                 fechaFormateada = fecha.ToString("dd/MM/yyyy");
             }
             else
             {
-                // La conversi√≥n fall√≥
-                fechaFormateada = "Formato de fecha inv√°lido";
+                // La conversiÛn fallÛ
+                fechaFormateada = "Formato de fecha inv·lido";
             }
             return fechaFormateada;
         }
@@ -493,6 +495,8 @@ namespace portalAdministrativoSISEC.Pages.Pines.Usados
                     item.AgenteDispersion = (!string.IsNullOrEmpty(x.AgenteDispersion) ? x.AgenteDispersion : "No encontrado");
                     item.RazonSocial = (!string.IsNullOrEmpty(x.RazonSocial) ? x.RazonSocial : "No encontrado");
                     item.TipoPin = (!string.IsNullOrEmpty(x.TipoPin) ? x.TipoPin : "No encontrado");
+                    item.ConvenioEmpresa = x.ConvenioEmpresa;
+                    item.Empresa = x.Empresa;
 
                     lista.Add(item);
                 });
@@ -504,3 +508,4 @@ namespace portalAdministrativoSISEC.Pages.Pines.Usados
         #endregion Methods
     }
 }
+

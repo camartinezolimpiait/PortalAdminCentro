@@ -1,13 +1,13 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.CompraPin.Models;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.Models;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Entidades.Devolucion.ConsultaInfoPin;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -97,9 +97,9 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ResumenCompra
         {
             return plataforma switch
             {
-                (int)EnumTipoCliente.CEA => "Curso de conducciÃ³n",
-                (int)EnumTipoCliente.CRC => "Examen mÃ©dico",
-                (int)EnumTipoCliente.CDA => "RevisiÃ³n tÃ©cnico-mecÃ¡nica", // opcional
+                (int)EnumTipoCliente.CEA => "Curso de conducción",
+                (int)EnumTipoCliente.CRC => "Examen médico",
+                (int)EnumTipoCliente.CDA => "Revisión técnico-mecánica", // opcional
                 _ => ""
             };
         }
@@ -108,7 +108,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ResumenCompra
         {
             return PagoPin?.ClienteCompra switch
             {
-                (int)EnumTipoCliente.CEA => "Centro de enseÃ±anza",
+                (int)EnumTipoCliente.CEA => "Centro de enseñanza",
                 (int)EnumTipoCliente.CRC => "Centro de reconocimiento",
                 _ => "Centro"
             };
@@ -167,7 +167,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ResumenCompra
             var hoy = DateTime.Today;
             var edad = hoy.Year - fechaNacimiento.Year;
 
-            // Si aÃºn no ha cumplido aÃ±os este aÃ±o, restar uno
+            // Si aún no ha cumplido años este año, restar uno
             if (fechaNacimiento.Date > hoy.AddYears(-edad))
                 edad--;
 
@@ -178,3 +178,5 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.ResumenCompra
 
     }
 }
+
+

@@ -1,0 +1,60 @@
+@* Inicio código generado por GitHub Copilot *@
+@using portalAdministrativoSISEC.Application.Data.CompraPin
+@using portalAdministrativoSISEC.Enum.PortalAdministrativo
+
+<fieldset class="coupon-fieldset">
+    <legend class="coupon-legend">Código de referido</legend>
+
+    <EditForm EditContext="EditContext" OnValidSubmit="OnApplyAsync">
+   <DataAnnotationsValidator />
+        
+ <div class="coupon-body">
+  <p class="coupon-description">
+          Si recibiste un código de parte de tu empresa o una campaña publicitaria,
+      <strong>ingrésalo aquí.</strong>
+         </p>
+
+   <div class="coupon-row">
+             <label class="coupon-input-label">
+          <span class="coupon-input-prefix">Código</span>
+       <InputText @bind-Value="CouponModel.ReferralCode"
+          maxlength="15"
+     autocomplete="off"
+            required
+         class="coupon-input"
+ @oninput="OnInputChangeAsync"
+  aria-label="Campo de código de referido" />
+ </label>
+                <button type="submit"
+   disabled="@IsLoading"
+      aria-label="Aplicar código de referido"
+       class="boton-secundario coupon-apply-btn">
+ @(IsLoading ? "Aplicando..." : "Aplicar")
+       </button>
+            </div>
+
+            <ValidationMessage For="@(() => CouponModel.ReferralCode)" class="coupon-error" />
+
+   @if (EsExitoso && !string.IsNullOrEmpty(NombreEmpresa))
+            {
+    <div class="coupon-alert coupon-alert--success" role="alert">
+    <svg class="feather coupon-alert__icon">
+           <use xlink:href="assets/feather-sprite.svg#check-circle"></use>
+         </svg>
+   <span>Convenio <strong>@NombreEmpresa</strong> aplicado</span>
+            </div>
+}
+
+     @if (!EsExitoso && !string.IsNullOrEmpty(MensajeRespuesta))
+            {
+       <div class="coupon-alert coupon-alert--warning" role="alert">
+         <svg class="feather coupon-alert__icon">
+        <use xlink:href="assets/feather-sprite.svg#alert-triangle"></use>
+  </svg>
+            <span>@MensajeRespuesta</span>
+      </div>
+        }
+</div>
+    </EditForm>
+</fieldset>
+@* Fin código generado por GitHub Copilot *@

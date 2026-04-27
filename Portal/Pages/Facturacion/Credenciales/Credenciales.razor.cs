@@ -1,8 +1,8 @@
-Ôªøusing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 using portalAdministrativoSISEC.Pages.Facturacion.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Extension;
 using System.Threading.Tasks;
 
@@ -26,12 +26,12 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Credenciales
 
         #endregion Properties
 
-        #region Inyecci√≥n Dependencias
+        #region InyecciÛn Dependencias
 
         [Inject]
         private IMiLicenciaService MiLicenciaService { get; set; }
 
-        #endregion Inyecci√≥n Dependencias
+        #endregion InyecciÛn Dependencias
 
         #region Variables
 
@@ -105,7 +105,7 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Credenciales
                     await response.ShowErrorMessageCollection(MiLicenciaService, "Recaudo");
             }
             else
-                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Warning, "Hay validaciones en el formulario que no se est√°n cumpliendo");
+                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Warning, "Hay validaciones en el formulario que no se est·n cumpliendo");
         }
 
         #endregion Private Methods

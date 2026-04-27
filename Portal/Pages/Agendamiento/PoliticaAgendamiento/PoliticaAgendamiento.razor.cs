@@ -1,12 +1,12 @@
-Ôªøusing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Politica;
 using portalAdministrativoSISEC.Enum;
-using portalAdministrativoSISEC.Services.Agendamiento;
-using portalAdministrativoSISEC.Services.Agendamiento.HorarioAtencion;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Horario;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.HorarioAtencion;
 using portalAdministrativoSISEC.Util;
 using System;
 using System.Collections.Generic;
@@ -75,11 +75,11 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
             }
             catch (ApplicationException ae)
             {
-                toastService.ShowWarning(ae.Message.ToString(), "Informaci√≥n");
+                toastService.ShowWarning(ae.Message.ToString(), "InformaciÛn");
             }
             catch (Exception ex)
             {
-                toastService.ShowWarning(ex.Message.ToString(), "Informaci√≥n");
+                toastService.ShowWarning(ex.Message.ToString(), "InformaciÛn");
             }
             await base.OnParametersSetAsync();
         }
@@ -95,7 +95,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
         }
 
         /// <summary>
-        /// Establece el texto que tendr√° el boton para continuar
+        /// Establece el texto que tendr· el boton para continuar
         /// Regla: si el radionutton seleccionado es SoloAtencionOrdenLlegada el texto debe ser Guardar, de lo contrario, Siguiente 
         /// </summary>
         /// <param name="policy">Enumerador de la politca de agendamiento</param>
@@ -127,7 +127,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
 
         /// <summary>
         /// Convertir string a la opcion correspondiente dentro del enumerador
-        /// Para revisar: Esto podr√≠a hacer parte de una funcion global para ser usada con Genericos
+        /// Para revisar: Esto podrÌa hacer parte de una funcion global para ser usada con Genericos
         /// </summary>
         /// <param name="optionEnum">String que corresponde a la opcion del enumerador</param>
         /// <returns></returns>
@@ -146,6 +146,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
         {
             if (applicationShared != null && applicationShared.IdPerfil.HasValue)
             {
+                string transactionGuid = $"{Guid.NewGuid()}";
                 var estadoProceso = await ParametrizacionHorarioService.SaveParametrizationSchedule(new ParametrizacionHorario
                 {
                     IdPerfil = applicationShared.IdPerfil.Value,
@@ -158,7 +159,8 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
                     IdPoliticaAgendamiento = ((short)GetEnumFromString(SelectedPolicy)),
                     IdTipoAgenda = ParametrizacionHorario.IdTipoAgenda,
                     IdParametroHorario = applicationShared.IdParametroHorario,
-                    IdParametrizacionHorario = ParametrizacionHorario.IdParametrizacionHorario
+                    IdParametrizacionHorario = ParametrizacionHorario.IdParametrizacionHorario,
+                    TransaccionGuid = transactionGuid
                 }, ConfiguracionHorarios[0].FechaInicioParametrizacion);
 
                 if (await ParametrizacionHorarioService.GetEstadoPeticion())
@@ -177,13 +179,13 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
                     }
                     else
                     {
-                        toastService.ShowSuccess(@"La configuraci√≥n se ha guardado correctamente", "Informaci√≥n");
+                        toastService.ShowSuccess(@"La configuraciÛn se ha guardado correctamente", "InformaciÛn");
                         Navigation.NavigateTo("/configuracion/configurarParametrizacion", false);
                     }
                 }
                 else
                 {
-                    toastService.ShowError(@"Ha ocurrido un error al guardar la configuraci√≥n", "Informaci√≥n");
+                    toastService.ShowError(@"Ha ocurrido un error al guardar la configuraciÛn", "InformaciÛn");
                 }
             }
         }
@@ -198,7 +200,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
             if (applicationShared == null)
             {
                 IsLoading = false;
-                throw new ApplicationException("No es posible obtener la informaci√≥n del centro");
+                throw new ApplicationException("No es posible obtener la informaciÛn del centro");
             }
             else
             {
@@ -246,3 +248,6 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.PoliticaAgendamiento
         #endregion
     }
 }
+
+
+

@@ -1,7 +1,7 @@
-ï»¿@page "/compradepin/pagoCuota"
+@page "/compradepin/pagoCuota"
 @inherits LayoutComponentBase
 
-@using portalAdministrativoSISEC.Data.CompraPin
+@using portalAdministrativoSISEC.Application.Data.CompraPin
 @using portalAdministrativoSISEC.Pages.Common
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
@@ -39,10 +39,10 @@
                     <div class="flex-1">
                         <h3 class="text-xl font-bold mb-0">Opciones de pago</h3>
                         <InputRadioGroup @bind-Value="paymentOptionModel.PaymentType" Name="opcionPago" @bind-Value:after="OnPaymentOptionChanged">
-                            <!-- Elegir nÃºmero de cuotas -->
+                            <!-- Elegir número de cuotas -->
                             <div class="space-y-3 py-3">
                                 <ValidationMessage For="@(() => paymentOptionModel.Cuotas)" />
-                                <!-- Primera opciÃ³n: elegir nÃºmero de cuotas -->
+                                <!-- Primera opción: elegir número de cuotas -->
                                 <label class="ring-azul-200 has-checked:border-azul-400 flex cursor-pointer items-center gap-3 rounded-lg border border-neutral-300 bg-neutral-50 px-3 hover:ring-2 has-checked:ring-2">
                                     <InputRadio type="radio"
                                                 name="opcionPago"
@@ -50,14 +50,14 @@
                                                 class="size-6 text-azul-600 focus:ring-azul-600"
                                                 @onchange="@(() => opcionPago = "Cuotas")" />
 
-                                    <span class="inline-block w-46">Elegir nÃºmero de cuotas:</span>
+                                    <span class="inline-block w-46">Elegir número de cuotas:</span>
 
                                     <fieldset class="join ml-3 flex items-center border-none m-0" disabled="@(!EsPagoPorCuotas)">
                                         <button class="join-item btn btn-soft"
                                                 type="button"
                                                 @onclick="RestarCuotas"
                                                 disabled="@(!EsPagoPorCuotas)">
-                                            âˆ’
+                                            -
                                         </button>
 
                                         <InputNumber type="number"
@@ -93,7 +93,7 @@
                                                  @bind-Value="paymentOptionModel.ValorParcial" />
                                 </label>
 
-                                <!-- OpciÃ³n 2 -->
+                                <!-- Opción 2 -->
                                 <label class="ring-azul-200 has-checked:border-pa-azul-400 flex cursor-pointer items-center gap-3 rounded-lg border border-neutral-300 bg-neutral-50 px-3 py-3 hover:ring-2 has-checked:ring-2">
                                     <InputRadio type="radio"
                                                 name="opcionPago"
@@ -120,7 +120,7 @@
                                     <span>@paymentOptionModel.MontoAPagar.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span>Costo por transacciÃ³n</span>
+                                    <span>Costo por transacción</span>
                                     <span>@InfoPin.Entidad.ValorAliadoCuota.ToString("C0", CultureInfo.CreateSpecificCulture("es-CO"))</span>
                                 </div>
                                 <div class="flex justify-between font-semibold text-azul-600">
@@ -164,3 +164,4 @@
         </section>
     </ContentTemplate>
 </SpinLoader>
+

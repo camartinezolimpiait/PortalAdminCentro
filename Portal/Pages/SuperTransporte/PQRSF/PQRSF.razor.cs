@@ -1,13 +1,13 @@
-锘縰sing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.SuperTransporte;
 using portalAdministrativoSISEC.Entidades.SuperTransporte.PQRSF;
-using portalAdministrativoSISEC.Services.Agendamiento.Agenda;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Agenda;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,7 +57,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.PQRSF
             SmtpClient smtp = new(Configuration.GetSection("NetworkCredential:Host").Value, Convert.ToInt32(Configuration.GetSection("NetworkCredential:Puerto").Value))
             {
                 Credentials = new NetworkCredential(Configuration.GetSection("NetworkCredential:CorreoSaliente").Value,
-                Configuration.GetSection("NetworkCredential:Contrase帽a").Value),
+                Configuration.GetSection("NetworkCredential:Contrase馻").Value),
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network
             };
@@ -70,7 +70,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.PQRSF
             }
             catch (SmtpException ex)
             {
-                ToastService.ShowError($"No se pudo enviar el correo electr贸nico{ex?.Message} \n {ex?.InnerException}", "Informaci贸n");
+                ToastService.ShowError($"No se pudo enviar el correo electr髇ico{ex?.Message} \n {ex?.InnerException}", "Informaci髇");
                 return false;
             }
         }
@@ -85,7 +85,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.PQRSF
             _applicationShared = result.Value;
             TiposDeDocumento = await AgendaService.GetTipoDocumento();
             TiposDeDocumento = TiposDeDocumento.Where(x => x.ClienteId == 1).ToList();
-            List<string> ListaSolicutd = new List<string>(new string[] { "Petici贸n", "Queja", "Reclamo", "Solicitud", "Sugerencia", "Felicitaci贸n" });
+            List<string> ListaSolicutd = new List<string>(new string[] { "Petici髇", "Queja", "Reclamo", "Solicitud", "Sugerencia", "Felicitaci髇" });
             TipoSolicitud = ListaSolicutd;
         }
 
@@ -129,7 +129,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.PQRSF
                     {
                         ToastService.ShowSuccess(
                             $@"El correo ha sido enviado correctamente",
-                            "Informaci贸n");
+                            "Informaci髇");
                         _informacionBasica.primer_nombre = string.Empty;
                         _informacionBasica.primer_apellido = string.Empty;
                         _informacionBasica.num_id = string.Empty;
@@ -143,12 +143,12 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.PQRSF
                     }
                     else
                     {
-                        ToastService.ShowError($@"No se pudo enviar el correo electr贸nico", "Informaci贸n");
+                        ToastService.ShowError($@"No se pudo enviar el correo electr髇ico", "Informaci髇");
                     }
                 }
                 else
                 {
-                    ToastService.ShowError($@"Se ha producido un error inesperado con la ruta de acceso.", "Informaci贸n");
+                    ToastService.ShowError($@"Se ha producido un error inesperado con la ruta de acceso.", "Informaci髇");
                 }
             }
         }
@@ -156,3 +156,4 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.PQRSF
         #endregion Private Methods
     }
 }
+

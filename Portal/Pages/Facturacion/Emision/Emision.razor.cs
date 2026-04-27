@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 using portalAdministrativoSISEC.Pages.Facturacion.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Extension;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -169,3 +169,4 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Emision
         #endregion Private Methods
     }
 }
+

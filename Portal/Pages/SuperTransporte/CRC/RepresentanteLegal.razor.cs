@@ -1,8 +1,8 @@
-锘縰sing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Services.SuperTransporte;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
+using portalAdministrativoSISEC.Application.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
 using portalAdministrativoSISEC.Pages.SuperTransporte.CRC;
@@ -36,7 +36,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
             var data = await _superTransporteService.GetCentro(applicationShared.IdCentroStrappi, "vigilado");
             if (data != null && data.data.attributes.vigilado.data != null)
             {
-                // Consulta de datos b谩sicos del representante legal
+                // Consulta de datos b醩icos del representante legal
                 var nit = data.data.attributes.vigilado.data.attributes.NIT.Trim();
                 await ConsultarInformacionRL(nit);
 
@@ -44,7 +44,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
 
                 if (string.IsNullOrEmpty(_representanteLegalDto.num_doc))
                 {
-                    toastService.ShowSuccess(@$"No se ha encontrado informaci贸n de Representante Legal con el NIT {nit}, por favor corrobore con el sistema VIGIA", "Informaci贸n");
+                    toastService.ShowSuccess(@$"No se ha encontrado informaci髇 de Representante Legal con el NIT {nit}, por favor corrobore con el sistema VIGIA", "Informaci髇");
                 }
 
             }
@@ -99,7 +99,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
                 }, applicationShared.IdCentroStrappi);
                 if (resultado != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                     Navigation.NavigateTo("/supertransporte/centro", false);
                 }
             }
@@ -123,3 +123,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
         }
     }
 }
+
+

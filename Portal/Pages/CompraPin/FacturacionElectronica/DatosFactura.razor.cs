@@ -1,12 +1,12 @@
-锘縰sing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Entidades.Common;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,10 +59,10 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.FacturacionElectronica
                 DatosFacturaModel.TipoPersonaFacturacion = 2;
             }
 
-            // Inicio c贸digo generado por GitHub Copilot
+            // Inicio c骴igo generado por GitHub Copilot
             TiposPersona = (await MiLicenciaService.GetPersonTypes()).Datos;
             pagoPin.TiposPersonaFacturacion = TiposPersona;
-            // Fin c贸digo generado por GitHub Copilot
+            // Fin c骴igo generado por GitHub Copilot
             await ObtenerTiposDocumento();
             isLoading = false;
         }
@@ -87,9 +87,9 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.FacturacionElectronica
         {
             ListaDocumentos = await _miLicenciaService.ObtenerTipoDocumentos();
             ListaDocumentos = FilterDocumentsAviable.FilterDocumentsTypes(ListaDocumentos);
-            // Inicio c贸digo generado por GitHub Copilot
+            // Inicio c骴igo generado por GitHub Copilot
             pagoPin.TiposDeDocumento = ListaDocumentos;
-            // Fin c贸digo generado por GitHub Copilot
+            // Fin c骴igo generado por GitHub Copilot
         }
 
         private void OnTipoPersonaChanged(ChangeEventArgs e)
@@ -107,3 +107,5 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.FacturacionElectronica
         }
     }
 }
+
+

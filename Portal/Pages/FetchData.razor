@@ -1,6 +1,6 @@
-﻿@page "/fetchdata"
+@page "/fetchdata"
 
-@using portalAdministrativoSISEC.Data
+@using portalAdministrativoSISEC.Application.Data
 @inject WeatherForecastService ForecastService
 
 <h1>Weather forecast</h1>
@@ -44,3 +44,4 @@ else
         forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
     }
 }
+

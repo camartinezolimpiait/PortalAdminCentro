@@ -1,10 +1,10 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,12 +71,12 @@ namespace portalAdministrativoSISEC.Shared
                 };
                 if (menuService.Plataforma != "CDA")
                 {
-                    // Obtener convenios segÃºn plataforma, con switch para claridad
+                    // Obtener convenios según plataforma, con switch para claridad
                     listadoConvenios = menuService.Plataforma == EnumTipoCliente.CEA.ToString()
                         ? await _miLicenciaService.ObtenerConveniosCEA(IdCentro)
                         : await _miLicenciaService.ObtenerConveniosCRC(IdCentro);
 
-                    // ConvenioCompraPin es true solo si hay algÃºn convenio con esos orÃ­genes; si la lista es null, serÃ¡ false
+                    // ConvenioCompraPin es true solo si hay algún convenio con esos orígenes; si la lista es null, será false
                     bool convenioCompraPin =
                         listadoConvenios?.Any(c =>
                             c.IdOrigenPin == (int)EnumTipoPago.PinDirecto ||
@@ -117,3 +117,4 @@ namespace portalAdministrativoSISEC.Shared
         #endregion Private Methods
     }
 }
+

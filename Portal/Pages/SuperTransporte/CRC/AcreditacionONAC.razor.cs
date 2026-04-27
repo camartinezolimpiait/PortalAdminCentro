@@ -1,13 +1,13 @@
-Ôªøusing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades;
 using portalAdministrativoSISEC.Entidades.SuperTransporte;
 using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
-using portalAdministrativoSISEC.Services.SuperTransporte;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -101,7 +101,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
                     }
                     else
                     {
-                        toastService.ShowError(@"Ha ocurrido un error al subir el archivo, intente nuevamente", "Informaci√≥n");
+                        toastService.ShowError(@"Ha ocurrido un error al subir el archivo, intente nuevamente", "InformaciÛn");
                         _loader.Hide();
                         return;
                     }
@@ -119,7 +119,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
                 var resultado = await _superTransporteService.PutVigilado(_acreditacionVigiladoRequest, _idVigilado);
                 if (resultado != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la informaci√≥n correctamente.", "Informaci√≥n");
+                    toastService.ShowSuccess(@"Se ha guardado la informaciÛn correctamente.", "InformaciÛn");
                     _vigilado.acreditacion_onac = new AcreditacionONACVigiladoDto<GetFile>()
                     {
                         codigo = _acreditacionVigiladoForm.codigo,
@@ -138,7 +138,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
         }
         private async Task AddAcreditacionCentro(EditContext context)
         {
-            string pattern = @"^[a-zA-Z0-9√±√ë√°√†√¢√£√©√®√™√≠√Ø√≥√¥√µ√∂√∫√º√ß\s-]*$";
+            string pattern = @"^[a-zA-Z0-9Ò—·‡‚„ÈËÍÌÔÛÙıˆ˙¸Á\s-]*$";
             _loader.Show();
             if (!string.IsNullOrEmpty(_acreditacionCentro))
             {
@@ -152,13 +152,13 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
                 var resultado = await _superTransporteService.PutCentro(_acreditacionRequest, applicationShared.IdCentroStrappi);
                 if (resultado != null)
                 {
-                    toastService.ShowSuccess(@"Se ha guardado la configuraci√≥n correctamente.", "Informaci√≥n");
+                    toastService.ShowSuccess(@"Se ha guardado la configuraciÛn correctamente.", "InformaciÛn");
                     Navigation.NavigateTo("/supertransporte/centro", false);
                 }
             }
             else
             {
-                error = "El campo no puede estar vac√≠o";
+                error = "El campo no puede estar vacÌo";
                 _loader.Hide();
                 return;
             }
@@ -183,3 +183,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
         }
     }
 }
+
+

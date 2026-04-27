@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.CompraPin.DatosBasicos;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
@@ -18,6 +18,9 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
 
         [Inject]
         public IMiLicenciaService MiLicenciaService { get; set; }
+
+        [Inject]
+        public ICompraPinDatosBasicosService DatosBasicosService { get; set; }
 
         #endregion Inyeccion Dependencias
 
@@ -34,20 +37,21 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
 
         [Parameter]
         public EventCallback CostoHasChanged { get; set; }
+
         [Parameter]
         public EventCallback OnRetroceder { get; set; }
-
 
         private readonly List<Sexo> Sexos = new()
         {
             new Sexo { Id = (int)EnumSexo.Hombre, Genero = nameof(EnumSexo.Hombre) },
             new Sexo { Id = (int)EnumSexo.Mujer, Genero = nameof(EnumSexo.Mujer) }
         };
+
         [SupplyParameterFromForm]
         private DatosBasicosModel DatosBasicosModel { get; set; }
+
         private EditContext editContext;
         private ValidationMessageStore messageStore;
-
 
         #endregion Variables
 
@@ -68,14 +72,15 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
                 DatosBasicosModel.Anio = PagoPin.Usuario.FechaNacimiento.Value.Year;
             }
 
-            if (PagoPin?.Usuario?.Genero != null && PagoPin?.Usuario?.Genero != 0)
+            if (PagoPin?.Usuario?.Genero != null && PagoPin.Usuario.Genero != 0)
+            {
                 await SetGenero((int)PagoPin.Usuario.Genero);
+            }
 
             if (PagoPin.ClienteCompra == (int)EnumTipoCliente.CEA)
             {
                 await ValidarCuotasCea();
             }
-           
 
             await PagoPinChanged.InvokeAsync(PagoPin);
         }
@@ -91,39 +96,37 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
             PagoPin.ConfiguracionCuotas.ValorAliado = result?.Entidad?.ValorAliado ?? 0;
         }
 
-
         public async Task<bool> HandleValidSubmit()
         {
-            bool isValid = await HandleValid();
-
+            var isValid = await HandleValid();
             await NotificarCambio(isValid);
             return isValid;
         }
 
         public async Task<bool> HandleValid()
         {
-            PagoPin.Usuario ??= new Data.CompraPin.DatosBasicos();
+            PagoPin.Usuario ??= new portalAdministrativoSISEC.Application.Data.CompraPin.DatosBasicos();
 
-            if (!TieneFechaCompleta() || !DatosBasicosModel.Sexo.HasValue || DatosBasicosModel.Sexo.Value == 0)
+            if (!DatosBasicosService.HasCompleteDate(DatosBasicosModel.Dia, DatosBasicosModel.Mes, DatosBasicosModel.Anio)
+                || !DatosBasicosModel.Sexo.HasValue
+                || DatosBasicosModel.Sexo.Value == 0)
             {
                 await PagoPinChanged.InvokeAsync(PagoPin);
                 return false;
             }
 
-            DateTime fechaNacimiento = new(
+            var fechaNacimiento = new DateTime(
                 DatosBasicosModel.Anio!.Value,
                 DatosBasicosModel.Mes!.Value,
                 DatosBasicosModel.Dia!.Value);
 
-            int edad = await MiLicenciaService.CalcularEdadAspirante(fechaNacimiento.ToString("MM-dd-yyyy"));
-
-            await SetGenero(DatosBasicosModel.Sexo.Value);
-            DeterminarMayorEdad(edad);
-
-            bool isValid = await AdministrarCambiosDatosBasicos(edad, fechaNacimiento);
+            var edad = await MiLicenciaService.CalcularEdadAspirante(fechaNacimiento.ToString("MM-dd-yyyy"));
+            var isValid = await AdministrarCambiosDatosBasicos(edad, fechaNacimiento);
 
             if (isValid)
+            {
                 PagoPin.IsValidDatosBasicos = true;
+            }
 
             await PagoPinChanged.InvokeAsync(PagoPin);
             return isValid;
@@ -131,69 +134,65 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
 
         private async Task<bool> AdministrarCambiosDatosBasicos(int edad, DateTime fechaNacimiento)
         {
-            if ((int)DatosBasicosModel.Dia <= DateTime.DaysInMonth((int)DatosBasicosModel.Anio, (int)DatosBasicosModel.Mes))
-            {
-                if (fechaNacimiento != new DateTime())
-                {
-                    if (edad < 16 || edad > 100)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        if (PagoPin.EdadAspirante != edad)
-                        {
-                            if (edad < 18)
-                            {
-                                PagoPin.Categoria = "";
-                                PagoPin.Categoria1 = "";
-                                PagoPin.Categoria2 = "";
-                                PagoPin.TipoTramite = null;
-                                PagoPin.TipoTramite2 = null;
-                                PagoPin.Usuario.TipoDocumentoDescpcion = string.Empty;
-                            }
-                            else
-                            {
-                                PagoPin.Usuario.TipoDocumento = 0;
-                                PagoPin.Usuario.TipoDocumentoDescpcion = string.Empty;
-                            }
-                        }
-                        PagoPin.EdadAspirante = edad;
-                        PagoPin.Usuario.FechaNacimiento = fechaNacimiento;
-                        if (edad < 18 && PagoPin.TramiteInstructor)
-                        {
-                            PagoPin.TramiteInstructor = false;
-                            PagoPin.OpcionTramite = null;
-                            PagoPin.TipoTramite = 0;                          
-                        }
-                        else if (edad < 18 && (PagoPin.OpcionTramite != null && PagoPin.TipoTramite == (int)EnumTramite.Recategorizar))
-                        {
-                            PagoPin.Categoria1 = PagoPin.Categoria2 = PagoPin.CategoriasActual = PagoPin.CategoriaSeleccionada = string.Empty;
-                            PagoPin.OpcionTramite = null;
-                            PagoPin.TipoTramite = 0;
-                        }
+            var result = DatosBasicosService.ApplyRules(
+                new CompraPinDatosBasicosRulesInput(
+                    DatosBasicosModel.Dia,
+                    DatosBasicosModel.Mes,
+                    DatosBasicosModel.Anio,
+                    DatosBasicosModel.Sexo,
+                    PagoPin.EdadAspirante,
+                    PagoPin.TramiteInstructor,
+                    PagoPin.OpcionTramite,
+                    PagoPin.TipoTramite),
+                edad,
+                fechaNacimiento);
 
-                        return true;
-                    }
-                }
-                return false;
-            }
-            else
+            if (!result.IsValid)
             {
                 return false;
             }
-        }
 
-        private void DeterminarMayorEdad(int edad)
-        {
-            if (edad < 18)
+            if (result.Genero.HasValue)
             {
-                PagoPin.MayorEdad = false;
+                await SetGenero(result.Genero.Value);
             }
-            else
+
+            if (result.ResetCategorias)
             {
-                PagoPin.MayorEdad = true;
+                PagoPin.Categoria = string.Empty;
+                PagoPin.Categoria1 = string.Empty;
+                PagoPin.Categoria2 = string.Empty;
+                PagoPin.TipoTramite = null;
+                PagoPin.TipoTramite2 = null;
+                PagoPin.Usuario.TipoDocumentoDescpcion = string.Empty;
             }
+            else if (result.ResetTipoDocumento)
+            {
+                PagoPin.Usuario.TipoDocumento = 0;
+                PagoPin.Usuario.TipoDocumentoDescpcion = string.Empty;
+            }
+
+            PagoPin.EdadAspirante = result.EdadAspirante;
+            PagoPin.Usuario.FechaNacimiento = result.FechaNacimiento;
+            PagoPin.MayorEdad = result.MayorEdad;
+
+            if (result.ResetInstructorFlow)
+            {
+                PagoPin.TramiteInstructor = false;
+                PagoPin.OpcionTramite = null;
+                PagoPin.TipoTramite = 0;
+            }
+            else if (result.ResetRecategorizacionFlow)
+            {
+                PagoPin.Categoria1 = string.Empty;
+                PagoPin.Categoria2 = string.Empty;
+                PagoPin.CategoriasActual = string.Empty;
+                PagoPin.CategoriaSeleccionada = string.Empty;
+                PagoPin.OpcionTramite = null;
+                PagoPin.TipoTramite = 0;
+            }
+
+            return true;
         }
 
         private async Task SetGenero(int idSexo)
@@ -203,39 +202,28 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
             Sexos.Find(x => x.Id == idSexo).Selected = true;
             Sexos.Find(x => x.Id != idSexo).Selected = false;
 
-            await Task.FromResult(true);
+            await Task.CompletedTask;
         }
 
         private void HandleValidationRequested(object sender, ValidationRequestedEventArgs args)
         {
             messageStore?.Clear();
-            if (!DateTime.TryParse($"{DatosBasicosModel.Anio}-{DatosBasicosModel.Mes}-{DatosBasicosModel.Dia}", out _))
-            {
-                messageStore?.Add(() => DatosBasicosModel.Dia, "La fecha de nacimiento no es válida");
-            }
-            else if (DateTime.TryParse($"{DatosBasicosModel.Anio}-{DatosBasicosModel.Mes}-{DatosBasicosModel.Dia}", out var birthDate))
-            {
-                var today = DateTime.Today;
-                var age = today.Year - birthDate.Year;
-                if (birthDate > today.AddYears(-age)) age--;
 
-                if (age < 16)
-                {
-                    messageStore?.Add(() => DatosBasicosModel.Dia, "Debe ser mayor de 16 años");
-                }
+            var validationResult = DatosBasicosService.ValidateBirthDate(
+                DatosBasicosModel.Dia is 0 ? null : DatosBasicosModel.Dia,
+                DatosBasicosModel.Mes is 0 ? null : DatosBasicosModel.Mes,
+                DatosBasicosModel.Anio is 0 ? null : DatosBasicosModel.Anio,
+                DateTime.Today);
+
+            if (!validationResult.IsValid && !string.IsNullOrWhiteSpace(validationResult.ErrorMessage))
+            {
+                messageStore?.Add(() => DatosBasicosModel.Dia, validationResult.ErrorMessage);
             }
         }
 
         private async Task Retroceder()
         {
             await OnRetroceder.InvokeAsync();
-        }
-
-        private bool TieneFechaCompleta()
-        {
-            return DatosBasicosModel.Dia != 0 &&
-                   DatosBasicosModel.Mes != 0 &&
-                   DatosBasicosModel.Anio != 0;
         }
 
         private async Task NotificarCambio(bool isValid)
@@ -246,3 +234,5 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
         #endregion Methods
     }
 }
+
+

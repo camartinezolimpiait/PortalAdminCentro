@@ -1,12 +1,12 @@
-﻿using Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.Agendamiento.Agenda;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Agenda;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +64,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 					if (AgendaDto != null && AgendaDto.IdAgenda>0)
 					{
                         await ObtainAgendaDTODetails();
-                        TipoCita = (AgendaDto.IdTipoCita == TipoCitaAgenda.Enrolamiento) ? "Enrolamiento" : "Continuación";
+                        TipoCita = (AgendaDto.IdTipoCita == TipoCitaAgenda.Enrolamiento) ? "Enrolamiento" : "Continuaci�n";
 						if (AgendaDto.DatosPersonaDTO != null)
 						{
 							// Problematica en estudio ->
@@ -191,3 +191,5 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 
 	}
 }
+
+

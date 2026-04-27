@@ -4,7 +4,7 @@ using Microsoft.JSInterop;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Helpers;
 using System;
 using System.Threading.Tasks;
@@ -181,3 +181,4 @@ namespace portalAdministrativoSISEC.Pages.Facturacion.Common
     }
 }
 // Fin código generado por GitHub Copilot
+

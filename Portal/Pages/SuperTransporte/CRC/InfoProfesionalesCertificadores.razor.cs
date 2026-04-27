@@ -1,8 +1,8 @@
-锘縰sing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Services.SuperTransporte;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Contracts.SuperTransporte;
+using portalAdministrativoSISEC.Application.Data;
 using System.Threading.Tasks;
 using portalAdministrativoSISEC.Entidades.SuperTransporte.CRC;
 using Microsoft.AspNetCore.Components.Forms;
@@ -90,7 +90,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
                         }, applicationShared.IdCentroStrappi);
                         if (resultado != null)
                         {
-                            toastService.ShowSuccess(@"Se ha guardado la configuraci贸n correctamente.", "Informaci贸n");
+                            toastService.ShowSuccess(@"Se ha guardado la configuraci髇 correctamente.", "Informaci髇");
                             Navigation.NavigateTo("/supertransporte/centro", false);
                         }
                     }
@@ -108,7 +108,7 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
                     _profesionales = new lista_profesionales();
                 }
                 else {
-                    toastService.ShowError(@"La profesi贸n seleccionada ya se encuentra registrada. Para continuar quitar la registrada.", "Informaci贸n");
+                    toastService.ShowError(@"La profesi髇 seleccionada ya se encuentra registrada. Para continuar quitar la registrada.", "Informaci髇");
                 }
 				
 			}
@@ -154,3 +154,5 @@ namespace portalAdministrativoSISEC.Pages.SuperTransporte.CRC
         }
     }
 }
+
+

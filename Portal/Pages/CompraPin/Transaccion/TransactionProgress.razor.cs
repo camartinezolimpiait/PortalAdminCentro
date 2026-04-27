@@ -1,11 +1,11 @@
-ï»¿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.CompraPin.Models;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.Models;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Entidades.Devolucion.ConsultaInfoPin;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Extension;
 using System;
 using System.Threading.Tasks;
@@ -65,19 +65,19 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Transaccion
 
         #region Public Methods
 
-        // Inicio refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
-        // ImplementaciÃ³n del patrÃ³n Dispose para cumplir con S3881 y CA1816
+        // Inicio refactorización/optimización por GitHub Copilot
+        // Implementación del patrón Dispose para cumplir con S3881 y CA1816
 
-        // MÃ©todo generado por GitHub Copilot
+        // Método generado por GitHub Copilot
         public void Dispose()
         {
             // Llamar a Dispose con true para liberar recursos administrados
             Dispose(true);
-            // Suprimir la finalizaciÃ³n si el recolector de basura lo llama
+            // Suprimir la finalización si el recolector de basura lo llama
             GC.SuppressFinalize(this);
         }
 
-        // MÃ©todo generado por GitHub Copilot
+        // Método generado por GitHub Copilot
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -88,13 +88,13 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Transaccion
                     CountdownTimer?.Dispose();
                     TimeAgoTimer?.Dispose();
                 }
-                // Liberar recursos no administrados aquÃ­ si los hubiera
+                // Liberar recursos no administrados aquí si los hubiera
 
                 _disposed = true;
             }
         }
 
-        // Fin refactorizaciÃ³n/optimizaciÃ³n por GitHub Copilot
+        // Fin refactorización/optimización por GitHub Copilot
 
         #endregion Public Methods
 
@@ -111,12 +111,12 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Transaccion
 
         private async Task IniciarProcesoAsync()
         {
-            // Cambiar el estado del botÃ³n a "actualizando"
+            // Cambiar el estado del botón a "actualizando"
             IsUpdating = true;
             ButtonText = "Actualizando...";
             ButtonClass = "flex items-center text-white text-sm font-medium bg-gris-400 rounded-md px-3 py-1 transition-colors duration-150 cursor-not-allowed";
 
-            //  Llama tu mÃ©todo principal de consulta
+            //  Llama tu método principal de consulta
             await ConsultarInformacionAsync();
 
             // Inicia el contador regresivo (120 segundos)
@@ -132,7 +132,7 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Transaccion
         private async Task CopiarNUT()
         {
             await JS.InvokeVoidAsync("copiarAlPortapapeles", PagoPin.Nut);
-            mensajeCopiado = "Â¡Copiado al portapapeles!";
+            mensajeCopiado = "¡Copiado al portapapeles!";
 
             StateHasChanged();
         }
@@ -196,11 +196,11 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Transaccion
                     ButtonText = "Actualizar estado";
                     ButtonClass = "flex items-center text-white text-sm font-medium bg-azul-600 hover:bg-azul-700 rounded-md px-3 py-1 transition-colors duration-150 cursor-pointer";
 
-                    // Guardar la hora de la Ãºltima actualizaciÃ³n
+                    // Guardar la hora de la última actualización
                     LastUpdateTime = DateTime.Now;
                     LastUpdateDisplay = "unos segundos";
 
-                    // ðŸ”¥ Iniciar el actualizador automÃ¡tico del texto
+                    // ?? Iniciar el actualizador automático del texto
                     StartTimeAgoUpdater();
 
                     await InvokeAsync(StateHasChanged);
@@ -242,3 +242,4 @@ namespace portalAdministrativoSISEC.Pages.CompraPin.Transaccion
         #endregion Private Methods
     }
 }
+

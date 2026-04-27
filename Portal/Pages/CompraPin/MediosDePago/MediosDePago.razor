@@ -1,8 +1,9 @@
-ï»¿@page "/compradepin/mediosdepago"
+@page "/compradepin/mediosdepago"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Enum.PortalAdministrativo
 @using portalAdministrativoSISEC.Pages.CompraPin
+@using portalAdministrativoSISEC.Pages.CompraPin.CouponCode
 @inject NavigationManager NavManager
 
 <SpinLoader IsLoading="isLoading">
@@ -19,8 +20,8 @@
             </h3>
 
             <p>
-                Verifica que tu informaciÃ³n este correcta. Enviaremos la confirmaciÃ³n de la compra al correo electrÃ³nico
-                registrado. AdemÃ¡s los datos serÃ¡n usados por el usuario para gestionar su PIN
+                Verifica que tu información este correcta. Enviaremos la confirmación de la compra al correo electrónico
+                registrado. Además los datos serán usados por el usuario para gestionar su PIN
             </p>
 
             <h4>Medios de pago disponibles</h4>
@@ -55,6 +56,15 @@
 
                 <ValidationMessage For="@(() => MediosDePagoModel.TipoRecaudoCtrl)" />
 
+   @* Inicio código generado por GitHub Copilot *@
+     @* Componente de Código de Cupón/Referido - Solo se muestra si hay medios de pago disponibles *@
+         @if (pagoPin.MediosPago != null && pagoPin.MediosPago.Any())
+    {
+        <CouponCode PagoPin="pagoPin" 
+            CouponAplicadoEvent="@OnCouponAplicado" />
+           }
+                @* Fin código generado por GitHub Copilot *@
+
                 <div class="mt-3 mb-4 flex w-[95%] items-center gap-2 rounded-md border border-blue-200 bg-blue-50 p-3">
                     <!-- Icono -->
                     <svg class="feather mr-1 flex-shrink-0 text-blue-600">
@@ -63,7 +73,7 @@
 
                     <!-- Texto -->
                     <p class="m-0 text-base text-gray-600">
-                        Recuerda que el dinero se reflejarÃ¡ en la cuenta registrada segÃºn el medio de pago que elijas.
+                        Recuerda que el dinero se reflejará en la cuenta registrada según el medio de pago que elijas.
                     </p>
                 </div>
 
@@ -71,7 +81,7 @@
 
                 <div class="mt-5 flex items-center space-x-3">
                     <button type="button" class="boton-secundario mr-2" @onclick="Retroceder">
-                        AtrÃ¡s
+                        Atrás
                     </button>
                     <button type="submit" class="boton-primario"> Siguiente </button>
                 </div>
@@ -81,3 +91,4 @@
     </ContentTemplate>
 
 </SpinLoader>
+

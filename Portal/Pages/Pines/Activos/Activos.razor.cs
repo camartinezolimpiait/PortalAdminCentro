@@ -1,4 +1,4 @@
-Ôªøusing Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.QuickGrid;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -7,15 +7,15 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.JSInterop;
 using OfficeOpenXml;
 using ClosedXML.Excel;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.Pines;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.Pines;
 using portalAdministrativoSISEC.Entidades.Common;
 using portalAdministrativoSISEC.Entidades.Devolucion;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.Common;
 using portalAdministrativoSISEC.Pages.Pines.Common;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 using portalAdministrativoSISEC.Util.Extension;
 using System;
@@ -53,8 +53,9 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
         List<TipoDocumentoPtesaDTO> ListaDocumentos = new();
         public List<Centro> ListaCentros { get; set; } = new();
         private GetDataResponseCentro getCentroResponse = new GetDataResponseCentro();
+        private List<string> ListaEmpresas = new();
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         private readonly Models.ActivosFiltrosModel FiltrosModel = new()
         {
             CanalVenta = 0,
@@ -62,48 +63,48 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
         };
 
         private EditContext FiltrosEditContext;
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         private bool SinResultados { get; set; } = true;
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         private bool HaHechoPrimeraConsulta { get; set; }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         private bool DebeRefrescarGrid;
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
-        // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
         private string? filtroCentroIdRunt = null;
-        // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+        // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
         DateTime filtroFechaInicial = DateTime.Today.AddDays(-14);
         DateTime filtroFechaFinal = DateTime.Today;
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         private DateTime GetFechaFinalParaConsulta()
         {
             // `InputDate` solo captura fecha (hora 00:00:00). Para evitar excluir registros de "hoy",
             // cuando el usuario selecciona la fecha actual se usa la hora actual del servidor.
-            // Para otras fechas, se usa el final del d√≠a para incluir todo el rango.
+            // Para otras fechas, se usa el final del dÌa para incluir todo el rango.
             var hoy = DateTime.Today;
             if (filtroFechaFinal.Date == hoy)
             {
-                // Si la fecha final es hoy, se ampl√≠a el rango sumando 1 d√≠a.
+                // Si la fecha final es hoy, se amplÌa el rango sumando 1 dÌa.
                 return filtroFechaFinal.Date.AddDays(2).AddTicks(-1);
             }
 
             return filtroFechaFinal.Date.AddDays(1).AddTicks(-1);
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
-        // M√©todo generado por GitHub Copilot
+        // MÈtodo generado por GitHub Copilot
         private async Task ExportarDatosAsync()
         {
-            // M√©todo generado por GitHub Copilot
-            // Inicio refactorizaci√≥n por GitHub Copilot
+            // MÈtodo generado por GitHub Copilot
+            // Inicio refactorizaciÛn por GitHub Copilot
             try
             {
                 var consulta = new ConsultaInfoPinEstado
@@ -137,29 +138,31 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                             var mappedList = result2.Entidad.Select(d => new ResponseInfoPinEstado
                             {
                                 Pin = d.Pin,
-                                // Inicio c√≥digo generado por GitHub Copilot
-                                // FechaRegistro se usa como "Fecha de compra" en la exportaci√≥n cuando est√© disponible.
+                                // Inicio cÛdigo generado por GitHub Copilot
+                                // FechaRegistro se usa como "Fecha de compra" en la exportaciÛn cuando estÈ disponible.
                                 FechaRegistro = d.FechaRegistro,
-                                // Fin c√≥digo generado por GitHub Copilot
+                                // Fin cÛdigo generado por GitHub Copilot
                                 ValorTransaccion = float.Parse(d.ValorDevolver),
                                 Estado = "Devuelto",
                                 NUTVenta = d.NUTVenta,
-                                // Inicio c√≥digo generado por GitHub Copilot
+                                // Inicio cÛdigo generado por GitHub Copilot
                                 RazonSocial = d.RazonSocial,
                                 NombreCompleto = d.NombreCompleto,
-                                // Fin c√≥digo generado por GitHub Copilot
+                                // Fin cÛdigo generado por GitHub Copilot
                                 AgenteDispersion = d.AgenteDispersion,
-                                // Inicio c√≥digo generado por GitHub Copilot
+                                // Inicio cÛdigo generado por GitHub Copilot
                                 // El endpoint de devoluciones puede no retornar CanalVenta. Se usa el filtro actual como fallback.
                                 CanalVenta = d.CanalVenta ?? FiltrosModel.CanalVenta,
-                                // Fin c√≥digo generado por GitHub Copilot
+                                // Fin cÛdigo generado por GitHub Copilot
                                 NumeroIdentificacion = d.NumeroIdentificacion,
                                 TipoIdentificacion = d.IdTipoIdentificacion,
-                                // Inicio c√≥digo generado por GitHub Copilot
+                                // Inicio cÛdigo generado por GitHub Copilot
                                 FechaDevolucion = d.FechaDevolucion,
                                 NovedadDevolucion = d.NovedadDevolucion,
                                 TipoDevolucion = d.TipoDevolucion,
-                                // Fin c√≥digo generado por GitHub Copilot
+                                ConvenioEmpresa=d.ConvenioEmpresa,
+                                Empresa=d.Empresa
+                                // Fin cÛdigo generado por GitHub Copilot
                             }).ToList();
                             result = new ResponseDTO<List<ResponseInfoPinEstado>>
                             {
@@ -182,21 +185,21 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                 // Encabezados base (todas las columnas del grid principal)
                 var col = 1;
                 worksheet.Cell(1, col++).Value = "Canal de venta";
-                worksheet.Cell(1, col++).Value = "N√∫mero de PIN";
+                worksheet.Cell(1, col++).Value = "N˙mero de PIN";
                 worksheet.Cell(1, col++).Value = "Modalidad";
 
-                // Inicio c√≥digo generado por GitHub Copilot
+                // Inicio cÛdigo generado por GitHub Copilot
                 // Columnas requeridas por el PBI para el archivo de devoluciones
                 var incluirColumnasDevoluciones = estado == nameof(EnumTipoConsultaPines.Devoluciones);
                 if (incluirColumnasDevoluciones)
                 {
                     worksheet.Cell(1, col++).Value = "Fecha de compra";
-                    worksheet.Cell(1, col++).Value = "Estado de devoluci√≥n";
+                    worksheet.Cell(1, col++).Value = "Estado de devoluciÛn";
                     worksheet.Cell(1, col++).Value = "Fecha";
                     worksheet.Cell(1, col++).Value = "Tipo";
                     worksheet.Cell(1, col++).Value = "Novedad";
                 }
-                // Fin c√≥digo generado por GitHub Copilot
+                // Fin cÛdigo generado por GitHub Copilot
 
                 // Columnas adicionales: desglose del pago (solo NO devoluciones)
                 var incluirDesglosePago = estado != nameof(EnumTipoConsultaPines.Devoluciones);
@@ -217,23 +220,25 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
 
                 worksheet.Cell(1, col++).Value = estado == nameof(EnumTipoConsultaPines.Devoluciones) ? "Valor total a devolver" : "Valor total";
                 worksheet.Cell(1, col++).Value = "Tipo Documento";
-                worksheet.Cell(1, col++).Value = "N√∫mero de Documento";
+                worksheet.Cell(1, col++).Value = "N˙mero de Documento";
                 worksheet.Cell(1, col++).Value = "Nombre completo";
 
                 worksheet.Cell(1, col++).Value = estado switch
                 {
                     nameof(EnumTipoConsultaPines.Activos) => "Fecha de compra",
                     nameof(EnumTipoConsultaPines.Usados) => "Fecha de uso",
-                    nameof(EnumTipoConsultaPines.Devoluciones) => "Fecha de devoluci√≥n",
+                    nameof(EnumTipoConsultaPines.Devoluciones) => "Fecha de devoluciÛn",
                     _ => "Fecha"
                 };
 
-                worksheet.Cell(1, col++).Value = "C√≥digo de transacci√≥n";
+                worksheet.Cell(1, col++).Value = "CÛdigo de transacciÛn";
                 worksheet.Cell(1, col++).Value = "Centro de compra";
                 worksheet.Cell(1, col++).Value = "Aliado de recaudo";
+                worksheet.Cell(1, col++).Value = "Convenio Empresa";
+                worksheet.Cell(1, col++).Value = "Empresa";
 
                 static string Modalidad(ResponseInfoPinEstado item)
-                    => Convert.ToInt32(item.Cuotas) > 1 ? "A Cuotas" : "√önico";
+                    => Convert.ToInt32(item.Cuotas) > 1 ? "A Cuotas" : "⁄nico";
 
                 static string CanalVentaNombre(ResponseInfoPinEstado item)
                     => System.Enum.IsDefined(typeof(EnumOrigenCotizacion), item.CanalVenta)
@@ -261,17 +266,17 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                     worksheet.Cell(row, c++).Value = item.Pin;
                     worksheet.Cell(row, c++).Value = Modalidad(item);
 
-                    // Inicio c√≥digo generado por GitHub Copilot
+                    // Inicio cÛdigo generado por GitHub Copilot
                     if (incluirColumnasDevoluciones)
                     {
-                        // En Devoluciones el backend no siempre entrega la fecha de compra; se mantiene el campo y se llena si est√° disponible.
+                        // En Devoluciones el backend no siempre entrega la fecha de compra; se mantiene el campo y se llena si est· disponible.
                         worksheet.Cell(row, c++).Value = item.FechaRegistro?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) ?? "-";
                         worksheet.Cell(row, c++).Value = "Devuelto";
                         worksheet.Cell(row, c++).Value = item.FechaDevolucion?.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) ?? "-";
                         worksheet.Cell(row, c++).Value = item.TipoDevolucion ?? "-";
                         worksheet.Cell(row, c++).Value = item.NovedadDevolucion ?? "-";
                     }
-                    // Fin c√≥digo generado por GitHub Copilot
+                    // Fin cÛdigo generado por GitHub Copilot
 
                     if (incluirDesglosePago)
                     {
@@ -294,6 +299,8 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                     worksheet.Cell(row, c++).Value = item.NUTVenta;
                     worksheet.Cell(row, c++).Value = item.RazonSocial;
                     worksheet.Cell(row, c++).Value = item.AgenteDispersion;
+                    worksheet.Cell(row, c++).Value = item.ConvenioEmpresa;
+                    worksheet.Cell(row, c++).Value = item.Empresa;
 
                     row++;
                 }
@@ -306,37 +313,37 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                 var fileName = $"Pines_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
                 await JS.InvokeVoidAsync("BlazorDownloadFile", fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelBytes);
 
-                // Mostrar el modal de √©xito usando la nueva funci√≥n JS
+                // Mostrar el modal de Èxito usando la nueva funciÛn JS
                 await JS.InvokeVoidAsync("mostrarModalExportacion");
             }
             catch (Exception ex)
             {
-                // Inicio c√≥digo generado por GitHub Copilot
-                _toastService.ShowError($"Ocurri√≥ un error al exportar los datos: {ex.Message}");
-                // Fin c√≥digo generado por GitHub Copilot
+                // Inicio cÛdigo generado por GitHub Copilot
+                _toastService.ShowError($"OcurriÛ un error al exportar los datos: {ex.Message}");
+                // Fin cÛdigo generado por GitHub Copilot
             }
-            // Fin refactorizaci√≥n por GitHub Copilot
+            // Fin refactorizaciÛn por GitHub Copilot
         }
 
 
         protected override void OnParametersSet()
         {
-            // Si el par√°metro existe y es un n√∫mero v√°lido
+            // Si el par·metro existe y es un n˙mero v·lido
             if (!string.IsNullOrEmpty(estado) && System.Enum.TryParse<EnumTipoConsultaPines>(estado, ignoreCase: true, out var estadoEnum))
             {
                 FiltrosModel.EstadoPin = (int)estadoEnum;
             }
             else
             {
-                // Valor por defecto si no es v√°lido
+                // Valor por defecto si no es v·lido
                 FiltrosModel.EstadoPin = (int)EnumTipoConsultaPines.Activos;
             }
 
             DebeRefrescarGrid = true;
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (DebeRefrescarGrid && grid is not null)
@@ -347,16 +354,16 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
 
             await base.OnAfterRenderAsync(firstRender);
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
         protected override async Task OnInitializedAsync()
         {
-            // Inicio refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+            // Inicio refactorizaciÛn/optimizaciÛn por GitHub Copilot
             try
             {
-                // Inicio c√≥digo generado por GitHub Copilot
+                // Inicio cÛdigo generado por GitHub Copilot
                 FiltrosEditContext = new EditContext(FiltrosModel);
-                // Fin c√≥digo generado por GitHub Copilot
+                // Fin cÛdigo generado por GitHub Copilot
 
                 pagination.TotalItemCountChanged += Pagination_TotalItemCountChanged;
 
@@ -372,6 +379,12 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                 ConsultaCentroPorComercio consultaCentro = new ConsultaCentroPorComercio() { IdComercio = getCentroResponse.IdComercio, ConsultaCentro = new ConsultaCentroPorId() { Plataforma = menuServiceShared.Value.Plataforma, Id = 0 } };
 
                 ListaCentros = await MiLicenciaService.ObtenerTodosCentrosxComercio(consultaCentro);
+
+                var empresasResponse = await MiLicenciaService.ObtenerEmpresasPines(applicationShared.IdRunt ?? "");
+                ListaEmpresas = empresasResponse?.Entidad is { Count: > 0 }
+                    ? empresasResponse.Entidad
+                    : ["Todos"];
+
                 // Define the GridItemsProvider. Its job is to convert QuickGrid's GridItemsProviderRequest into a query against
                 // an arbitrary data soure. In this example, we need to translate query parameters into the particular URL format
                 // supported by the external JSON API. It's only possible to perform whatever sorting/filtering/etc is supported
@@ -391,21 +404,22 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                             FechaFinal = GetFechaFinalParaConsulta(),
                             IdAgenteDispersion = FiltrosModel.AliadoRecaudo ?? 0,
                             IdCentro = null,
-                            // Inicio c√≥digo generado por GitHub Copilot
+                            // Inicio cÛdigo generado por GitHub Copilot
                             IdRunt = string.IsNullOrWhiteSpace(filtroCentroIdRunt) ? applicationShared.IdRunt : filtroCentroIdRunt,
-                            // Fin c√≥digo generado por GitHub Copilot
-                            NumPagina = (req.StartIndex / req.Count) + 1, // Calcula la p√°gina actual
+                            // Fin cÛdigo generado por GitHub Copilot
+                            NumPagina = (req.StartIndex / req.Count) + 1, // Calcula la p·gina actual
                             NumRegistros = req.Count,
                             Opcion = 1,
-                            Pin = FiltrosModel.Pin
+                            Pin = FiltrosModel.Pin,
+                            Empresa = string.IsNullOrWhiteSpace(FiltrosModel.Empresa) ? null : FiltrosModel.Empresa
                         };
 
-                        // Inicio c√≥digo generado por GitHub Copilot
+                        // Inicio cÛdigo generado por GitHub Copilot
                         string json = System.Text.Json.JsonSerializer.Serialize(consulta);
-                        // Fin c√≥digo generado por GitHub Copilot
+                        // Fin cÛdigo generado por GitHub Copilot
 
                         ResponseDTO<List<ResponseInfoPinEstado>> result = null;
-                        // Inicio c√≥digo generado por GitHub Copilot
+                        // Inicio cÛdigo generado por GitHub Copilot
 
                         switch (estado)
                         {
@@ -439,6 +453,8 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                                         TotalRegistros = d.TotalRegistros,
                                         TipoDevolucion = d.TipoDevolucion,
                                         CuentaBanco = d.CuentaBanco,
+                                        ConvenioEmpresa= d.ConvenioEmpresa,
+                                        Empresa= d.Empresa
                                         
                                     }).ToList();
                                     result = new ResponseDTO<List<ResponseInfoPinEstado>>
@@ -449,7 +465,7 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                                 }
                                 break;
                         }
-                        // Fin c√≥digo generado por GitHub Copilot
+                        // Fin cÛdigo generado por GitHub Copilot
 
                         if (result?.Entidad == null || result.Entidad.Count == 0)
                         {
@@ -467,19 +483,19 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
                     catch (Exception ex)
                     {
                         SinResultados = true;
-                        _toastService.ShowError($"Ocurri√≥ un error al consultar los pines: {ex.Message}");
+                        _toastService.ShowError($"OcurriÛ un error al consultar los pines: {ex.Message}");
                         return GridItemsProviderResult.From(new List<ResponseInfoPinEstado>(), 0);
                     }
                 };
             }
             catch (Exception ex)
             {
-                _toastService.ShowError($"Ocurri√≥ un error al inicializar la consulta de pines: {ex.Message}");
+                _toastService.ShowError($"OcurriÛ un error al inicializar la consulta de pines: {ex.Message}");
             }
-            // Fin refactorizaci√≥n/optimizaci√≥n por GitHub Copilot
+            // Fin refactorizaciÛn/optimizaciÛn por GitHub Copilot
         }
 
-        // Esta es la √∫nica soluci√≥n que he encontrado para hacer que mi paginador personalizado se actualice cuando cambian los filtros.
+        // Esta es la ˙nica soluciÛn que he encontrado para hacer que mi paginador personalizado se actualice cuando cambian los filtros.
         // Sin esto, toca darle click a Filtrar para que se actualice el conteo
         private void Pagination_TotalItemCountChanged(object sender, int? e)
         {
@@ -499,12 +515,12 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
             await grid.RefreshDataAsync();
         }
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         private async Task HandleValidSubmitAsync(EditContext editContext)
         {
             await FilterChangedAsync();
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
         private async Task GoToPageAsync(int pageIndex)
         {
@@ -543,12 +559,12 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
             await JS.InvokeVoidAsync("showModalById", id);
         }
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         private bool CanGoBack => pagination.CurrentPageIndex > 0;
         private bool CanGoForwards => pagination.CurrentPageIndex < pagination.LastPageIndex;
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
 
-        // Inicio c√≥digo generado por GitHub Copilot
+        // Inicio cÛdigo generado por GitHub Copilot
         private async Task LimpiarFiltrosAsync()
         {
             // Restablecer filtros a valores por defecto
@@ -563,6 +579,8 @@ namespace portalAdministrativoSISEC.Pages.Pines.Activos
 
             await FilterChangedAsync();
         }
-        // Fin c√≥digo generado por GitHub Copilot
+        // Fin cÛdigo generado por GitHub Copilot
     }
 }
+
+

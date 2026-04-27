@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using portalAdministrativoSISEC.Data.CompraPin;
-using portalAdministrativoSISEC.Data.CompraPin.CDA;
+using Microsoft.AspNetCore.Components;
+using portalAdministrativoSISEC.Application.Data.CompraPin;
+using portalAdministrativoSISEC.Application.Data.CompraPin.CDA;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Util.Const.ApiPortalAdministrativo;
 using System.Collections.Generic;

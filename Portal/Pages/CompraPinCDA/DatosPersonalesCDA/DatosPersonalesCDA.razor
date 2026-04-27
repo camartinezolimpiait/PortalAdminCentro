@@ -1,6 +1,6 @@
-Ôªø@page "/compradepincda/datospersonalesCDA"
+@page "/compradepincda/datospersonalesCDA"
 @inherits LayoutComponentBase
-@using portalAdministrativoSISEC.Data.CompraPin;
+@using portalAdministrativoSISEC.Application.Data.CompraPin;
 @using portalAdministrativoSISEC.Pages.CompraPin
 @using portalAdministrativoSISEC.Pages.CompraPin.Categorias
 @using portalAdministrativoSISEC.Pages.CompraPin.DatosBasicos
@@ -21,10 +21,10 @@
             <DataAnnotationsValidator />
 
             <h3>Datos personales</h3>
-            <p>Ingrese los datos de la persona que trae el veh√≠culo. El resumen de la compra con el PIN se enviar√° a la direcci√≥n de correo electr√≥nico que registre.</p>
+            <p>Ingrese los datos de la persona que trae el vehÌculo. El resumen de la compra con el PIN se enviar· a la direcciÛn de correo electrÛnico que registre.</p>
             <div class="field">
-                <label for="email">Correo electr√≥nico</label>
-                <!-- bind permite la comunicaci√≥n bidireccional entre el campo de entrada y la propiedad-->
+                <label for="email">Correo electrÛnico</label>
+                <!-- bind permite la comunicaciÛn bidireccional entre el campo de entrada y la propiedad-->
                 <input autocomplete="on" @bind-value="DatosPersonalesModel.Correo" @bind-value:event="oninput" @onblur="@(() => OnBlur("correo"))" @onchange="@((ChangeEventArgs e) => HandleInputChange("correo", e))" />
                 @if (isFieldTouched("correo"))
                 {

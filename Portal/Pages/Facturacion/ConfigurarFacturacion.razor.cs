@@ -1,11 +1,11 @@
-锘縰sing Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
+using portalAdministrativoSISEC.Application.Data;
 using portalAdministrativoSISEC.Entidades.Facturacion;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.Facturacion.Models;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util.Extension;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace portalAdministrativoSISEC.Pages.Facturacion;
 
 public partial class ConfigurarFacturacion
 {
-    #region Inyecci贸n Dependencias
+    #region Inyecci髇 Dependencias
 
     [Inject]
     private ProtectedSessionStorage ProtectedSessionStore { get; set; }
@@ -24,7 +24,7 @@ public partial class ConfigurarFacturacion
     [Inject]
     private IMiLicenciaService MiLicenciaService { get; set; }
 
-    #endregion Inyecci贸n Dependencias
+    #endregion Inyecci髇 Dependencias
 
     #region Fields
 
@@ -55,7 +55,7 @@ public partial class ConfigurarFacturacion
 
     #region Protected Methods
 
-    // Inicio refactorizaci贸n/optimizaci贸n por GitHub Copilot
+    // Inicio refactorizaci髇/optimizaci髇 por GitHub Copilot
     protected override async Task OnInitializedAsync()
     {
         try
@@ -67,7 +67,7 @@ public partial class ConfigurarFacturacion
 
             if (!centroShared.Success || !applicationShared.Success)
             {
-                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Error, "Error al cargar los datos de sesi贸n.");
+                await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Error, "Error al cargar los datos de sesi髇.");
                 return;
             }
 
@@ -86,10 +86,10 @@ public partial class ConfigurarFacturacion
 
                 // Ejecutar tareas en paralelo para mejorar rendimiento
                 await Task.WhenAll(
-                    ConsultaRegimenAsync(),
-                    ConsultaDepartamentosAsync(),
-                    ConsultaPersonasAsync(),
-                    ConsultaCategoriasFacturacionAsync(),
+              ConsultaRegimenAsync(),
+                   ConsultaDepartamentosAsync(),
+                ConsultaPersonasAsync(),
+                     ConsultaCategoriasFacturacionAsync(),
                     ConsultaDisparadoresFacturacionAsync()
                );
 
@@ -102,21 +102,20 @@ public partial class ConfigurarFacturacion
         }
         catch (Exception ex)
         {
-            await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Error, $"Error al inicializar la configuraci贸n de facturaci贸n: {ex.Message}");
+            await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Error, $"Error al inicializar la configuraci髇 de facturaci髇: {ex.Message}");
         }
         finally
         {
             IsLoading = false;
         }
     }
-
-    // Fin refactorizaci贸n/optimizaci贸n por GitHub Copilot
+    // Fin refactorizaci髇/optimizaci髇 por GitHub Copilot
 
     #endregion Protected Methods
 
     #region Private Methods
 
-    // Inicio c贸digo generado por GitHub Copilot
+    // Inicio c骴igo generado por GitHub Copilot
     private async Task ConsultaRegimenAsync()
     {
         FacturacionResponse<List<ConsultaGenericaTipos>> responseTiposregimen = await MiLicenciaService.ConsultarGenericaTipos(EnumTiposFacturacion.TiposRegimen);
@@ -176,10 +175,9 @@ public partial class ConfigurarFacturacion
         else
             await responseDisparadores.ShowErrorMessageCollection(MiLicenciaService, "Recaudo");
     }
+    // Fin c骴igo generado por GitHub Copilot
 
-    // Fin c贸digo generado por GitHub Copilot
-
-    // Inicio refactorizaci贸n/optimizaci贸n por GitHub Copilot
+    // Inicio refactorizaci髇/optimizaci髇 por GitHub Copilot
     private async Task CargarConfiguracionFacturacionElectronica()
     {
         try
@@ -190,7 +188,7 @@ public partial class ConfigurarFacturacion
             if (responseConfiguracion.SolicitudExitosa)
             {
                 CredencialesModel.Usuario = responseConfiguracion?.Datos?.Usuario ?? "";
-                CredencialesModel.Clave = responseConfiguracion?.Datos?.Contrase帽a ?? "";
+                CredencialesModel.Clave = responseConfiguracion?.Datos?.Contrase馻 ?? "";
 
                 EmisionModel.RazonSocial = responseConfiguracion?.Datos?.RazonSocial ?? "";
                 EmisionModel.NIT = responseConfiguracion?.Datos?.NIT ?? "";
@@ -222,15 +220,14 @@ public partial class ConfigurarFacturacion
         }
         catch (Exception ex)
         {
-            await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Error, $"Error al cargar la configuraci贸n de facturaci贸n: {ex.Message}");
+            await MiLicenciaService.ShowNotificacion(Enum.NotificationStatus.Error, $"Error al cargar la configuraci髇 de facturaci髇: {ex.Message}");
         }
         finally
         {
             IsLoading = false;
         }
     }
-
-    // Fin refactorizaci贸n/optimizaci贸n por GitHub Copilot
+    // Fin refactorizaci髇/optimizaci髇 por GitHub Copilot
 
     private async Task ChangeTab(string tab)
     {
@@ -240,7 +237,7 @@ public partial class ConfigurarFacturacion
             (tab == "Tab3" && ValidarEmisionModelo()) ||
             (tab == "Tab4" && ValidarNumeracionModelo()) ||
             (tab == "Tab5" && ValidarArticulosModelo() && ValidarNumeracionModelo()))
-            activeTab = tab;
+                activeTab = tab;
 
         await Task.FromResult(true);
     }
@@ -249,7 +246,7 @@ public partial class ConfigurarFacturacion
     {
         if (!string.IsNullOrEmpty(CredencialesModel.Usuario) &&
             !string.IsNullOrEmpty(CredencialesModel.Clave))
-            return true;
+                return true;
 
         return false;
     }
@@ -268,7 +265,7 @@ public partial class ConfigurarFacturacion
             (EmisionModel.Ciudad != null && EmisionModel.Ciudad > 0) &&
             !string.IsNullOrEmpty(EmisionModel.Observaciones) &&
             (EmisionModel.TipoPersona != null && EmisionModel.TipoPersona > 0))
-            return true;
+                return true;
 
         return false;
     }
@@ -279,7 +276,7 @@ public partial class ConfigurarFacturacion
             !string.IsNullOrEmpty(NumeracionModel.Prefijo) &&
             NumeracionModel.Desde > 0 &&
             NumeracionModel.Hasta > 0)
-            return true;
+                return true;
 
         return false;
     }
@@ -311,7 +308,7 @@ public partial class ConfigurarFacturacion
             !string.IsNullOrEmpty(ArticulosModel.ExamenMedico) &&
             !string.IsNullOrEmpty(ArticulosModel.ExamenMedicoSencillo) &&
             !string.IsNullOrEmpty(ArticulosModel.ExamenMedicoCombo))
-            return true;
+                return true;
 
         return false;
     }
@@ -339,3 +336,4 @@ public partial class ConfigurarFacturacion
 
     #endregion Private Methods
 }
+

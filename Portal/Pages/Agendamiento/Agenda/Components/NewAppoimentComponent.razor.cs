@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using portalAdministrativoSISEC.Data;
-using portalAdministrativoSISEC.Data.Agendamiento;
+using portalAdministrativoSISEC.Application.Data;
+using portalAdministrativoSISEC.Application.Data.Agendamiento;
 using portalAdministrativoSISEC.Entidades.Agendamiento.Agenda;
 using portalAdministrativoSISEC.Enum;
 using portalAdministrativoSISEC.Enum.PortalAdministrativo;
 using portalAdministrativoSISEC.Pages.CompraPin.Models;
-using portalAdministrativoSISEC.Services.Agendamiento.Agenda;
-using portalAdministrativoSISEC.Services.MiLicencia;
+using portalAdministrativoSISEC.Application.Contracts.Agendamiento.Agenda;
+using portalAdministrativoSISEC.Application.Contracts.MiLicencia;
 using portalAdministrativoSISEC.Util;
 
 namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
@@ -105,7 +105,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 				{
 					isLoading = false;
 					StateHasChanged();
-					toastService.ShowWarning(validation, "Informaci√≥n");
+					toastService.ShowWarning(validation, "InformaciÛn");
 					return;
 				}
 				var scheduledPerson = await ScheduledPerson(applicationShared.IdPerfil.Value, asignarTipoDocumento(TiposDeDocumento, applicationShared.Plataforma == EnumTipoCliente.CEA.ToString() ? 2 : 1, dataAgenda.TipoDocumento), dataAgenda.NumeroDocumento, OptionAppoiment.ScheduleStartDate.Value);
@@ -113,8 +113,8 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 				{
 					isLoading = false;
 					StateHasChanged();
-					string message = string.Concat("El usuario con este Tipo de identificaci√≥n y n√∫mero ya tiene fecha agendada el dia ", scheduledPerson.FechaAgenda.ToResultadoBusqueda());
-					toastService.ShowWarning(message, "Informaci√≥n");
+					string message = string.Concat("El usuario con este Tipo de identificaciÛn y n˙mero ya tiene fecha agendada el dia ", scheduledPerson.FechaAgenda.ToResultadoBusqueda());
+					toastService.ShowWarning(message, "InformaciÛn");
 					return;
 				}
 
@@ -124,7 +124,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 					{
 						isLoading = false;
 						StateHasChanged();
-						toastService.ShowWarning(@"Debe proporcionar las observaciones para continuar", "Informaci√≥n");
+						toastService.ShowWarning(@"Debe proporcionar las observaciones para continuar", "InformaciÛn");
 						return;
 					}
 				}
@@ -160,18 +160,18 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 				if (result)
 				{
 					this.notificacionAgenda();
-					toastService.ShowSuccess(@"Se agend√≥ la cita correctamente", "Nueva cita");
+					toastService.ShowSuccess(@"Se agendÛ la cita correctamente", "Nueva cita");
 					await AppoimentSaved.InvokeAsync(result);
 				}
 				else
 				{
-					toastService.ShowWarning(@"No se pudo agendar la cita correctamente, por favor verifique los datos nuevamente", "Informaci√≥n");
+					toastService.ShowWarning(@"No se pudo agendar la cita correctamente, por favor verifique los datos nuevamente", "InformaciÛn");
 				}
 			}
 			catch (Exception ex)
 			{
 				isLoading = false;
-				toastService.ShowWarning(@"No se pudo agendar la cita correctamente, por favor verifique los datos nuevamente", "Informaci√≥n");
+				toastService.ShowWarning(@"No se pudo agendar la cita correctamente, por favor verifique los datos nuevamente", "InformaciÛn");
 			}
 			
 		}
@@ -185,9 +185,9 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 				message = "Complete el campo Nombre";
 				return await Task.FromResult(message);
 			}
-			if (!Regex.IsMatch(dataAgenda.Nombres, @"^[a-zA-Z√°√©√≠√≥√∫√Å√â√ç√ì√ö√±√ë\s]+$"))
+			if (!Regex.IsMatch(dataAgenda.Nombres, @"^[a-zA-Z·ÈÌÛ˙¡…Õ”⁄Ò—\s]+$"))
 			{
-				message = "Nombres no v√°lidos. Solo se permiten letras y espacios.";
+				message = "Nombres no v·lidos. Solo se permiten letras y espacios.";
 				return await Task.FromResult(message);
 			}
 			if (dataAgenda.Apellidos == null || dataAgenda.Apellidos.Trim() == "")
@@ -197,9 +197,9 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 			}
 
 
-			if (!Regex.IsMatch(dataAgenda.Apellidos, @"^[a-zA-Z√°√©√≠√≥√∫√Å√â√ç√ì√ö√±√ë\s]+$"))
+			if (!Regex.IsMatch(dataAgenda.Apellidos, @"^[a-zA-Z·ÈÌÛ˙¡…Õ”⁄Ò—\s]+$"))
 			{
-				message = "Nombres no v√°lidos. Solo se permiten letras y espacios.";
+				message = "Nombres no v·lidos. Solo se permiten letras y espacios.";
 				return await Task.FromResult(message);
 			}
 			if (dataAgenda.TipoDocumento == 0)
@@ -209,7 +209,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 			}
 			if (dataAgenda.NumeroDocumento == null || dataAgenda.NumeroDocumento.Trim() == "")
 			{
-				message = "Complete el campo  n√∫mero de documento";
+				message = "Complete el campo  n˙mero de documento";
 				return await Task.FromResult(message);
 			}
 			if (!isArmas && dataAgenda.IdTramite == 0)
@@ -219,12 +219,12 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 			}
 			if (!isArmas && (dataAgenda.Categoria == null || dataAgenda.Categoria.Trim() == ""))
 			{
-				message = "Seleccione m√≠nimo una categoria";
+				message = "Seleccione mÌnimo una categoria";
 				return await Task.FromResult(message);
 			}
 			if (dataAgenda.Telefono == null || dataAgenda.Telefono.Trim() == "")
 			{
-				message = "Complete el campo tel√©fono";
+				message = "Complete el campo telÈfono";
 				return await Task.FromResult(message);
 			}
 			if (dataAgenda.Correo == null || dataAgenda.Correo.Trim() == "")
@@ -240,7 +240,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 			await CancelForm.InvokeAsync(false);
 		}
         /// <summary>
-        ///  // Crear una nueva lista para almacenar la categor√≠a seleccionada
+        ///  // Crear una nueva lista para almacenar la categorÌa seleccionada
         /// </summary>
         /// <param name="args"></param>
         /// <param name="category"></param>
@@ -280,7 +280,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 		}
 
         /// <summary>
-        /// M√©todo para construir la notificaci√≥n con par√°metros din√°micos
+        /// MÈtodo para construir la notificaciÛn con par·metros din·micos
         /// </summary>
         /// <param name="tipoCliente"></param>
         /// <param name="correo"></param>
@@ -427,7 +427,7 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 					Id = int.Parse(IdFiltradoCEA);
 					break;
 				default:
-					throw new ArgumentException("tipoCliente no es v√°lido", nameof(tipoCliente));
+					throw new ArgumentException("tipoCliente no es v·lido", nameof(tipoCliente));
 				}
 			return Id;
 		}
@@ -452,3 +452,5 @@ namespace portalAdministrativoSISEC.Pages.Agendamiento.Agenda.Components
 		}
 	}
 }
+
+
