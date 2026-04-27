@@ -25,6 +25,7 @@
       <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onclick={onclose} aria-label="Cerrar">✕</button>
       {@render children()}
     </div>
-    <div class="modal-backdrop" onclick={onclose}></div>
+    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+    <div class="modal-backdrop" role="presentation" onclick={onclose}></div>
   </dialog>
 {/if}
